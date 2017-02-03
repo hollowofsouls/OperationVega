@@ -76,7 +76,7 @@ namespace Assets.Scripts
         /// </summary>
         public void Move()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("I Am Moving");
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("I Am Attacking");
         }
 
         /// <summary>

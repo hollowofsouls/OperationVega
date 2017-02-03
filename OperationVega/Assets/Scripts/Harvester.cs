@@ -23,6 +23,10 @@ namespace Assets.Scripts
         [HideInInspector]
         public IResources TargetResource;
 
+        public Vector3 TargetDirection;
+
+        public Vector3 TargetPosition;
+
         /// <summary>
         /// The health of the harvester.
         /// </summary>
@@ -82,7 +86,13 @@ namespace Assets.Scripts
         /// </summary>
         public void Move()
         {
-            throw new System.NotImplementedException();
+            if (this.TargetPosition != null)
+            {
+                if (Vector3.Magnitude(this.transform.position - this.TargetPosition) > 0.1)
+                {
+                    this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
+                }
+            }
         }
 
         /// <summary>
@@ -120,5 +130,12 @@ namespace Assets.Scripts
           
         }
 
+        /// <summary>
+        /// The update function.
+        /// </summary>
+        private void Update()
+        {
+            this.Move();
+        }
     }
 }
