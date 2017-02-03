@@ -24,6 +24,18 @@ namespace Assets.Scripts
         public IResources TargetResource;
 
         /// <summary>
+        /// The target click position to move to.
+        /// </summary>
+        [HideInInspector]
+        public Vector3 TargetClickPosition;
+
+        /// <summary>
+        /// The target direction to move at.
+        /// </summary>
+        [HideInInspector]
+        public Vector3 TargetDirection;
+
+        /// <summary>
         /// The health of the extractor.
         /// </summary>
         [HideInInspector]
@@ -77,13 +89,15 @@ namespace Assets.Scripts
         [HideInInspector]
         public uint Resourcecount;
 
-
         /// <summary>
         /// The move function providing movement functionality.
         /// </summary>
         public void Move()
         {
-            throw new System.NotImplementedException();
+            if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > 0.1)
+            {
+                this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
+            }
         }
 
         /// <summary>
@@ -127,6 +141,28 @@ namespace Assets.Scripts
         public void FearFactor()
         {
             
+        }
+
+        /// <summary>
+        /// The set the target position function.
+        /// </summary>
+        /// <param name="targetPos">
+        /// The target position to go to when clicked.
+        /// </param>
+        public void SetTheTargetPosition(Vector3 targetPos)
+        {
+            this.TargetClickPosition = targetPos;
+            this.TargetDirection = (this.TargetClickPosition - this.transform.position).normalized;
+
+        }
+
+        /// <summary>
+        /// The update function.
+        /// </summary>
+        private void Update()
+        {
+            UnitController.Self.CheckIfSelected(this.gameObject);
+            this.Move();
         }
     }
 }

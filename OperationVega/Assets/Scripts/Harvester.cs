@@ -23,9 +23,17 @@ namespace Assets.Scripts
         [HideInInspector]
         public IResources TargetResource;
 
-        public Vector3 TargetDirection;
+        /// <summary>
+        /// The target click position to move to.
+        /// </summary>
+        [HideInInspector]
+        public Vector3 TargetClickPosition;
 
-        public Vector3 TargetPosition;
+        /// <summary>
+        /// The target direction to move at.
+        /// </summary>
+        [HideInInspector]
+        public Vector3 TargetDirection;
 
         /// <summary>
         /// The health of the harvester.
@@ -86,13 +94,10 @@ namespace Assets.Scripts
         /// </summary>
         public void Move()
         {
-            if (this.TargetPosition != null)
-            {
-                if (Vector3.Magnitude(this.transform.position - this.TargetPosition) > 0.1)
-                {
-                    this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
-                }
-            }
+           if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > 0.1)
+           {
+              this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
+           }
         }
 
         /// <summary>
@@ -109,6 +114,19 @@ namespace Assets.Scripts
         public void Decontaminate()
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// The set the target position function.
+        /// </summary>
+        /// <param name="targetPos">
+        /// The target position to go to when clicked.
+        /// </param>
+        public void SetTheTargetPosition(Vector3 targetPos)
+        {
+            this.TargetClickPosition = targetPos;
+            this.TargetDirection = (this.TargetClickPosition - this.transform.position).normalized;
+
         }
 
         /// <summary>
@@ -135,6 +153,7 @@ namespace Assets.Scripts
         /// </summary>
         private void Update()
         {
+            UnitController.Self.CheckIfSelected(this.gameObject);
             this.Move();
         }
     }

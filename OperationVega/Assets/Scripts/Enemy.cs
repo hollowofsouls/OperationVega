@@ -9,6 +9,7 @@ namespace Assets.Scripts
     /// <summary>
     /// The enemy class.
     /// </summary>
+    [RequireComponent(typeof(MeshCollider))]
     public class Enemy : MonoBehaviour, IUnit, ICombat, IDamageable
     {
         /// <summary>
@@ -104,6 +105,15 @@ namespace Assets.Scripts
         public void Taint()
         {
 
+        }
+
+        /// <summary>
+        /// The start function
+        /// </summary>
+        private void Start()
+        {
+            MeshCollider mc = this.GetComponent<MeshCollider>();
+            mc.sharedMesh = this.GetComponentsInChildren<MeshFilter>()[1].mesh;
         }
     }
 }

@@ -2,18 +2,16 @@
 namespace Assets.Scripts
 {
     using System.Collections.Generic;
-
     using UnityEngine;
 
-    using UnityStandardAssets.ImageEffects;
-
     /// <summary>
-    /// The unit controller.
+    /// The unit controller class.
+    /// This class handles functionality of the units click movement
     /// </summary>
     public class UnitController : MonoBehaviour
     {
         /// <summary>
-        /// The instance.
+        /// The instance of the class.
         /// </summary>
         private static UnitController instance;
 
@@ -23,40 +21,40 @@ namespace Assets.Scripts
         private static Rect dragscreen = new Rect(0, 0, 0, 0);
 
         /// <summary>
-        /// The selection highlight.
+        /// The selection highlight is the texture.
         /// </summary>
         [SerializeField]
         private Texture2D selectionHighlight;
 
         /// <summary>
-        /// The start click.
+        /// The start click reference.
         /// </summary>
         private Vector3 startclick = -Vector3.one;
 
+        /// <summary>
+        /// The the clicked object reference.
+        /// </summary>
+        private GameObject theclickedobject;
 
         /// <summary>
-        /// The the player.
+        /// The unit that has been selected.
         /// </summary>
         [SerializeField]
-        private IUnit theUnit;
-
-        [SerializeField]
-        private Harvester thePlayer;
+        private IGather theUnit;
 
         /// <summary>
-        /// The players.
+        /// The list of units selected by drag screen.
         /// </summary>
         [SerializeField]
-        private List<IGather> players = new List<IGather>();
+        public List<GameObject> Units = new List<GameObject>();
 
         /// <summary>
-        /// The player prefab.
+        /// The click destination of where to send the unit.
         /// </summary>
-        //[SerializeField]
-        //private GameObject playerPrefab;
+        private Vector3 clickdestination;
 
         /// <summary>
-        /// Gets the self.
+        /// Gets the instance of the UnitController.
         /// </summary>
         public static UnitController Self
         {
@@ -83,26 +81,11 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// Gets or sets the players.
-        /// </summary>
-        public List<IGather> Players
-        {
-            get
-            {
-                return this.players;
-            }
-
-            set
-            {
-                this.players = value;
-            }
-        }
-
-        /// <summary>
-        /// The invert y.
+        /// The invert y function.
+        /// Inverts the y.
         /// </summary>
         /// <param name="y">
-        /// The y.
+        /// The y value to pass in.
         /// </param>
         /// <returns>
         /// The <see cref="float"/>.
@@ -111,17 +94,43 @@ namespace Assets.Scripts
         {
             return Screen.height - y;
         }
- 
+
         ///// <summary>
-        ///// The spawn player.
+        ///// The spawn unit function.
+        ///// This function spawns the passed in unit
         ///// </summary>
-        //public void SpawnPlayer()
+        ///// <param name="theUnit">
+        ///// The Unit to spawn.
+        ///// </param>
+        //public void SpawnUnit(IUnit theUnit)
         //{
         //    GameObject player = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
         //}
 
         /// <summary>
-        /// The start.
+        /// The check if selected function.
+        /// Checks if the current game object is under the drag screen
+        /// </summary>
+        /// <param name="theunit">
+        /// The unit to check if its under the drag screen.
+        /// </param>
+        public void CheckIfSelected(GameObject theunit)
+        {
+            if (theunit.GetComponent<Renderer>().isVisible && Input.GetMouseButtonUp(0))
+            {
+                Vector3 camPos = Camera.main.WorldToScreenPoint(theunit.transform.position);
+                camPos.y = InvertY(camPos.y);
+
+                if (DragScreen.Contains(camPos) & !this.Units.Contains(theunit))
+                {
+                    this.Units.Add(theunit);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// The start function.
         /// </summary>
         private void Start()
         {
@@ -129,72 +138,68 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The update.
+        /// The update function.
         /// </summary>
         private void Update()
         {
-            this.SelectPlayer();
-            this.MultiSelectPlayers();
-            //this.ClearSelectedPlayers();
-            //this.MoveDraggedUnits();
+            this.ActivateDragScreen();
+            this.SelectUnits();
+            this.ClearSelectedUnits();
         }
 
         /// <summary>
-        /// The shoot ray.
+        /// The shoot ray function.
+        /// Used to select units
         /// </summary>
-        /// <returns>
-        /// The <see cref="Transform"/>.
-        /// </returns>
-        private Transform ShootRay()
+        private void ShootRay()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit = new RaycastHit();
 
-            Physics.Raycast(ray.origin, ray.direction, out hit);
-
-            if (hit.transform != null)
+            if (Physics.Raycast(ray.origin, ray.direction, out hit))
             {
-                if (hit.transform.GetComponent(typeof(IUnit)))
+                if (hit.transform.GetComponent(typeof(IGather)))
                 {
-                    GameObject go = hit.transform.GetComponent(typeof(IUnit)).gameObject;
-                    this.thePlayer = go.GetComponent<Harvester>();
+                    this.theUnit = (IGather)hit.transform.GetComponent(typeof(IGather));
+                    this.theclickedobject = hit.transform.GetComponent(typeof(IGather)).gameObject;
                 }
 
-                return hit.transform;
+                this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
             }
-            return null;
         }
 
         /// <summary>
-        /// The select player.
+        /// The select units function.
+        /// This function is used for unit selection
         /// </summary>
-        private void SelectPlayer()
+        private void SelectUnits()
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                Transform objecthit = this.ShootRay();
+                this.ShootRay();
 
-                if (objecthit != null & this.thePlayer != null)
+                if (this.theUnit != null & this.theclickedobject != null)
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    this.theUnit.SetTheTargetPosition(this.clickdestination);
+                }
 
-                    RaycastHit hit = new RaycastHit();
-
-                    if (Physics.Raycast(ray.origin, ray.direction, out hit))
+                if (this.Units.Count > 0)
+                {
+                    foreach (GameObject p in this.Units)
                     {
-                        Vector3 destination = new Vector3(hit.point.x, 0.5f, hit.point.z);
-                        this.thePlayer.TargetPosition = this.thePlayer.TargetPosition = destination;
-                        this.thePlayer.TargetDirection = (this.thePlayer.TargetPosition - this.thePlayer.transform.position).normalized;
+                        IGather g = (IGather)p.GetComponent(typeof(IGather));
+                        g.SetTheTargetPosition(this.clickdestination);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// The multi select players.
+        /// The activate drag screen function.
+        /// This controls the drag screen
         /// </summary>
-        private void MultiSelectPlayers()
+        private void ActivateDragScreen()
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -226,56 +231,37 @@ namespace Assets.Scripts
             }
         }
 
-        ///// <summary>
-        ///// The clear selected players.
-        ///// </summary>
-        //private void ClearSelectedPlayers()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Mouse1))
-        //    {
-        //        if (this.players != null)
-        //        {
-        //            foreach (IGather p in this.players)
-        //            {
-        //                p.TargetPos = p.transform;
-        //            }
-        //        }
+        /// <summary>
+        /// The clear selected units function.
+        /// This clears the list of selected units and the current selected unit
+        /// </summary>
+        private void ClearSelectedUnits()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                if (this.Units != null)
+                {
+                    foreach (GameObject p in this.Units)
+                    {
+                        IGather g = (IGather)p.GetComponent(typeof(IGather));
+                        g.SetTheTargetPosition(p.transform.position);
+                    }
+                }
 
-        //        this.players.Clear();
+                this.Units.Clear();
 
-        //        if (this.thePlayer != null)
-        //        {
-        //            this.thePlayer.TargetPos = this.thePlayer.transform;
-        //            this.thePlayer = null;
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// The move dragged units.
-        ///// </summary>
-        //private void MoveDraggedUnits()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Mouse0))
-        //    {
-        //        Transform target = this.ShootRay();
-
-        //        if (this.players.Count > 0)
-        //        {
-        //            foreach (IGather p in this.players)
-        //            {
-        //                p.TargetPos = target;
-        //                p.DirectionToTarget = (p.TargetPos.position - p.transform.position).normalized;
-        //            }
-        //        }
-               
-        //    }
-        //}
+                if (this.theclickedobject != null)
+                {
+                    this.theUnit.SetTheTargetPosition(this.theclickedobject.transform.position);
+                    this.theclickedobject = null;
+                }
+            }
+        }
 
         /// <summary>
-        /// The on gui.
+        /// The On GUI function.
+        /// This draws the drag screen to the screen
         /// </summary>
-        
         private void OnGUI()
         {
             if (this.startclick != -Vector3.one)

@@ -8,12 +8,13 @@ namespace Assets.Scripts
     /// It requires a rigidbody to perform collision detection.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(BoxCollider))]
     public class Spawnpoint : MonoBehaviour
     {
         /// <summary>
-        /// The the rigid body.
+        /// The the enemy to spawn.
         /// </summary>
-        private Rigidbody theRigidbody;
+        public GameObject TheEnemyToSpawn;
 
         /// <summary>
         /// The start function.
@@ -21,10 +22,15 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            this.theRigidbody = this.GetComponent<Rigidbody>();
-            this.theRigidbody.useGravity = false;
-            this.theRigidbody.isKinematic = true;
-            this.theRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            Rigidbody theRigidbody = this.GetComponent<Rigidbody>();
+
+            theRigidbody = this.GetComponent<Rigidbody>();
+            theRigidbody.useGravity = false;
+            theRigidbody.isKinematic = true;
+            theRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+            BoxCollider theBoxCollider = this.GetComponent<BoxCollider>();
+            theBoxCollider.isTrigger = true;
         }
 
         /// <summary>
@@ -33,7 +39,7 @@ namespace Assets.Scripts
         /// <param name="other">
         /// The other collider that enters.
         /// </param>
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.GetComponent(typeof(IGather)))
             {

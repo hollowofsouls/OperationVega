@@ -15,11 +15,6 @@ namespace Assets.Scripts
         private float mousePosX;
 
         /// <summary>
-        /// The mouse position y.
-        /// </summary>
-        private float mousePosY;
-
-        /// <summary>
         /// The speed at which the camera moves.
         /// </summary>
         /// [HideInInspector]
@@ -50,7 +45,6 @@ namespace Assets.Scripts
         {
             this.RotateCamera();
             this.mousePosX = Input.mousePosition.x;
-            this.mousePosY = Input.mousePosition.y;
         }
 
         /// <summary>
