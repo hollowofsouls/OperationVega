@@ -39,14 +39,12 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The subscribe function. Subscribes to an event for later use
+        /// The subscribe function. Subscribes to an event for later use.
+        /// <para></para>
+        /// <remarks><paramref name="eventName"></paramref> -The event name to subscribe to.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="listener"></paramref> -The listener that will be the event function.</remarks>
         /// </summary>
-        /// <param name="eventName">
-        /// The event name to subscribe to.
-        /// </param>
-        /// <param name="listener">
-        /// The listener that will be the event function.
-        /// </param>
         public static void Subscribe(string eventName, UnityAction listener)
         {
             UnityEvent thisEvent = null;
@@ -64,14 +62,12 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The unsubscribe function. Unsubscribes to an event
+        /// The unsubscribe function. Unsubscribes to an event.
+        /// <para></para>
+        /// <remarks><paramref name="eventName"></paramref> -The event name to unsubscribe from.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="listener"></paramref> -The listener that will be the event function.</remarks>
         /// </summary>
-        /// <param name="eventName">
-        /// The event name to unsubscribe from.
-        /// </param>
-        /// <param name="listener">
-        /// The listener that will be the event function.
-        /// </param>
         public static void UnSubscribe(string eventName, UnityAction listener)
         {
             if (eventManager == null) return;
@@ -85,11 +81,10 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The publish function. Calls the event to be used.
+        /// The Publish function. Executes all functions in the event.
+        /// <para></para>
+        /// <remarks><paramref name="eventName"></paramref> -The event name to be called and execute its function(s).</remarks>
         /// </summary>
-        /// <param name="eventName">
-        /// The event name to be called and execute its function(s).
-        /// </param>
         public static void Publish(string eventName)
         {
             UnityEvent thisEvent;
