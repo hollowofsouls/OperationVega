@@ -1,8 +1,6 @@
 ﻿
 namespace Assets.Scripts
 {
-    using UnityEngine;
-
     /// <summary>
     /// The Unit interface to represent what it means to be a Unit.
     /// </summary>

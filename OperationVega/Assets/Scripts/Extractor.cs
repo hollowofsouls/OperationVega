@@ -12,6 +12,12 @@ namespace Assets.Scripts
     public class Extractor : MonoBehaviour, IUnit, IGather, ICombat, IDamageable
     {
         /// <summary>
+        /// The extractor finite state machine.
+        /// Used to keep track of the extractors states.
+        /// </summary>
+        public FiniteStateMachine<string> TheExtractorFSM = new FiniteStateMachine<string>();
+
+        /// <summary>
         /// The target to attack.
         /// </summary>
         [HideInInspector]

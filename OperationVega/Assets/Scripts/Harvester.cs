@@ -12,6 +12,12 @@ namespace Assets.Scripts
     public class Harvester : MonoBehaviour, IUnit, IGather, IDamageable
     {
         /// <summary>
+        /// The harvester finite state machine.
+        /// Used to keep track of the harvesters states.
+        /// </summary>
+        public FiniteStateMachine<string> TheHarvesterFSM = new FiniteStateMachine<string>();
+
+        /// <summary>
         /// The target to heal/stun.
         /// </summary>
         [HideInInspector]

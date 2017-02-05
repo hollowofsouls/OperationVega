@@ -13,6 +13,12 @@ namespace Assets.Scripts
     public class Enemy : MonoBehaviour, IUnit, ICombat, IDamageable
     {
         /// <summary>
+        /// The enemy finite state machine.
+        /// Used to keep track of the enemy states.
+        /// </summary>
+        public FiniteStateMachine<string> TheEnemyFSM = new FiniteStateMachine<string>();
+
+        /// <summary>
         /// The target to attack.
         /// </summary>
         [HideInInspector]

@@ -12,6 +12,12 @@ namespace Assets.Scripts
     public class Miner : MonoBehaviour, IUnit, IGather, ICombat, IDamageable
     {
         /// <summary>
+        /// The miner finite state machine.
+        /// Used to keep track of the miners states.
+        /// </summary>
+        public FiniteStateMachine<string> TheMinerFSM = new FiniteStateMachine<string>();
+
+        /// <summary>
         /// The target to attack.
         /// </summary>
         [HideInInspector]
