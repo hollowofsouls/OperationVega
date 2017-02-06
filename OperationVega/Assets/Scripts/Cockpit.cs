@@ -10,7 +10,7 @@ namespace Assets.Scripts
 	using UnityEngine;
 
 	/// <summary>
-	/// The cockpit.
+	/// The cockpit  class.
 	/// </summary>
 	public class Cockpit : MonoBehaviour, IRocketParts
 	{
