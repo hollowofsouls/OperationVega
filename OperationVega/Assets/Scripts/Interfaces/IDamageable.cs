@@ -1,7 +1,5 @@
 ﻿
-using UnityEngine;
-
-namespace Assets.Scripts
+namespace Assets.Scripts.Interfaces
 {
     /// <summary>
     /// The Damageable interface.

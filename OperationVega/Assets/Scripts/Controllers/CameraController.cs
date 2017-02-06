@@ -1,5 +1,5 @@
 ﻿
-namespace Assets.Scripts
+namespace Assets.Scripts.Controllers
 {
     using UnityEngine;
 
@@ -97,7 +97,7 @@ namespace Assets.Scripts
             {
                 if (Input.mousePosition.x != this.mousePosX)
                 {
-                    float camroty = (Input.mousePosition.x - this.mousePosX) * RotateSpeed * Time.deltaTime;
+                    float camroty = (Input.mousePosition.x - this.mousePosX) * this.RotateSpeed * Time.deltaTime;
                     this.transform.Rotate(0.0f, camroty, 0.0f);
                 }
             }
