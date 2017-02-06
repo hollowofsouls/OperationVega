@@ -22,22 +22,27 @@ namespace UI
         void OnRallyClick()
         {
             //Function will be use to rally upon click.
+            Debug.Log("Begin Rallying ");
         }
         void OnHarvestClick()
         {
             //Function will be use to harvest upon click.
+            Debug.Log("Begin Harvesting");
         }
         void OnRecallClick()
         {
             //Function will be use to recall upon click.
+            Debug.Log("Recall to barracks.");
         }
         void OnCancelActionClick()
         {
             //Function will cancel previous action upon click.
+            Debug.Log("Cancel Previous Action");
         }
         void OnQuitGameClick()
         {
             //Function will quit game upon click.
+            Debug.Log("Quit Game");
         }
         #endregion
     }
