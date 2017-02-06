@@ -37,7 +37,7 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The the clicked object reference.
         /// </summary>
-        private GameObject theclickedobject;
+        public GameObject theclickedobject;
 
         /// <summary>
         /// The unit that has been selected.
@@ -54,7 +54,7 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The click destination of where to send the unit.
         /// </summary>
-        private Vector3 clickdestination;
+        public Vector3 clickdestination;
 
         /// <summary>
         /// Gets the instance of the UnitController.
@@ -147,29 +147,7 @@ namespace Assets.Scripts.Controllers
         {
             this.ActivateDragScreen();
             this.SelectUnits();
-            this.ClearSelectedUnits();
-        }
-
-        /// <summary>
-        /// The shoot ray function.
-        /// Used to select units
-        /// </summary>
-        private void ShootRay()
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit = new RaycastHit();
-
-            if (Physics.Raycast(ray.origin, ray.direction, out hit))
-            {
-                if (hit.transform.GetComponent(typeof(IGather)))
-                {
-                    this.theUnit = (IGather)hit.transform.GetComponent(typeof(IGather));
-                    this.theclickedobject = hit.transform.GetComponent(typeof(IGather)).gameObject;
-                }
-
-                this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
-            }
+            this.CommandUnits();
         }
 
         /// <summary>
@@ -180,19 +158,17 @@ namespace Assets.Scripts.Controllers
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                this.ShootRay();
+                this.ClearSelectedUnits();
 
-                if (this.theUnit != null & this.theclickedobject != null)
-                {
-                    this.theUnit.SetTheTargetPosition(this.clickdestination);
-                }
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (this.Units.Count > 0)
+                RaycastHit hit = new RaycastHit();
+
+                if (Physics.Raycast(ray.origin, ray.direction, out hit))
                 {
-                    foreach (GameObject p in this.Units)
+                    if (hit.transform.GetComponent(typeof(IGather)))
                     {
-                        IGather g = (IGather)p.GetComponent(typeof(IGather));
-                        g.SetTheTargetPosition(this.clickdestination);
+                        this.theUnit = (IGather)hit.transform.GetComponent(typeof(IGather));
                     }
                 }
             }
@@ -206,6 +182,7 @@ namespace Assets.Scripts.Controllers
         {
             if (Input.GetMouseButtonDown(0))
             {
+                this.Units.Clear();
                 this.startclick = Input.mousePosition;
             }
             else if (Input.GetMouseButtonUp(0))
@@ -227,10 +204,10 @@ namespace Assets.Scripts.Controllers
             if (Input.GetMouseButton(0))
             {
                 dragscreen = new Rect(
-                                 this.startclick.x,
-                                 InvertY(this.startclick.y),
-                                 Input.mousePosition.x - this.startclick.x,
-                                 InvertY(Input.mousePosition.y) - InvertY(this.startclick.y));
+                    this.startclick.x,
+                    InvertY(this.startclick.y),
+                    Input.mousePosition.x - this.startclick.x,
+                    InvertY(Input.mousePosition.y) - InvertY(this.startclick.y));
             }
         }
 
@@ -240,23 +217,154 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ClearSelectedUnits()
         {
+            this.Units.Clear();
+            this.theUnit = null;
+            this.theclickedobject = null;
+        }
+
+        /// <summary>
+        /// The command units function.
+        /// Gives the units proper commands.
+        /// </summary>
+        private void CommandUnits()
+        {
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (this.Units != null)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                RaycastHit hit = new RaycastHit();
+
+                if (Physics.Raycast(ray.origin, ray.direction, out hit))
                 {
-                    foreach (GameObject p in this.Units)
+                    this.theclickedobject = hit.transform.gameObject;
+                    this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
+
+                    this.CommandToAttack(hit);
+                    this.CommandToMove();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The to attack function.
+        /// </summary>
+        /// <param name="hit">
+        /// The hit.
+        /// </param>
+        private void CommandToAttack(RaycastHit hit)
+        {
+            if (hit.transform.GetComponent<Enemy>())
+            {
+                if (this.theUnit != null)
+                {
+                    // Attack with a single unit
+                    switch (this.theUnit.GetType().ToString())
                     {
-                        IGather g = (IGather)p.GetComponent(typeof(IGather));
-                        g.SetTheTargetPosition(p.transform.position);
+                        case "Assets.Scripts.Extractor":
+                            Extractor extractor = this.theUnit as Extractor;
+                            extractor.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                            extractor.TheExtractorFsm.Feed("IdleToBattle");
+                            break;
+                        case "Assets.Scripts.Miner":
+                            Miner miner = this.theUnit as Miner;
+                            miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                            miner.TheMinerFsm.Feed("IdleToBattle");
+                            break;
                     }
                 }
 
-                this.Units.Clear();
-
-                if (this.theclickedobject != null)
+                // Attack with multiple units
+                if (this.Units.Count > 0)
                 {
-                    this.theUnit.SetTheTargetPosition(this.theclickedobject.transform.position);
-                    this.theclickedobject = null;
+                    foreach (GameObject go in this.Units)
+                    {
+                        IGather unit = (IGather)go.GetComponent(typeof(IGather));
+
+                        switch (unit.GetType().ToString())
+                        {
+                            case "Assets.Scripts.Extractor":
+                                Extractor extractor = unit as Extractor;
+                                extractor.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                                extractor.TheExtractorFsm.Feed("IdleToBattle");
+                                break;
+                            case "Assets.Scripts.Miner":
+                                Miner miner = unit as Miner;
+                                miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                                miner.TheMinerFsm.Feed("IdleToBattle");
+                                break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                this.CommandToIdle();
+            }
+        }
+
+        /// <summary>
+        /// The command to move function.
+        /// </summary>
+        private void CommandToMove()
+        {
+            if (this.theUnit != null & this.theclickedobject != null)
+            {
+                this.theUnit.SetTheTargetPosition(this.clickdestination);
+            }
+
+            if (this.Units.Count > 0)
+            {
+                foreach (GameObject p in this.Units)
+                {
+                    IGather g = (IGather)p.GetComponent(typeof(IGather));
+                    g.SetTheTargetPosition(this.clickdestination);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The command to idle function.
+        /// </summary>
+        private void CommandToIdle()
+        {
+            // Send unit back to idle
+            if (this.theUnit != null)
+            {
+                switch (this.theUnit.GetType().ToString())
+                {
+                    case "Assets.Scripts.Extractor":
+                        Extractor extractor = this.theUnit as Extractor;
+                        extractor.Target = null;
+                        extractor.TheExtractorFsm.Feed("BattleToIdle");
+                        break;
+                    case "Assets.Scripts.Miner":
+                        Miner miner = this.theUnit as Miner;
+                        miner.Target = null;
+                        miner.TheMinerFsm.Feed("BattleToIdle");
+                        break;
+                }
+            }
+
+            // Send multiple units back to idle
+            if (this.Units.Count > 0)
+            {
+                foreach (GameObject go in this.Units)
+                {
+                    IGather unit = (IGather)go.GetComponent(typeof(IGather));
+
+                    switch (unit.GetType().ToString())
+                    {
+                        case "Assets.Scripts.Extractor":
+                            Extractor extractor = unit as Extractor;
+                            extractor.Target = null;
+                            extractor.TheExtractorFsm.Feed("BattleToIdle");
+                            break;
+                        case "Assets.Scripts.Miner":
+                            Miner miner = unit as Miner;
+                            miner.Target = null;
+                            miner.TheMinerFsm.Feed("BattleToIdle");
+                            break;
+                    }
                 }
             }
         }

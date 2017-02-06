@@ -3,9 +3,6 @@ namespace Assets.Scripts
 {
     using Controllers;
     using Interfaces;
-
-    using Resource;
-
     using UnityEngine;
 
     /// <summary>
@@ -104,7 +101,8 @@ namespace Assets.Scripts
         /// </param>
         public void TakeDamage(uint damage)
         {
-            throw new System.NotImplementedException();
+            Debug.Log("Enemy took damage");
+            this.Health -= damage;
         }
 
         /// <summary>
@@ -120,6 +118,9 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
+            this.Health = 100;
+            Debug.Log(this.Health);
+
             MeshCollider mc = this.GetComponent<MeshCollider>();
             mc.sharedMesh = this.GetComponentsInChildren<MeshFilter>()[1].mesh;
         }
