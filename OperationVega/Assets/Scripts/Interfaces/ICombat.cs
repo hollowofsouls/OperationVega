@@ -1,5 +1,5 @@
 ﻿
-namespace Assets.Scripts
+namespace Assets.Scripts.Interfaces
 {
     /// <summary>
     /// The Combat interface that allows an object to have combat functionality.

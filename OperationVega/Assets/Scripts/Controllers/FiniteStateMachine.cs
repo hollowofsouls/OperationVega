@@ -1,5 +1,5 @@
 ﻿
-namespace Assets
+namespace Assets.Scripts.Controllers
 {
     using System;
     using System.Collections.Generic;

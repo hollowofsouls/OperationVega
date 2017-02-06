@@ -1,7 +1,9 @@
 ﻿
 namespace Assets.Scripts
 {
-    // Namespace to use for the Resource script
+    using Controllers;
+    using Interfaces;
+
     using Resource;
 
     using UnityEngine;
