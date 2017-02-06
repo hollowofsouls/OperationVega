@@ -9,7 +9,7 @@ namespace Assets.Scripts
 	using UnityEngine;
 
 	/// <summary>
-	/// The chassis.
+	/// The chassis  class.
 	/// </summary>
 	public class Chassis : MonoBehaviour, IRocketParts
 	{

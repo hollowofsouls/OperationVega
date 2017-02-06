@@ -9,7 +9,7 @@ namespace Assets.Scripts
 	using UnityEngine;
 
 	/// <summary>
-	/// The wings.
+	/// The wings  class.
 	/// </summary>
 	public class Wings : MonoBehaviour, IRocketParts
 	{

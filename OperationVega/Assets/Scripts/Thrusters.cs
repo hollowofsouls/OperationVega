@@ -9,7 +9,7 @@ namespace Assets.Scripts
 	using UnityEngine;
 
 	/// <summary>
-	/// The thrusters.
+	/// The thrusters class.
 	/// </summary>
 	public class Thrusters : MonoBehaviour, IRocketParts
 	{
