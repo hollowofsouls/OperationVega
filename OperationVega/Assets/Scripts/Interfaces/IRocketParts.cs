@@ -1,5 +1,4 @@
-﻿// Interface for the rocket parts
-
+﻿
 namespace Assets.Scripts.Interfaces
 {
 	using System.Collections;
