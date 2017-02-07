@@ -1,13 +1,9 @@
 ﻿
 namespace Assets.Scripts
 {
-	using System.Collections;
-	using System.Collections.Generic;
 	using System.Linq;
 
 	using Assets.Scripts.Interfaces;
-
-	using UnityEditor;
 
 	using UnityEngine;
 
@@ -114,12 +110,14 @@ namespace Assets.Scripts
 			if (this.ship.PartList.OfType<Cockpit>().Any())
 			{
 				this.ship.PartList.Remove(this);
-				Debug.Log("Removed");
+				
+				// Debug.Log("Removed");
 			}
 			else if (!this.ship.PartList.OfType<Cockpit>().Any())
 			{
 				this.ship.PartList.Add(this);
-				Debug.Log("Added");
+				
+				// Debug.Log("Added");
 			}
 		}
 

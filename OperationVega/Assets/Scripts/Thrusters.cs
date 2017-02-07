@@ -1,8 +1,7 @@
 ﻿
 namespace Assets.Scripts
 {
-	using System.Collections;
-	using System.Collections.Generic;
+	using System.Linq;
 
 	using Assets.Scripts.Interfaces;
 
@@ -82,6 +81,26 @@ namespace Assets.Scripts
 		}
 
 		/// <summary>
+		/// Function for adding the parts to the list.
+		/// Need to work on removing parts if one of the same type is selected.
+		/// </summary>
+		public void AddParts()
+		{
+			if (this.ship.PartList.OfType<Thrusters>().Any())
+			{
+				this.ship.PartList.Remove(this);
+
+				// Debug.Log("Removed");
+			}
+			else if (!this.ship.PartList.OfType<Thrusters>().Any())
+			{
+				this.ship.PartList.Add(this);
+
+				// Debug.Log("Added");
+			}
+		}
+
+		/// <summary>
 		/// Use this for initialization
 		/// </summary>
 		private void Start()
@@ -89,6 +108,7 @@ namespace Assets.Scripts
 			this.quality = 20;
 			this.steel = 200;
 			this.fuel = 50;
+			this.ship = FindObjectOfType<Rocket>();
 		}
 
 		/// <summary>
@@ -96,6 +116,10 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Update()
 		{
+			if (Input.GetMouseButtonDown(1))
+			{
+				this.AddParts();
+			}
 		}
 	}
 }
