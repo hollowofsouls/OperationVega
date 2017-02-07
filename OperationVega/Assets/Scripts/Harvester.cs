@@ -86,7 +86,7 @@ namespace Assets.Scripts
         /// The heal range of the harvester.
         /// </summary>
         [HideInInspector]
-        public uint Healrange;
+        public float Healrange;
 
         /// <summary>
         /// The resource count of the harvester.
@@ -95,31 +95,46 @@ namespace Assets.Scripts
         public uint Resourcecount;
 
         /// <summary>
-        /// The battle delegate.
-        /// This delegate contains the functions for the battle state.
+        /// The time between attacks reference.
+        /// Stores the reference to the timer between attacks
         /// </summary>
-        private Handler battleDelegate;
+        private float timebetweenattacks;
 
         /// <summary>
-        /// The harvest delegate.
-        /// This delegate contains the functions for the harvest state.
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the idle state.
         /// </summary>
-        private Handler harvestDelegate;
+        private RangeHandler idleHandler;
 
         /// <summary>
-        /// The handler delegate.
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the battle state.
         /// </summary>
-        private delegate void Handler();
+        private RangeHandler battleHandler;
+
+        /// <summary>
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the harvest state.
+        /// </summary>
+        private RangeHandler harvestHandler;
+
+        /// <summary>
+        /// The range handler delegate.
+        /// The delegate handles setting the attack range upon changing state.
+        /// <para></para>
+        /// <remarks><paramref name="number"></paramref> -The number to set the attack range to.</remarks>
+        /// </summary>
+        private delegate void RangeHandler(float number);
 
         /// <summary>
         /// The move function providing movement functionality.
         /// </summary>
         public void Move()
         {
-           if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > 0.1)
-           {
-              this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
-           }
+             if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Healrange)
+              {
+                 this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
+              }
         }
 
         /// <summary>
@@ -163,11 +178,66 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The change states function.
+        /// This function changes the state to the passed in state.
+        /// <para></para>
+        /// <remarks><paramref name="destinationState"></paramref> -The state to transition to.</remarks>
+        /// </summary>
+        public void ChangeStates(string destinationState)
+        {
+            string thecurrentstate = this.TheHarvesterFsm.CurrentState.Statename;
+            switch (destinationState)
+            {
+                case "Battle":
+                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 5.0f);
+                    break;
+                case "Idle":
+                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 0.1f);
+                    break;
+                case "Harvest":
+                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    break;
+            }
+        }
+
+        /// <summary>
         /// The heal stun function gives the harvester functionality to heal units and stun enemies.
         /// </summary>
         public void HealStun()
         {
-          
+            if (this.timebetweenattacks >= this.Attackspeed)
+            {
+                Debug.Log("I am heal stunning");
+                this.Target.TakeDamage(5);
+                Enemy e = this.Target as Enemy;
+                Debug.Log(e.Health);
+                this.timebetweenattacks = 0;
+            }
+
+        }
+
+        /// <summary>
+        /// The update unit function.
+        /// This updates the units behavior.
+        /// </summary>
+        private void UpdateUnit()
+        {
+            this.timebetweenattacks += 1 * Time.deltaTime;
+
+            switch (this.TheHarvesterFsm.CurrentState.Statename)
+            {
+                case "Idle":
+                    this.Move();
+                    break;
+                case "Battle":
+                    this.BattleState();
+                    break;
+                case "Harvest":
+                    this.HarvestState();
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -176,7 +246,50 @@ namespace Assets.Scripts
         /// </summary>
         private void InitUnit()
         {
+            this.Healrange = 0.1f;
+            this.Attackspeed = 3;
+            this.timebetweenattacks = this.Attackspeed;
             Debug.Log("Harvester Initialized");
+        }
+
+        /// <summary>
+        /// The reset range function.
+        /// This resets the range of distance the unit stands from the clicked position.
+        /// </summary>
+        /// <param name="num">
+        /// The number to set the attack range to.
+        /// </param>
+        private void ResetRange(float num)
+        {
+            this.Healrange = num;
+        }
+
+        /// <summary>
+        /// The battle state function.
+        /// The function called while in the battle state.
+        /// </summary>
+        private void BattleState()
+        {
+            this.Move();
+            if (this.Target != null)
+            {
+                float distance = Vector3.Magnitude(this.transform.position - this.TargetClickPosition);
+
+                if (distance <= this.Healrange)
+                {
+                    this.HealStun();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The harvest state function.
+        /// The function called while in the harvest state.
+        /// </summary>
+        private void HarvestState()
+        {
+            this.Move();
+            Debug.Log("Harvester found food");
         }
 
         /// <summary>
@@ -184,19 +297,22 @@ namespace Assets.Scripts
         /// </summary>
         private void Awake()
         {
-            this.battleDelegate = this.HealStun;
-            this.harvestDelegate = this.Harvest;
+            this.idleHandler = this.ResetRange;
+            this.battleHandler = this.ResetRange;
+            this.harvestHandler = this.ResetRange;
 
             this.TheHarvesterFsm.CreateState("Init", null);
-            this.TheHarvesterFsm.CreateState("Idle", null);
-            this.TheHarvesterFsm.CreateState("Battle", this.battleDelegate);
-            this.TheHarvesterFsm.CreateState("Harvest", this.harvestDelegate);
+            this.TheHarvesterFsm.CreateState("Idle", this.idleHandler);
+            this.TheHarvesterFsm.CreateState("Battle", this.battleHandler);
+            this.TheHarvesterFsm.CreateState("Harvest", this.harvestHandler);
 
             this.TheHarvesterFsm.AddTransition("Init", "Idle", "auto");
             this.TheHarvesterFsm.AddTransition("Idle", "Battle", "IdleToBattle");
             this.TheHarvesterFsm.AddTransition("Battle", "Idle", "BattleToIdle");
             this.TheHarvesterFsm.AddTransition("Idle", "Harvest", "IdleToHarvest");
             this.TheHarvesterFsm.AddTransition("Harvest", "Idle", "HarvestToIdle");
+            this.TheHarvesterFsm.AddTransition("Battle", "Harvest", "BattleToHarvest");
+            this.TheHarvesterFsm.AddTransition("Harvest", "Battle", "HarvestToBattle");
         }
 
         /// <summary>
@@ -204,7 +320,7 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            this.TheHarvesterFsm.Feed("auto");
+            this.TheHarvesterFsm.Feed("auto", 0.1f);
             this.InitUnit();
         }
 
@@ -214,7 +330,7 @@ namespace Assets.Scripts
         private void Update()
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
-            this.Move();
+            this.UpdateUnit();
         }
     }
 }

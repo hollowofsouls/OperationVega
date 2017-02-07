@@ -95,27 +95,36 @@ namespace Assets.Scripts
         public uint Resourcecount;
 
         /// <summary>
-        /// The idle delegate.
-        /// This delegate contains the functions for the idle state.
+        /// The time between attacks reference.
+        /// Stores the reference to the timer between attacks
         /// </summary>
-        private Handler idleDelegate;
+        private float timebetweenattacks;
 
         /// <summary>
-        /// The battle delegate.
-        /// This delegate contains the functions for the battle state.
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the idle state.
         /// </summary>
-        private Handler battleDelegate;
+        private RangeHandler idleHandler;
 
         /// <summary>
-        /// The harvest delegate.
-        /// This delegate contains the functions for the harvest state.
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the battle state.
         /// </summary>
-        private Handler harvestDelegate;
+        private RangeHandler battleHandler;
 
         /// <summary>
-        /// The handler delegate.
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the harvest state.
         /// </summary>
-        private delegate void Handler();
+        private RangeHandler harvestHandler;
+
+        /// <summary>
+        /// The range handler delegate.
+        /// The delegate handles setting the attack range upon changing state.
+        /// <para></para>
+        /// <remarks><paramref name="number"></paramref> -The number to set the attack range to.</remarks>
+        /// </summary>
+        private delegate void RangeHandler(float number);
 
         /// <summary>
         /// The move function providing movement functionality.
@@ -124,7 +133,7 @@ namespace Assets.Scripts
         {
             if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Attackrange)
             {
-                this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
+               this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
             }
         }
 
@@ -149,9 +158,14 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
-            Debug.Log("Attacking");
-            this.Target.TakeDamage(5);
-            this.Attackrange = 5.0f;
+            if (this.timebetweenattacks >= this.Attackspeed)
+            {
+                Debug.Log("Attacking");
+                this.Target.TakeDamage(5);
+                Enemy e = this.Target as Enemy;
+                Debug.Log(e.Health);
+                this.timebetweenattacks = 0;
+            }
         }
 
         /// <summary>
@@ -187,12 +201,62 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The change states function.
+        /// This function changes the state to the passed in state.
+        /// <para></para>
+        /// <remarks><paramref name="destinationState"></paramref> -The state to transition to.</remarks>
+        /// </summary>
+        public void ChangeStates(string destinationState)
+        {
+            string thecurrentstate = this.TheMinerFsm.CurrentState.Statename;
+            switch (destinationState)
+            {
+                case "Battle":
+                    this.TheMinerFsm.Feed(thecurrentstate + "To" + destinationState, 5.0f);
+                    break;
+                case "Idle":
+                    this.TheMinerFsm.Feed(thecurrentstate + "To" + destinationState, 0.1f);
+                    break;
+                case "Harvest":
+                    this.TheMinerFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// The update unit function.
+        /// This updates the units behavior.
+        /// </summary>
+        private void UpdateUnit()
+        {
+            this.timebetweenattacks += 1 * Time.deltaTime;
+
+            switch (this.TheMinerFsm.CurrentState.Statename)
+            {
+                case "Idle":
+                    this.Move();
+                    break;
+                case "Battle":
+                    this.BattleState();
+                    break;
+                case "Harvest":
+                    this.HarvestState();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
         /// The initialize unit function.
         /// This will initialize the unit with the appropriate values for stats.
         /// </summary>
         private void InitUnit()
         {
             this.Attackrange = 0.1f;
+            this.Attackspeed = 3;
+            this.timebetweenattacks = this.Attackspeed;
+
             Debug.Log("Miner Initialized");
         }
 
@@ -200,10 +264,40 @@ namespace Assets.Scripts
         /// The reset range function.
         /// This resets the range of distance the unit stands from the clicked position.
         /// </summary>
-        private void ResetRange()
+        /// <param name="num">
+        /// The number to set the attack range to.
+        /// </param>
+        private void ResetRange(float num)
         {
-            Debug.Log("In Idle State");
-            this.Attackrange = 0.1f;
+            this.Attackrange = num;
+        }
+
+        /// <summary>
+        /// The battle state function.
+        /// The function called while in the battle state.
+        /// </summary>
+        private void BattleState()
+        {
+            this.Move();
+            if (this.Target != null)
+            {
+                float distance = Vector3.Magnitude(this.transform.position - this.TargetClickPosition);
+
+                if (distance <= this.Attackrange)
+                {
+                    this.Attack();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The harvest state function.
+        /// The function called while in the harvest state.
+        /// </summary>
+        private void HarvestState()
+        {
+            this.Move();
+            Debug.Log("Miner found minerals");
         }
 
         /// <summary>
@@ -211,20 +305,22 @@ namespace Assets.Scripts
         /// </summary>
         private void Awake()
         {
-            this.idleDelegate = this.ResetRange;
-            this.battleDelegate = this.Attack;
-            this.harvestDelegate = this.Harvest;
+            this.idleHandler = this.ResetRange;
+            this.battleHandler = this.ResetRange;
+            this.harvestHandler = this.ResetRange;
 
             this.TheMinerFsm.CreateState("Init", null);
-            this.TheMinerFsm.CreateState("Idle", this.idleDelegate);
-            this.TheMinerFsm.CreateState("Battle", this.battleDelegate);
-            this.TheMinerFsm.CreateState("Harvest", this.harvestDelegate);
+            this.TheMinerFsm.CreateState("Idle", this.idleHandler);
+            this.TheMinerFsm.CreateState("Battle", this.battleHandler);
+            this.TheMinerFsm.CreateState("Harvest", this.harvestHandler);
 
             this.TheMinerFsm.AddTransition("Init", "Idle", "auto");
             this.TheMinerFsm.AddTransition("Idle", "Battle", "IdleToBattle");
             this.TheMinerFsm.AddTransition("Battle", "Idle", "BattleToIdle");
             this.TheMinerFsm.AddTransition("Idle", "Harvest", "IdleToHarvest");
             this.TheMinerFsm.AddTransition("Harvest", "Idle", "HarvestToIdle");
+            this.TheMinerFsm.AddTransition("Battle", "Harvest", "BattleToHarvest");
+            this.TheMinerFsm.AddTransition("Harvest", "Battle", "HarvestToBattle");
         }
 
         /// <summary>
@@ -232,7 +328,7 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            this.TheMinerFsm.Feed("auto");
+            this.TheMinerFsm.Feed("auto", 0.1f);
             this.InitUnit();
         }
 
@@ -242,7 +338,7 @@ namespace Assets.Scripts
         private void Update()
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
-            this.Move();
+            this.UpdateUnit();
         }
     }
 }
