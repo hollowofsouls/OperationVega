@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 5e556b4f5c2cacd419d569c582f49021
-timeCreated: 1486395782
+guid: 75562bc843cecc64681dec2a77d5fa43
+timeCreated: 1486482042
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,8 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Barracks:pCube1
-    4300002: Barracks2
+    4300000: GasTank
     9500000: //RootNode
   materials:
     importMaterials: 1
