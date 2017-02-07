@@ -1,5 +1,4 @@
 ﻿
-
 namespace Assets.Scripts
 {
 	using System.Collections;
@@ -112,17 +111,16 @@ namespace Assets.Scripts
 		/// </summary>
 		public void AddParts()
 		{
-			if (!this.ship.PartList.OfType<Cockpit>().Any())
+			if (this.ship.PartList.OfType<Cockpit>().Any())
+			{
+				this.ship.PartList.Remove(this);
+				Debug.Log("Removed");
+			}
+			else if (!this.ship.PartList.OfType<Cockpit>().Any())
 			{
 				this.ship.PartList.Add(this);
 				Debug.Log("Added");
 			}
-
-			// else if (this.ship.PartList.OfType<Cockpit>().Any())
-			// {
-			//	this.ship.PartList.Remove(this);
-			//	Debug.Log("Removed");
-			// }
 		}
 
 		/// <summary>
