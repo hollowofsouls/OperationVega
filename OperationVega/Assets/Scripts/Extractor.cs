@@ -19,6 +19,11 @@ namespace Assets.Scripts
         public IDamageable Target;
 
         /// <summary>
+        /// The enemy gameobject reference.
+        /// </summary>
+        public GameObject theEnemy;
+
+        /// <summary>
         /// The resource to taint.
         /// </summary>
         [HideInInspector]
@@ -160,14 +165,26 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
-           if (this.timebetweenattacks >= this.Attackspeed)
-           {
-              Debug.Log("Attacking");
-              this.Target.TakeDamage(5);
-              Enemy e = this.Target as Enemy;
-              Debug.Log(e.Health);
-              this.timebetweenattacks = 0;
-           }
+            if (this.timebetweenattacks >= this.Attackspeed)
+            {
+                Vector3 thedisplacement = (this.transform.position - this.theEnemy.transform.position).normalized;
+                if (Vector3.Dot(thedisplacement, this.theEnemy.transform.forward) < 0)
+                {
+                    Debug.Log("Extractor crit hit!");
+                    this.Target.TakeDamage(10);
+                    Enemy e = this.Target as Enemy;
+                    Debug.Log(e.Health);
+                    this.timebetweenattacks = 0;
+                }
+                else
+                {
+                    Debug.Log("Extractor Attacked for normal damage");
+                    this.Target.TakeDamage(5);
+                    Enemy e = this.Target as Enemy;
+                    Debug.Log(e.Health);
+                    this.timebetweenattacks = 0;
+                }
+            }
         }
 
         /// <summary>

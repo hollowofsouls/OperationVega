@@ -34,16 +34,18 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private Vector3 startclick = -Vector3.one;
 
+        public GameObject theselectedobject;
+
         /// <summary>
         /// The the clicked object reference.
         /// </summary>
-        public GameObject theclickedobject;
+        public GameObject theclickedactionobject;
 
         /// <summary>
         /// The unit that has been selected.
         /// </summary>
         [SerializeField]
-        private IGather theUnit;
+        public IGather theUnit;
 
         /// <summary>
         /// The list of units selected by drag screen.
@@ -169,6 +171,7 @@ namespace Assets.Scripts.Controllers
                     if (hit.transform.GetComponent(typeof(IGather)))
                     {
                         this.theUnit = (IGather)hit.transform.GetComponent(typeof(IGather));
+                        this.theselectedobject = hit.transform.gameObject;
                     }
                 }
             }
@@ -220,7 +223,7 @@ namespace Assets.Scripts.Controllers
         {
             this.Units.Clear();
             this.theUnit = null;
-            this.theclickedobject = null;
+            this.theclickedactionobject = null;
         }
 
         /// <summary>
@@ -273,19 +276,22 @@ namespace Assets.Scripts.Controllers
                         case "Assets.Scripts.Extractor":
                             Extractor extractor = this.theUnit as Extractor;
                             extractor.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                            extractor.theEnemy = hit.transform.gameObject;
                             extractor.ChangeStates("Battle");
                             break;
                         case "Assets.Scripts.Miner":
                             Miner miner = this.theUnit as Miner;
                             miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                            miner.theEnemy = hit.transform.gameObject;
                             miner.ChangeStates("Battle");
                             break;
-                    case "Assets.Scripts.Harvester":
-                        Harvester harvester = this.theUnit as Harvester;
-                        harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
-                        harvester.ChangeStates("Battle");
-                        break;
-                }
+                        case "Assets.Scripts.Harvester":
+                            Harvester harvester = this.theUnit as Harvester;
+                            harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                            harvester.theEnemy = hit.transform.gameObject;
+                            harvester.ChangeStates("Battle");
+                            break;
+                   }
                 } 
                 else if (this.Units.Count > 0)
                 {
@@ -298,22 +304,24 @@ namespace Assets.Scripts.Controllers
                             case "Assets.Scripts.Extractor":
                                 Extractor extractor = unit as Extractor;
                                 extractor.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                                extractor.theEnemy = hit.transform.gameObject;
                                 extractor.ChangeStates("Battle");
                                 break;
                             case "Assets.Scripts.Miner":
                                 Miner miner = unit as Miner;
                                 miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                                miner.theEnemy = hit.transform.gameObject;
                                 miner.ChangeStates("Battle");
                                 break;
-                        case "Assets.Scripts.Harvester":
-                            Harvester harvester = unit as Harvester;
-                            harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
-                            harvester.ChangeStates("Battle");
-                            break;
-                    }
+                            case "Assets.Scripts.Harvester":
+                                Harvester harvester = unit as Harvester;
+                                harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
+                                harvester.theEnemy = hit.transform.gameObject;
+                                harvester.ChangeStates("Battle");
+                                break;
+                       }
                     }
                 }
-            
         }
 
         /// <summary>
@@ -397,16 +405,16 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void CommandToMove()
         {
-            if (this.theUnit != null & this.theclickedobject != null)
+            if (this.theUnit != null & this.theclickedactionobject != null)
             {
-                this.CheckUnitTypeAndState(this.theUnit);
+                this.CheckUnitType(this.theUnit);
             }
-            else if (this.Units.Count > 0 & this.theclickedobject != null)
+            else if (this.Units.Count > 0 & this.theclickedactionobject != null)
             {
                 foreach (GameObject p in this.Units)
                 {
                     IGather g = (IGather)p.GetComponent(typeof(IGather));
-                    this.CheckUnitTypeAndState(g);
+                    this.CheckUnitType(g);
                 }
             }
         }
@@ -425,18 +433,21 @@ namespace Assets.Scripts.Controllers
                         Extractor extractor = this.theUnit as Extractor;
                         extractor.Target = null;
                         extractor.TargetResource = null;
+                        extractor.theEnemy = null;
                         extractor.ChangeStates("Idle");
                         break;
                     case "Assets.Scripts.Miner":
                         Miner miner = this.theUnit as Miner;
                         miner.Target = null;
                         miner.TargetResource = null;
+                        miner.theEnemy = null;
                         miner.ChangeStates("Idle");
                         break;
                     case "Assets.Scripts.Harvester":
                         Harvester harvester = this.theUnit as Harvester;
                         harvester.Target = null;
                         harvester.TargetResource = null;
+                        harvester.theEnemy = null;
                         harvester.ChangeStates("Idle");
                         break;
                 }
@@ -453,18 +464,21 @@ namespace Assets.Scripts.Controllers
                             Extractor extractor = unit as Extractor;
                             extractor.Target = null;
                             extractor.TargetResource = null;
+                            extractor.theEnemy = null;
                             extractor.ChangeStates("Idle");
                             break;
                         case "Assets.Scripts.Miner":
                             Miner miner = unit as Miner;
                             miner.Target = null;
                             miner.TargetResource = null;
+                            miner.theEnemy = null;
                             miner.ChangeStates("Idle");
                             break;
                         case "Assets.Scripts.Harvester":
                             Harvester harvester = unit as Harvester;
                             harvester.Target = null;
                             harvester.TargetResource = null;
+                            harvester.theEnemy = null;
                             harvester.ChangeStates("Idle");
                             break;
                     }
@@ -481,14 +495,14 @@ namespace Assets.Scripts.Controllers
         /// </param>
         private void CheckTheClickedObject(RaycastHit hit)
         {
-            this.theclickedobject = hit.transform.gameObject;
+            this.theclickedactionobject = hit.transform.gameObject;
 
-            if (hit.transform.GetComponent(typeof(IUnit)) || hit.transform.GetComponent(typeof(IResources)))
+            if (hit.transform.GetComponent<Enemy>() || hit.transform.GetComponent(typeof(IResources)))
             {
                 this.clickdestination = new Vector3(
-                    this.theclickedobject.transform.position.x,
+                    this.theclickedactionobject.transform.position.x,
                     0.5f,
-                    this.theclickedobject.transform.position.z);
+                    this.theclickedactionobject.transform.position.z);
             }
             else
             {
@@ -497,56 +511,52 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// The check unit type and state function.
-        /// This function allows movement but restricts movement to the wrong resource.
+        /// The check unit type function.
+        /// This function allows movement but restricts movement of the unit going to the wrong resource.
         /// </summary>
         /// <param name="gatheringunit">
         /// The gathering unit.
         /// </param>
-        private void CheckUnitTypeAndState(IGather gatheringunit)
+        private void CheckUnitType(IGather gatheringunit)
         {
-            IResources theresource = this.theclickedobject.GetComponent<IResources>();
-
-            switch (gatheringunit.GetType().ToString())
+            IResources theResource = (IResources)this.theclickedactionobject.GetComponent(typeof(IResources));
+            
+            // Dont move if sending a unit to a location that a unit is already on
+            if (this.theclickedactionobject.GetComponent(typeof(IGather)))
             {
-                case "Assets.Scripts.Extractor":
-                    Extractor extractor = gatheringunit as Extractor;
-                    string estate = extractor.TheExtractorFsm.CurrentState.Statename;
-                    Gas thegas = theresource as Gas;
-                    if (theresource != null & thegas == null)
-                    {
+                return;
+            }
 
-                    }
-                    else
-                    {
-                        gatheringunit.SetTheTargetPosition(this.clickdestination);
-                    }
-                    break;
-                case "Assets.Scripts.Miner":
-                    Miner miner = gatheringunit as Miner;
-                    string mstate = miner.TheMinerFsm.CurrentState.Statename;
-                    Minerals themineral = theresource as Minerals;
-                    if (theresource != null & themineral == null)
-                    {
-                    }
-                    else
-                    {
-                        gatheringunit.SetTheTargetPosition(this.clickdestination);
-                    }
-                    break;
-                case "Assets.Scripts.Harvester":
-                    Harvester harvester = gatheringunit as Harvester;
-                    string hstate = harvester.TheHarvesterFsm.CurrentState.Statename;
-                    Food thefood = theresource as Food;
-                    if (theresource != null & thefood == null)
-                    {
-                        Debug.Log("No Food but is a resource");
-                    }
-                    else
-                    {
-                        gatheringunit.SetTheTargetPosition(this.clickdestination);
-                    }
-                    break;
+            if (theResource != null)
+            {
+                switch (gatheringunit.GetType().ToString())
+                {
+                    case "Assets.Scripts.Extractor":
+                        Gas thegas = theResource as Gas;
+                        if (thegas != null)
+                        {
+                            gatheringunit.SetTheTargetPosition(this.clickdestination);
+                        }
+                        break;
+                    case "Assets.Scripts.Miner":
+                        Minerals themineral = theResource as Minerals;
+                        if (themineral != null)
+                        {
+                            this.theselectedobject.transform.LookAt(this.clickdestination);
+                        }
+                        break;
+                    case "Assets.Scripts.Harvester":
+                        Food thefood = theResource as Food;
+                        if (thefood != null)
+                        {
+                            gatheringunit.SetTheTargetPosition(this.clickdestination);
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                gatheringunit.SetTheTargetPosition(this.clickdestination);
             }
         }
 

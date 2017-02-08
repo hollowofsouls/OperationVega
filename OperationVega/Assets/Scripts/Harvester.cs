@@ -23,6 +23,11 @@ namespace Assets.Scripts
         public IDamageable Target;
 
         /// <summary>
+        /// The enemy gameobject reference.
+        /// </summary>
+        public GameObject theEnemy;
+
+        /// <summary>
         /// The resource to taint.
         /// </summary>
         [HideInInspector]
@@ -207,11 +212,23 @@ namespace Assets.Scripts
         {
             if (this.timebetweenattacks >= this.Attackspeed)
             {
-                Debug.Log("I am heal stunning");
-                this.Target.TakeDamage(5);
-                Enemy e = this.Target as Enemy;
-                Debug.Log(e.Health);
-                this.timebetweenattacks = 0;
+                Vector3 thedisplacement = (this.transform.position - this.theEnemy.transform.position).normalized;
+                if (Vector3.Dot(thedisplacement, this.theEnemy.transform.forward) < 0)
+                {
+                    Debug.Log("Harvester hit crit!");
+                    this.Target.TakeDamage(10);
+                    Enemy e = this.Target as Enemy;
+                    Debug.Log(e.Health);
+                    this.timebetweenattacks = 0;
+                }
+                else
+                {
+                    Debug.Log("Harvester attacking normal damage");
+                    this.Target.TakeDamage(5);
+                    Enemy e = this.Target as Enemy;
+                    Debug.Log(e.Health);
+                    this.timebetweenattacks = 0;
+                }
             }
 
         }
@@ -271,7 +288,7 @@ namespace Assets.Scripts
         private void BattleState()
         {
             this.Move();
-            if (this.Target != null)
+            if (this.theEnemy != null)
             {
                 float distance = Vector3.Magnitude(this.transform.position - this.TargetClickPosition);
 
@@ -289,7 +306,6 @@ namespace Assets.Scripts
         private void HarvestState()
         {
             this.Move();
-            Debug.Log("Harvester found food");
         }
 
         /// <summary>
@@ -322,6 +338,7 @@ namespace Assets.Scripts
         {
             this.TheHarvesterFsm.Feed("auto", 0.1f);
             this.InitUnit();
+            Debug.Log("Harvesters direction" + this.transform.forward);
         }
 
         /// <summary>
