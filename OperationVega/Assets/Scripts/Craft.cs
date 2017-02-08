@@ -6,13 +6,20 @@ using Assets.Scripts;
 
 namespace Assets.Scripts
 {
+    using Interfaces;
     
+
+
     public class Craft 
     {
-        Food Items;
+        //Will be used to desribe resources as Items
+        IResources Items;
+        //Integer that will hold the amount.
         int Amount;
-
-        public Craft(Food item, int amount)
+        
+        
+        //Public Craft constructor that has item / amount in the parameters
+        public Craft(IResources item, int amount)
         {
             this.Items = item;
             this.Amount = amount;
@@ -21,18 +28,37 @@ namespace Assets.Scripts
 
     public class CanCraft
     {
-        public List<Craft> Ingridients;
+        //Public List that holds on the ingredients.
+        public List<Craft> Ingredients;
+        //Bool that checks to see if the item can be crafted.
+        public bool CraftItem;
         Craft output;
-    }
 
+        //Boolean that checks the items needed 
+        public bool CheckNeededItems(User user)
+        {
+           
+            foreach (Craft item in Ingredients)
+            {
+                if (Ingredients.Contains(item))
+                    CraftItem = true;
+            }
+            return false;
+        }
+    }
+    
     public class Fuel : CanCraft
     {
         //Ingridients for Fuel
         public Fuel()
         {
             // List that contains ingridients for Fuel
-            Ingridients = new List<Craft>();
-            Ingridients.Add(new Craft(new Food(), 1));
+            Ingredients = new List<Craft>();
+            Ingredients.Add(new Craft(new Minerals(), 1));
+            Ingredients.Add(new Craft(new Gas(), 1));
+            CraftItem = false;
+            
+            
         }
     }
 
@@ -42,7 +68,10 @@ namespace Assets.Scripts
         public Steel()
         {
             //List that contains ingridients for Steel
-            Ingridients = new List<Craft>();
+            Ingredients = new List<Craft>();
+            Ingredients.Add(new Craft(new Minerals(), 1));
+            //Ingridients.Add(new Craft(new Fuels(), 1));
+            CraftItem = false;
             
         }
     }
@@ -53,7 +82,11 @@ namespace Assets.Scripts
         public CookedFood()
         {
             //Ingridients needed for CookedFood
-            Ingridients = new List<Craft>();
+            Ingredients = new List<Craft>();
+            Ingredients.Add(new Craft(new Food(), 1));
+            Ingredients.Add(new Craft(new Gas(), 1));
+            CraftItem = false;
         }
+        
     }
 }
