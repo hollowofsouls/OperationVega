@@ -113,9 +113,13 @@ namespace Assets.Scripts
 		{
 			if (this.ship.PartList.OfType<Cockpit>().Any())
 			{
-				this.ship.PartList.Remove(this);
-				
-				// Debug.Log("Removed");
+				foreach (IRocketParts go in this.ship.PartList)
+				{
+					if (go as Cockpit)
+					{
+						this.ship.PartList.Remove(go);
+					}
+				}
 			}
 			else if (!this.ship.PartList.OfType<Cockpit>().Any())
 			{

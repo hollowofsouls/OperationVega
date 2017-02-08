@@ -92,8 +92,13 @@ namespace Assets.Scripts
 		{
 			if (this.ship.PartList.OfType<Thrusters>().Any())
 			{
-				this.ship.PartList.Remove(this);
-
+				foreach (IRocketParts go in this.ship.PartList)
+				{
+					if (go as Thrusters)
+					{
+						this.ship.PartList.Remove(go);
+					}
+				}
 				// Debug.Log("Removed");
 			}
 			else if (!this.ship.PartList.OfType<Thrusters>().Any())

@@ -92,7 +92,13 @@ namespace Assets.Scripts
 		{
 			if (this.ship.PartList.OfType<Chassis>().Any())
 			{
-				this.ship.PartList.Remove(this);
+				foreach (IRocketParts go in this.ship.PartList)
+				{
+					if (go as Chassis)
+					{
+						this.ship.PartList.Remove(go);
+					}
+				}
 
 				// Debug.Log("Removed");
 			}
