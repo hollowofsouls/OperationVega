@@ -19,11 +19,15 @@ namespace Assets.Scripts
 
 		/// <summary>
 		/// The steel.
+		/// The amount of steel required to build the part.
+		/// Accessible through the SteelCost property.
 		/// </summary>
 		private int steel;
 
 		/// <summary>
 		/// The fuel.
+		/// The amount of Fuel required to build the part.
+		/// Accessible through the FuelCost property.
 		/// </summary>
 		private int fuel;
 
@@ -88,7 +92,13 @@ namespace Assets.Scripts
 		{
 			if (this.ship.PartList.OfType<Chassis>().Any())
 			{
-				this.ship.PartList.Remove(this);
+				foreach (IRocketParts go in this.ship.PartList)
+				{
+					if (go as Chassis)
+					{
+						this.ship.PartList.Remove(go);
+					}
+				}
 
 				// Debug.Log("Removed");
 			}
