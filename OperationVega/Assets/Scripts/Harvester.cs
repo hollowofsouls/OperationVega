@@ -4,6 +4,7 @@ namespace Assets.Scripts
     using Controllers;
     using Interfaces;
     using UnityEngine;
+    using UnityEngine.AI;
 
     /// <summary>
     /// The harvester class.
@@ -99,6 +100,8 @@ namespace Assets.Scripts
         [HideInInspector]
         public uint Resourcecount;
 
+        private NavMeshAgent navagent;
+
         /// <summary>
         /// The time between attacks reference.
         /// Stores the reference to the timer between attacks
@@ -136,10 +139,10 @@ namespace Assets.Scripts
         /// </summary>
         public void Move()
         {
-             if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Healrange)
-              {
-                 this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
-              }
+            if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Healrange)
+            {
+                this.transform.position += this.TargetDirection * this.Speed * Time.deltaTime;
+            }
         }
 
         /// <summary>
@@ -166,9 +169,7 @@ namespace Assets.Scripts
         /// </param>
         public void SetTheTargetPosition(Vector3 targetPos)
         {
-            this.TargetClickPosition = targetPos;
-            this.TargetDirection = (this.TargetClickPosition - this.transform.position).normalized;
-
+            this.navagent.SetDestination(targetPos);
         }
 
         /// <summary>
@@ -197,10 +198,10 @@ namespace Assets.Scripts
                     this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 5.0f);
                     break;
                 case "Idle":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 0.1f);
+                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
                     break;
                 case "Harvest":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
                     break;
             }
         }
@@ -244,7 +245,6 @@ namespace Assets.Scripts
             switch (this.TheHarvesterFsm.CurrentState.Statename)
             {
                 case "Idle":
-                    this.Move();
                     break;
                 case "Battle":
                     this.BattleState();
@@ -263,9 +263,13 @@ namespace Assets.Scripts
         /// </summary>
         private void InitUnit()
         {
-            this.Healrange = 0.1f;
+            this.Healrange = 5.0f;
             this.Attackspeed = 3;
+            this.Speed = 2;
+
             this.timebetweenattacks = this.Attackspeed;
+            this.navagent = this.GetComponent<NavMeshAgent>();
+            this.navagent.speed = this.Speed;
             Debug.Log("Harvester Initialized");
         }
 
@@ -276,9 +280,9 @@ namespace Assets.Scripts
         /// <param name="num">
         /// The number to set the attack range to.
         /// </param>
-        private void ResetRange(float num)
+        private void ResetStoppingDistance(float num)
         {
-            this.Healrange = num;
+            this.navagent.stoppingDistance = num;
         }
 
         /// <summary>
@@ -287,12 +291,13 @@ namespace Assets.Scripts
         /// </summary>
         private void BattleState()
         {
-            this.Move();
-            if (this.theEnemy != null)
+            if (this.Target != null)
             {
-                float distance = Vector3.Magnitude(this.transform.position - this.TargetClickPosition);
-
-                if (distance <= this.Healrange)
+                if (this.navagent.remainingDistance <= 1.0f)
+                {
+                    return;
+                }
+                if (this.navagent.remainingDistance <= this.Healrange)
                 {
                     this.HealStun();
                 }
@@ -305,7 +310,7 @@ namespace Assets.Scripts
         /// </summary>
         private void HarvestState()
         {
-            this.Move();
+            Debug.Log("Harvester found food");
         }
 
         /// <summary>
@@ -313,9 +318,9 @@ namespace Assets.Scripts
         /// </summary>
         private void Awake()
         {
-            this.idleHandler = this.ResetRange;
-            this.battleHandler = this.ResetRange;
-            this.harvestHandler = this.ResetRange;
+            this.idleHandler = this.ResetStoppingDistance;
+            this.battleHandler = this.ResetStoppingDistance;
+            this.harvestHandler = this.ResetStoppingDistance;
 
             this.TheHarvesterFsm.CreateState("Init", null);
             this.TheHarvesterFsm.CreateState("Idle", this.idleHandler);
@@ -336,9 +341,8 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            this.TheHarvesterFsm.Feed("auto", 0.1f);
             this.InitUnit();
-            Debug.Log("Harvesters direction" + this.transform.forward);
+            this.TheHarvesterFsm.Feed("auto", 0.1f);
         }
 
         /// <summary>

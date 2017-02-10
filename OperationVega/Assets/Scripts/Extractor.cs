@@ -6,6 +6,7 @@ namespace Assets.Scripts
     using Controllers;
     using Interfaces;
     using UnityEngine;
+    using UnityEngine.AI;
 
     /// <summary>
     /// The extractor class.
@@ -107,6 +108,8 @@ namespace Assets.Scripts
         /// </summary>
         private float timebetweenattacks;
 
+        private NavMeshAgent navagent;
+
         /// <summary>
         /// Instance of the RangeHandler delegate.
         /// Called in changing to the idle state.
@@ -140,7 +143,7 @@ namespace Assets.Scripts
         {
             if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Attackrange)
             {
-                this.transform.position += this.TargetDirection * 2 * Time.deltaTime;
+                this.transform.position += this.TargetDirection * this.Speed * Time.deltaTime;
             }
         }
 
@@ -214,9 +217,7 @@ namespace Assets.Scripts
         /// </param>
         public void SetTheTargetPosition(Vector3 targetPos)
         {
-            this.TargetClickPosition = targetPos;
-            this.TargetDirection = (this.TargetClickPosition - this.transform.position).normalized;
-
+            this.navagent.SetDestination(targetPos);
         }
 
         /// <summary>
@@ -235,10 +236,10 @@ namespace Assets.Scripts
                     this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 5.0f);
                     break;
                 case "Idle":
-                    this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 0.1f);
+                    this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
                     break;
                 case "Harvest":
-                    this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
                     break;
             }
         }
@@ -249,10 +250,12 @@ namespace Assets.Scripts
         /// </summary>
         private void InitUnit()
         {
-            this.Attackrange = 0.1f;
+            this.Attackrange = 5.0f;
             this.Attackspeed = 3;
+            this.Speed = 2;
             this.timebetweenattacks = this.Attackspeed;
-
+            this.navagent = this.GetComponent<NavMeshAgent>();
+            this.navagent.speed = this.Speed;
             Debug.Log("Extractor Initialized");
         }
 
@@ -263,9 +266,9 @@ namespace Assets.Scripts
         /// <param name="num">
         /// The number to set the attack range to.
         /// </param>
-        private void ResetRange(float num)
+        private void ResetStoppingDistance(float num)
         {
-            this.Attackrange = num;
+            this.navagent.stoppingDistance = num;
         }
 
         /// <summary>
@@ -274,12 +277,13 @@ namespace Assets.Scripts
         /// </summary>
         private void BattleState()
         {
-            this.Move();
             if (this.Target != null)
             {
-                float distance = Vector3.Magnitude(this.transform.position - this.TargetClickPosition);
-
-                if (distance <= this.Attackrange)
+                if (this.navagent.remainingDistance <= 1.0f)
+                {
+                    return;
+                }
+                if (this.navagent.remainingDistance <= this.Attackrange)
                 {
                     this.Attack();
                 }
@@ -292,7 +296,6 @@ namespace Assets.Scripts
         /// </summary>
         private void HarvestState()
         {
-                this.Move();
                 Debug.Log("Extractor found gas");
         }
 
@@ -301,9 +304,9 @@ namespace Assets.Scripts
         /// </summary>
         private void Awake()
         {
-            this.idleHandler = this.ResetRange;
-            this.battleHandler = this.ResetRange;
-            this.harvestHandler = this.ResetRange;
+            this.idleHandler = this.ResetStoppingDistance;
+            this.battleHandler = this.ResetStoppingDistance;
+            this.harvestHandler = this.ResetStoppingDistance;
 
             this.TheExtractorFsm.CreateState("Init", null);
             this.TheExtractorFsm.CreateState("Idle", this.idleHandler);
@@ -348,7 +351,6 @@ namespace Assets.Scripts
             switch (this.TheExtractorFsm.CurrentState.Statename)
             {
                 case "Idle":
-                    this.Move();
                     break;
                 case "Battle":
                     this.BattleState();

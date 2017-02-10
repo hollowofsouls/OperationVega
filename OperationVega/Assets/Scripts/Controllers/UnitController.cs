@@ -6,6 +6,7 @@ namespace Assets.Scripts.Controllers
     using Interfaces;
 
     using UnityEngine;
+    using UnityEngine.AI;
 
     /// <summary>
     /// The unit controller class.
@@ -405,16 +406,48 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void CommandToMove()
         {
-            if (this.theUnit != null & this.theclickedactionobject != null)
+            // If there is no destination or the destination clicked is another unit..just return and dont move
+            if (this.theclickedactionobject == null || this.theclickedactionobject.GetComponent(typeof(IGather)))
             {
-                this.CheckUnitType(this.theUnit);
+                return;
             }
-            else if (this.Units.Count > 0 & this.theclickedactionobject != null)
+
+            IResources theResource = (IResources)this.theclickedactionobject.GetComponent(typeof(IResources));
+
+            if (this.theUnit != null)
             {
-                foreach (GameObject p in this.Units)
+                if (theResource != null)
                 {
-                    IGather g = (IGather)p.GetComponent(typeof(IGather));
-                    this.CheckUnitType(g);
+                    this.UnitToResource(theResource, this.theUnit);
+                }
+                else
+                {
+                    this.theUnit.SetTheTargetPosition(this.clickdestination);
+                }
+            }
+            else if (this.Units.Count > 0)
+            {
+                if (theResource != null)
+                {
+                    foreach (GameObject p in this.Units)
+                    {
+                        IGather g = (IGather)p.GetComponent(typeof(IGather));
+                        this.UnitToResource(theResource, g);
+                    }
+                }
+                else
+                {
+                    //Circle formation
+                    for (int i = 0; i < this.Units.Count; i++)
+                    {
+                        float angle = i * (2 * 3.14159f / this.Units.Count);
+                        float x = Mathf.Cos(angle) * 1.5f;
+                        float z = Mathf.Sin(angle) * 1.5f;
+
+                        IGather g = (IGather)this.Units[i].GetComponent(typeof(IGather));
+                        this.clickdestination = new Vector3(this.clickdestination.x + x, 0.5f, this.clickdestination.z + z);
+                        g.SetTheTargetPosition(this.clickdestination);
+                    }
                 }
             }
         }
@@ -514,21 +547,14 @@ namespace Assets.Scripts.Controllers
         /// The check unit type function.
         /// This function allows movement but restricts movement of the unit going to the wrong resource.
         /// </summary>
+        /// <param name="theResource">
+        /// The the Resource.
+        /// </param>
         /// <param name="gatheringunit">
         /// The gathering unit.
         /// </param>
-        private void CheckUnitType(IGather gatheringunit)
+        private void UnitToResource(IResources theResource, IGather gatheringunit)
         {
-            IResources theResource = (IResources)this.theclickedactionobject.GetComponent(typeof(IResources));
-            
-            // Dont move if sending a unit to a location that a unit is already on
-            if (this.theclickedactionobject.GetComponent(typeof(IGather)))
-            {
-                return;
-            }
-
-            if (theResource != null)
-            {
                 switch (gatheringunit.GetType().ToString())
                 {
                     case "Assets.Scripts.Extractor":
@@ -542,7 +568,7 @@ namespace Assets.Scripts.Controllers
                         Minerals themineral = theResource as Minerals;
                         if (themineral != null)
                         {
-                            this.theselectedobject.transform.LookAt(this.clickdestination);
+                            gatheringunit.SetTheTargetPosition(this.clickdestination);
                         }
                         break;
                     case "Assets.Scripts.Harvester":
@@ -553,11 +579,6 @@ namespace Assets.Scripts.Controllers
                         }
                         break;
                 }
-            }
-            else
-            {
-                gatheringunit.SetTheTargetPosition(this.clickdestination);
-            }
         }
 
         /// <summary>
