@@ -359,6 +359,7 @@ namespace Assets.Scripts.Controllers
                             harvester.TargetResource = hit.transform.GetComponent<Food>();
                             if (harvester.TargetResource != null)
                             {
+                                harvester.theRecentTree = hit.transform.gameObject;
                                 harvester.ChangeStates("Harvest");
                             }
                             break;
@@ -437,7 +438,7 @@ namespace Assets.Scripts.Controllers
                 }
                 else
                 {
-                    //Circle formation
+                    // Circle formation
                     for (int i = 0; i < this.Units.Count; i++)
                     {
                         float angle = i * (2 * 3.14159f / this.Units.Count);

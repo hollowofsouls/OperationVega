@@ -227,7 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b381b85bb193b44b293d86cf0ab169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cleanfood: {fileID: 1629558699160106, guid: 8867a08e0ba118940a2f95cb9eecbbce, type: 2}
   theEnemy: {fileID: 0}
+  theRecentTree: {fileID: 0}
   TargetClickPosition: {x: 0, y: 0, z: 0}
   TargetDirection: {x: 0, y: 0, z: 0}
   Health: 0
@@ -387,6 +389,72 @@ MonoBehaviour:
   theclickedactionobject: {fileID: 0}
   Units: []
   clickdestination: {x: 0, y: 0, z: 0}
+--- !u!1001 &465729416
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4856303556068706, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1354161324915248, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+      propertyPath: m_Name
+      value: Silo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: b8380efc239c6ae4aba6868f93cdca29, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1 &465729417 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1354161324915248, guid: b8380efc239c6ae4aba6868f93cdca29,
+    type: 2}
+  m_PrefabInternal: {fileID: 465729416}
+--- !u!208 &465729418
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 465729417}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 1.5, y: 4, z: 1.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &494181247
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &494181248
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -577,7 +645,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.765, y: 1.5, z: 0.785}
+  m_Extents: {x: 0.25, y: 1.5, z: 0.5}
   m_MoveThreshold: 0.1
   m_Carve: 0
   m_CarveOnlyStationary: 1
@@ -665,7 +733,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1449517978
 MonoBehaviour:
   m_ObjectHideFlags: 0
