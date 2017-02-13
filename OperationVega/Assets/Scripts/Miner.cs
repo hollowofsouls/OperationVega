@@ -183,17 +183,6 @@ namespace Assets.Scripts
         private delegate void RangeHandler(float number);
 
         /// <summary>
-        /// The move function providing movement functionality.
-        /// </summary>
-        public void Move()
-        {
-            if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Attackrange)
-            {
-               this.transform.position += this.TargetDirection * this.Speed * Time.deltaTime;
-            }
-        }
-
-        /// <summary>
         /// The harvest function provides functionality of the miner to harvest a resource.
         /// </summary>
         public void Harvest()
@@ -222,11 +211,11 @@ namespace Assets.Scripts
                     // Create the dirty mineral object and parent it to the front of the miner
                     var clone = Instantiate(this.dirtymineral, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
+                    clone.name = "MineralsTaint";
                     this.ChangeStates("Decontaminate");
                     GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
                     Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
-                    Vector3 destination = new Vector3(thedoor.position.x + this.transform.forward.x, 0.5f, thedoor.position.z + this.transform.forward.z);
-                    this.navagent.SetDestination(destination);
+                    this.navagent.SetDestination(thedoor.position);
                 }
             }
         }
@@ -417,7 +406,7 @@ namespace Assets.Scripts
         {
             if (this.Target != null)
             {
-                if (this.navagent.remainingDistance <= this.Attackrange && this.navagent.remainingDistance >= 1.5f)
+                if (this.navagent.remainingDistance <= this.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();
                 }
@@ -432,7 +421,8 @@ namespace Assets.Scripts
         {
             if (this.TargetResource != null && this.TargetResource.Count > 0)
             {
-                if (this.navagent.remainingDistance <= 2.0f && this.navagent.remainingDistance >= 1.4f)
+               
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
                     this.Harvest();
                 }
@@ -465,7 +455,7 @@ namespace Assets.Scripts
 
             dropofftime += 1 * Time.deltaTime;
 
-            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance)
+            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
             {
                 if (this.dropofftime >= 1.0f)
                 {
@@ -485,7 +475,7 @@ namespace Assets.Scripts
         /// </summary>
         private void DecontaminationState()
         {
-            if (this.navagent.remainingDistance <= 1.0f)
+            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
             {
                 this.Decontaminate();
             }
@@ -518,12 +508,14 @@ namespace Assets.Scripts
             this.TheMinerFsm.AddTransition("Harvest", "Battle", "HarvestToBattle");
             this.TheMinerFsm.AddTransition("Harvest", "Stock", "HarvestToStock");
             this.TheMinerFsm.AddTransition("Battle", "Stock", "BattleToStock");
+            this.TheMinerFsm.AddTransition("Idle", "Stock", "IdleToStock");
+            this.TheMinerFsm.AddTransition("Stock", "Idle", "StockToIdle");
             this.TheMinerFsm.AddTransition("Stock", "Battle", "StockToBattle");
             this.TheMinerFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
             this.TheMinerFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
-            this.TheMinerFsm.AddTransition("Decontaminate", "Harvest", "DecontaminateToHarvest");
             this.TheMinerFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
-
+            this.TheMinerFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
+            this.TheMinerFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
         }
 
         /// <summary>

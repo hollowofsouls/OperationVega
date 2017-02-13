@@ -250,6 +250,14 @@ namespace Assets.Scripts.Controllers
                     {
                         this.CommandToHarvest(hit);
                     }
+                    else if (hit.transform.gameObject.name == "Silo")
+                    {
+                        this.CommandToStock();
+                    }
+                    else if (hit.transform.gameObject.name == "Decontamination")
+                    {
+                        this.CommandToDecontaminate(hit);
+                    }
                     else
                     {
                         this.CommandToIdle();
@@ -262,6 +270,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to attack function.
+        /// Sends units to attack.
         /// </summary>
         /// <param name="hit">
         /// The hit object.
@@ -277,18 +286,21 @@ namespace Assets.Scripts.Controllers
                             Extractor extractor = this.theUnit as Extractor;
                             extractor.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                             extractor.theEnemy = hit.transform.gameObject;
+                            extractor.SetTheTargetPosition(hit.transform.position);
                             extractor.ChangeStates("Battle");
                             break;
                         case "Assets.Scripts.Miner":
                             Miner miner = this.theUnit as Miner;
                             miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                             miner.theEnemy = hit.transform.gameObject;
-                           miner.ChangeStates("Battle");
+                            miner.SetTheTargetPosition(hit.transform.position);
+                            miner.ChangeStates("Battle");
                             break;
                         case "Assets.Scripts.Harvester":
                             Harvester harvester = this.theUnit as Harvester;
                             harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                             harvester.theEnemy = hit.transform.gameObject;
+                            harvester.SetTheTargetPosition(hit.transform.position);
                             harvester.ChangeStates("Battle");
                             break;
                    }
@@ -305,18 +317,21 @@ namespace Assets.Scripts.Controllers
                                 Extractor extractor = unit as Extractor;
                                 extractor.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                                 extractor.theEnemy = hit.transform.gameObject;
+                                extractor.SetTheTargetPosition(hit.transform.position);
                                 extractor.ChangeStates("Battle");
                                 break;
                             case "Assets.Scripts.Miner":
                                 Miner miner = unit as Miner;
                                 miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                                 miner.theEnemy = hit.transform.gameObject;
+                                miner.SetTheTargetPosition(hit.transform.position);
                                 miner.ChangeStates("Battle");
                                 break;
                             case "Assets.Scripts.Harvester":
                                 Harvester harvester = unit as Harvester;
                                 harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                                 harvester.theEnemy = hit.transform.gameObject;
+                                harvester.SetTheTargetPosition(hit.transform.position);
                                 harvester.ChangeStates("Battle");
                                 break;
                        }
@@ -326,6 +341,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to harvest function.
+        /// Sends units to harvest.
         /// </summary>
         /// <param name="hit">
         /// The hit object.
@@ -343,6 +359,7 @@ namespace Assets.Scripts.Controllers
                             if (extractor.TargetResource != null)
                             {
                                 extractor.theRecentGeyser = hit.transform.gameObject;
+                                extractor.SetTheTargetPosition(hit.transform.position);
                                 extractor.ChangeStates("Harvest");
                             }
                             break;
@@ -352,6 +369,7 @@ namespace Assets.Scripts.Controllers
                             if (miner.TargetResource != null)
                             {
                                 miner.theRecentMineralDeposit = hit.transform.gameObject;
+                                miner.SetTheTargetPosition(hit.transform.position);
                                 miner.ChangeStates("Harvest");
                             }
                             break;
@@ -361,6 +379,7 @@ namespace Assets.Scripts.Controllers
                             if (harvester.TargetResource != null)
                             {
                                 harvester.theRecentTree = hit.transform.gameObject;
+                                harvester.SetTheTargetPosition(hit.transform.position);
                                 harvester.ChangeStates("Harvest");
                             }
                             break;
@@ -380,6 +399,7 @@ namespace Assets.Scripts.Controllers
                                 if (extractor.TargetResource != null)
                                 {
                                     extractor.theRecentGeyser = hit.transform.gameObject;
+                                    extractor.SetTheTargetPosition(hit.transform.position);
                                     extractor.ChangeStates("Harvest");
                                 }
                                 break;
@@ -389,6 +409,7 @@ namespace Assets.Scripts.Controllers
                                 if (miner.TargetResource != null)
                                 {
                                     miner.theRecentMineralDeposit = hit.transform.gameObject;
+                                    miner.SetTheTargetPosition(hit.transform.position);
                                     miner.ChangeStates("Harvest");
                                 }
                                 break;
@@ -398,6 +419,7 @@ namespace Assets.Scripts.Controllers
                                 if (harvester.TargetResource != null)
                                 {
                                     harvester.theRecentTree = hit.transform.gameObject;
+                                    harvester.SetTheTargetPosition(hit.transform.position);
                                     harvester.ChangeStates("Harvest");
                                 }
                                 break;
@@ -408,29 +430,13 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to move function.
+        /// Sends units to appropriate destinations.
         /// </summary>
         private void CommandToMove()
         {
-            // If there is no destination or the destination clicked is another unit..just return and dont move
-            if (this.theclickedactionobject == null || this.theclickedactionobject.GetComponent(typeof(IGather)))
-            {
-                return;
-            }
-
             IResources theResource = (IResources)this.theclickedactionobject.GetComponent(typeof(IResources));
 
-            if (this.theUnit != null)
-            {
-                if (theResource != null)
-                {
-                    this.UnitToResource(theResource, this.theUnit);
-                }
-                else
-                {
-                    this.theUnit.SetTheTargetPosition(this.clickdestination);
-                }
-            }
-            else if (this.Units.Count > 0)
+            if (this.Units.Count > 0)
             {
                 if (theResource != null)
                 {
@@ -459,9 +465,16 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to idle function.
+        /// Send units to idle.
         /// </summary>
         private void CommandToIdle()
         {
+            // If there is no destination or the destination clicked is another unit..just return and dont move
+            if (this.theclickedactionobject == null || this.theclickedactionobject.GetComponent(typeof(IGather)))
+            {
+                return;
+            }
+
             // Send unit back to idle
             if (this.theUnit != null)
             {
@@ -470,22 +483,22 @@ namespace Assets.Scripts.Controllers
                     case "Assets.Scripts.Extractor":
                         Extractor extractor = this.theUnit as Extractor;
                         extractor.Target = null;
-                        extractor.TargetResource = null;
                         extractor.theEnemy = null;
+                        extractor.SetTheTargetPosition(this.clickdestination);
                         extractor.ChangeStates("Idle");
                         break;
                     case "Assets.Scripts.Miner":
                         Miner miner = this.theUnit as Miner;
                         miner.Target = null;
-                        miner.TargetResource = null;
                         miner.theEnemy = null;
+                        miner.SetTheTargetPosition(this.clickdestination);
                         miner.ChangeStates("Idle");
                         break;
                     case "Assets.Scripts.Harvester":
                         Harvester harvester = this.theUnit as Harvester;
                         harvester.Target = null;
-                        harvester.TargetResource = null;
                         harvester.theEnemy = null;
+                        harvester.SetTheTargetPosition(this.clickdestination);
                         harvester.ChangeStates("Idle");
                         break;
                 }
@@ -501,23 +514,165 @@ namespace Assets.Scripts.Controllers
                         case "Assets.Scripts.Extractor":
                             Extractor extractor = unit as Extractor;
                             extractor.Target = null;
-                            extractor.TargetResource = null;
                             extractor.theEnemy = null;
                             extractor.ChangeStates("Idle");
                             break;
                         case "Assets.Scripts.Miner":
                             Miner miner = unit as Miner;
                             miner.Target = null;
-                            miner.TargetResource = null;
                             miner.theEnemy = null;
                             miner.ChangeStates("Idle");
                             break;
                         case "Assets.Scripts.Harvester":
                             Harvester harvester = unit as Harvester;
                             harvester.Target = null;
-                            harvester.TargetResource = null;
                             harvester.theEnemy = null;
                             harvester.ChangeStates("Idle");
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The command to stock function.
+        /// Sends units to stock.
+        /// </summary>
+        private void CommandToStock()
+        {
+            if (this.theUnit != null)
+            {
+                // Stock with a single unit
+                switch (this.theUnit.GetType().ToString())
+                {
+                    case "Assets.Scripts.Extractor":
+                        Extractor extractor = this.theUnit as Extractor;
+                        if (extractor.Resourcecount > 0)
+                        {
+                            extractor.SetTheTargetPosition(this.clickdestination);
+                            extractor.ChangeStates("Stock");
+                        }
+                        break;
+                    case "Assets.Scripts.Miner":
+                        Miner miner = this.theUnit as Miner;
+                        if (miner.Resourcecount > 0)
+                        {
+                            miner.SetTheTargetPosition(this.clickdestination);
+                            miner.ChangeStates("Stock");
+                        }
+                        break;
+                    case "Assets.Scripts.Harvester":
+                        Harvester harvester = this.theUnit as Harvester;
+                        if (harvester.Resourcecount > 0)
+                        {
+                            harvester.SetTheTargetPosition(this.clickdestination);
+                            harvester.ChangeStates("Stock");
+                        }
+                        break;
+                }
+            }
+            else if (this.Units.Count > 0)
+            {
+                foreach (GameObject go in this.Units)
+                {
+                    IGather unit = (IGather)go.GetComponent(typeof(IGather));
+
+                    switch (unit.GetType().ToString())
+                    {
+                        case "Assets.Scripts.Extractor":
+                            Extractor extractor = unit as Extractor;
+                            if (extractor.Resourcecount > 0)
+                            {
+                                extractor.SetTheTargetPosition(this.clickdestination);
+                                extractor.ChangeStates("Stock");
+                            }
+                            break;
+                        case "Assets.Scripts.Miner":
+                            Miner miner = unit as Miner;
+                            if (miner.Resourcecount > 0)
+                            {
+                                miner.SetTheTargetPosition(this.clickdestination);
+                                miner.ChangeStates("Stock");
+                            }
+                            break;
+                        case "Assets.Scripts.Harvester":
+                            Harvester harvester = unit as Harvester;
+                            if (harvester.Resourcecount > 0)
+                            {
+                                harvester.SetTheTargetPosition(this.clickdestination);
+                                harvester.ChangeStates("Stock");
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The command to decontaminate function.
+        /// Send units to decontaminate.
+        /// </summary>
+        private void CommandToDecontaminate(RaycastHit hit)
+        {
+            if (this.theUnit != null)
+            {
+                // Stock with a single unit
+                switch (this.theUnit.GetType().ToString())
+                {
+                    case "Assets.Scripts.Miner":
+                        Miner miner = this.theUnit as Miner;
+                        Debug.Log("Decontamination clicked for miner");
+                        if (miner.transform.GetChild(0).name == "MineralsTaint")
+                        {
+                            miner.ChangeStates("Decontaminate");
+                            Transform thedoor = hit.transform.GetChild(1);
+                            Debug.Log(thedoor.name);
+                            Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
+                            miner.SetTheTargetPosition(destination);
+                        }
+                        break;
+                    case "Assets.Scripts.Harvester":
+                        Harvester harvester = this.theUnit as Harvester;
+                        if (harvester.transform.GetChild(0).name == "PickupFoodTaint")
+                        {
+                            harvester.ChangeStates("Decontaminate");
+                            Transform thedoor = hit.transform.GetChild(1);
+                            Debug.Log(thedoor.name);
+                            Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
+                            harvester.SetTheTargetPosition(destination);
+                        }
+                        break;
+                }
+            }
+            else if (this.Units.Count > 0)
+            {
+                foreach (GameObject go in this.Units)
+                {
+                    IGather unit = (IGather)go.GetComponent(typeof(IGather));
+
+                    switch (unit.GetType().ToString())
+                    {
+                        case "Assets.Scripts.Miner":
+                            Miner miner = unit as Miner;
+                            if (miner.transform.GetChild(0).name == "MineralsTaint")
+                            {
+                                miner.ChangeStates("Decontaminate");
+                                Transform thedoor = hit.transform.GetChild(1);
+                                Debug.Log(thedoor.name);
+                                Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
+                                miner.SetTheTargetPosition(destination);
+                            }
+                            break;
+                        case "Assets.Scripts.Harvester":
+                            Harvester harvester = unit as Harvester;
+                            if (harvester.transform.GetChild(0).name == "PickupFoodTaint")
+                            {
+                                harvester.ChangeStates("Decontaminate");
+                                Transform thedoor = hit.transform.GetChild(1);
+                                Debug.Log(thedoor.name);
+                                Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
+                                harvester.SetTheTargetPosition(destination);
+                            }
                             break;
                     }
                 }

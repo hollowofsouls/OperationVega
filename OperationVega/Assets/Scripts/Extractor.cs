@@ -168,17 +168,6 @@ namespace Assets.Scripts
         private delegate void RangeHandler(float number);
 
         /// <summary>
-        /// The move function providing movement functionality.
-        /// </summary>
-        public void Move()
-        {
-            if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Attackrange)
-            {
-                this.transform.position += this.TargetDirection * this.Speed * Time.deltaTime;
-            }
-        }
-
-        /// <summary>
         /// The harvest function provides functionality of the extractor to harvest a resource.
         /// </summary>
         public void Harvest()
@@ -347,7 +336,7 @@ namespace Assets.Scripts
         {
             if (this.TargetResource != null && this.TargetResource.Count > 0)
             {
-                if (this.navagent.remainingDistance <= 2.0f && this.navagent.remainingDistance >= 1.4f)
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && this.navagent.remainingDistance >= 1.4f)
                 {
                     this.Harvest();
                 }
@@ -421,6 +410,8 @@ namespace Assets.Scripts
             this.TheExtractorFsm.AddTransition("Battle", "Stock", "BattleToStock");
             this.TheExtractorFsm.AddTransition("Stock", "Battle", "StockToBattle");
             this.TheExtractorFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
+            this.TheExtractorFsm.AddTransition("Idle", "Stock", "IdleToStock");
+            this.TheExtractorFsm.AddTransition("Stock", "Idle", "StockToIdle");
         }
 
         /// <summary>
