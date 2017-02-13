@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
+using Text = UnityEngine.UI.Text;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Assets.Scripts.Managers;
@@ -10,6 +11,7 @@ using Assets.Scripts.Managers;
 
 namespace UI
 {
+    using Assets.Scripts;
     public class UIManager : MonoBehaviour
     {     
         #region -- VARIABLES --
@@ -32,7 +34,32 @@ namespace UI
         [SerializeField]
         private Button m_CancelAction;
         [SerializeField]
+        private Button m_Minerals;
+        [SerializeField]
+        private Button m_Food;
+        [SerializeField]
+        private Button m_CookedFood;
+        [SerializeField]
+        private Button m_Gas;
+        [SerializeField]
+        private Button m_Fuel;
+        [SerializeField]
         private Canvas m_BackgroundUI;
+
+        [SerializeField]
+        private Text m_MineralsT;
+        [SerializeField]
+        private Text m_FoodT;
+        [SerializeField]
+        private Text m_CookedFoodT;
+        [SerializeField]
+        private Text m_GasT;
+        [SerializeField]
+        private Text m_FuelT;
+        [SerializeField]
+       
+
+
         #endregion
 
         #region -- PROPERTIES --
@@ -57,10 +84,18 @@ namespace UI
             #endregion
 
             #region -- Main Menu Subscribers --
-            EventManager.Subscribe("NewGame", this.NewGame);
+            EventManager.Subscribe("NewGame", this.NewGameClick);
             EventManager.Subscribe("Options", this.OnOptions);
             EventManager.Subscribe("Instructions", this.OnInstructions);
             EventManager.Subscribe("QuitGame", this.OnQuitGame);
+            #endregion
+
+            #region -- Crafting Subscribers --
+            EventManager.Subscribe("Minerals", this.Minerals);
+            EventManager.Subscribe("Food", this.Food);
+            EventManager.Subscribe("CookedFood", this.CookedFood);
+            EventManager.Subscribe("Gas", this.Gas);
+            EventManager.Subscribe("Fuel", this.Fuel);
             #endregion
 
         }
@@ -84,15 +119,33 @@ namespace UI
             EventManager.UnSubscribe("Options", this.OnOptions);
             EventManager.UnSubscribe("Instructions", this.OnInstructions);
             EventManager.UnSubscribe("QuitGame", this.OnQuitGame);
-            #endregion 
+            #endregion
+
+            #region -- Crafting Unsubscribers --
+            EventManager.UnSubscribe("Minerals", this.OnMinerals);
+            EventManager.UnSubscribe("Food", this.OnFood);
+            EventManager.UnSubscribe("CookedFood", this.OnCookedFood);
+            EventManager.UnSubscribe("Gas", this.OnGas);
+            EventManager.UnSubscribe("Fuel", this.OnFuel);
+            #endregion
         }
         #region -- VOID FUNCTIONS --
+
+        void Update()
+        {
+            //Updates the amount of resources the player has.
+            m_MineralsT.text = " " + User.MineralsCount;
+            m_FoodT.text = " " + User.FoodCount;
+            m_CookedFoodT.text = "" + User.CookedFoodCount;
+            m_GasT.text = " " + User.GasCount;
+            m_FuelT.text = "" + User.FuelCount;
+        }
         public void OnRallyClick()
         {
             EventManager.Publish("Rally");
         }
         public void OnRally()
-        {            
+        {    
             //Function will be use to rally upon click.
             Debug.Log("Begin Rallying ");
         }
@@ -213,6 +266,58 @@ namespace UI
             //Function will quit game upon click.
             Debug.Log("Quit Game");
         }
+
+        #region -- Crafting -- 
+        public void Minerals()
+        {
+            EventManager.Publish("Minerals");
+        }
+        public void OnMinerals()
+        {
+            Debug.Log("Minerals");
+        }
+        
+        public void Food()
+        {
+            EventManager.Publish("Food");
+        }
+        public void OnFood()
+        {
+            Debug.Log("Food");
+        }
+        
+        public void CookedFood()
+        {
+            EventManager.Publish("CookedFood");
+        }
+
+        public void OnCookedFood()
+        {
+            Debug.Log("Cooked Food");
+        }
+
+        public void Gas()
+        {
+            EventManager.Publish("Gas");
+        }
+
+        public void OnGas()
+        {
+            Debug.Log("Gas");
+        }
+
+        public void Fuel()
+        {
+            EventManager.Publish("Fuel");
+        }
+
+        public void OnFuel()
+        {
+            
+            Debug.Log("Fuel");
+        }
+
+        #endregion
         #endregion
         #endregion
     }
