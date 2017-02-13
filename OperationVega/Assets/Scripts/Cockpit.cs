@@ -1,9 +1,7 @@
 ﻿
-
 namespace Assets.Scripts
 {
-	using System.Collections;
-	using System.Collections.Generic;
+	using System.Linq;
 
 	using Assets.Scripts.Interfaces;
 
@@ -21,11 +19,15 @@ namespace Assets.Scripts
 
 		/// <summary>
 		/// The steel.
+		/// The amount of steel required to build the part.
+		/// Accessible through the SteelCost property.
 		/// </summary>
 		private int steel;
 
 		/// <summary>
 		/// The fuel.
+		/// The amount of Fuel required to build the part.
+		/// Accessible through the FuelCost property.
 		/// </summary>
 		private int fuel;
 
@@ -33,6 +35,27 @@ namespace Assets.Scripts
 		/// The quality.
 		/// </summary>
 		private int quality;
+
+		/// <summary>
+		/// The ship.
+		/// </summary>
+		private Rocket ship;
+
+		/// <summary>
+		/// Gets or sets the carrying.
+		/// </summary>
+		public int Carrying
+		{
+			get
+			{
+				return this.capacity;
+			}
+
+			set
+			{
+				this.capacity = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the quality.
@@ -83,6 +106,30 @@ namespace Assets.Scripts
 		}
 
 		/// <summary>
+		/// Function for adding the parts to the list.
+		/// Need to work on removing parts if one of the same type is selected.
+		/// </summary>
+		public void AddParts()
+		{
+			if (this.ship.PartList.OfType<Cockpit>().Any())
+			{
+				foreach (IRocketParts go in this.ship.PartList)
+				{
+					if (go as Cockpit)
+					{
+						this.ship.PartList.Remove(go);
+					}
+				}
+			}
+			else if (!this.ship.PartList.OfType<Cockpit>().Any())
+			{
+				this.ship.PartList.Add(this);
+				
+				// Debug.Log("Added");
+			}
+		}
+
+		/// <summary>
 		/// Use this for initialization
 		/// </summary>
 		private void Start()
@@ -91,6 +138,7 @@ namespace Assets.Scripts
 			this.steel = 200;
 			this.fuel = 0;
 			this.capacity = 20;
+			this.ship = FindObjectOfType<Rocket>();
 		}
 
 		/// <summary>
@@ -98,6 +146,10 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Update()
 		{
+			if (Input.GetMouseButtonDown(0))
+			{
+				this.AddParts();
+			}
 		}
 	}
 }

@@ -1,8 +1,7 @@
 ﻿
 namespace Assets.Scripts
 {
-	using System.Collections;
-	using System.Collections.Generic;
+	using System.Linq;
 
 	using Assets.Scripts.Interfaces;
 
@@ -20,11 +19,15 @@ namespace Assets.Scripts
 
 		/// <summary>
 		/// The steel.
+		/// The amount of steel required to build the part.
+		/// Accessible through the SteelCost property.
 		/// </summary>
 		private int steel;
 
 		/// <summary>
 		/// The fuel.
+		/// The amount of Fuel required to build the part.
+		/// Accessible through the FuelCost property.
 		/// </summary>
 		private int fuel;
 
@@ -82,6 +85,31 @@ namespace Assets.Scripts
 		}
 
 		/// <summary>
+		/// Function for adding the parts to the list.
+		/// Need to work on removing parts if one of the same type is selected.
+		/// </summary>
+		public void AddParts()
+		{
+			if (this.ship.PartList.OfType<Thrusters>().Any())
+			{
+				foreach (IRocketParts go in this.ship.PartList)
+				{
+					if (go as Thrusters)
+					{
+						this.ship.PartList.Remove(go);
+					}
+				}
+				// Debug.Log("Removed");
+			}
+			else if (!this.ship.PartList.OfType<Thrusters>().Any())
+			{
+				this.ship.PartList.Add(this);
+
+				// Debug.Log("Added");
+			}
+		}
+
+		/// <summary>
 		/// Use this for initialization
 		/// </summary>
 		private void Start()
@@ -89,6 +117,7 @@ namespace Assets.Scripts
 			this.quality = 20;
 			this.steel = 200;
 			this.fuel = 50;
+			this.ship = FindObjectOfType<Rocket>();
 		}
 
 		/// <summary>
@@ -96,6 +125,10 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Update()
 		{
+			if (Input.GetMouseButtonDown(1))
+			{
+				this.AddParts();
+			}
 		}
 	}
 }
