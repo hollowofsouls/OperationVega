@@ -1,15 +1,27 @@
 ﻿
+
+
+namespace Assets.Scripts
+{
+	using System.Collections;
+	using System.Collections.Generic;
+
 namespace Assets.Scripts
 {
 	using System.Collections.Generic;
 	using System.Linq;
+
 
 	using Assets.Scripts.Interfaces;
 
 	using UnityEngine;
 
 	/// <summary>
+
+	/// The rocket.
+
 	/// The rocket class.
+
 	/// </summary>
 	public class Rocket : MonoBehaviour
 	{
@@ -19,6 +31,7 @@ namespace Assets.Scripts
 		private List<IRocketParts> allParts;
 
 		/// <summary>
+
 		/// The total quality.
 		/// </summary>
 		private int totalQuality;
