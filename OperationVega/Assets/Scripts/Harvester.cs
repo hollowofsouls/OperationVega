@@ -346,11 +346,7 @@ namespace Assets.Scripts
         {
             if (this.Target != null)
             {
-                if (this.navagent.remainingDistance <= 1.0f)
-                {
-                    return;
-                }
-                if (this.navagent.remainingDistance <= this.Healrange)
+                if (this.navagent.remainingDistance <= this.Healrange && this.navagent.remainingDistance >= 1.5f)
                 {
                     this.HealStun();
                 }
@@ -363,9 +359,9 @@ namespace Assets.Scripts
         /// </summary>
         private void HarvestState()
         {
-            if (this.TargetResource != null && !this.TargetResource.Taint && this.TargetResource.Count > 0)
+            if (this.TargetResource != null && this.TargetResource.Count > 0)
             {
-                if (this.navagent.remainingDistance <= 2.0f)
+                if (this.navagent.remainingDistance <= 2.0f && this.navagent.remainingDistance >= 1.4f)
                 {
                     this.Harvest();
                 }
@@ -379,8 +375,12 @@ namespace Assets.Scripts
         private void StockState()
         {
             if (this.Resourcecount <= 0)
-            { 
-                Destroy(this.transform.GetChild(0).gameObject);
+            {
+                for (int i = 0; i < this.transform.childCount; i++)
+                {
+                    Destroy(this.transform.GetChild(i).gameObject);
+                }
+
                 if (this.TargetResource != null && this.TargetResource.Count > 0)
                 {
                     this.navagent.SetDestination(this.theRecentTree.transform.position);

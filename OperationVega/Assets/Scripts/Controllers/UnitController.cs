@@ -6,7 +6,6 @@ namespace Assets.Scripts.Controllers
     using Interfaces;
 
     using UnityEngine;
-    using UnityEngine.AI;
 
     /// <summary>
     /// The unit controller class.
@@ -343,6 +342,7 @@ namespace Assets.Scripts.Controllers
                             extractor.TargetResource = hit.transform.GetComponent<Gas>();
                             if (extractor.TargetResource != null)
                             {
+                                extractor.theRecentGeyser = hit.transform.gameObject;
                                 extractor.ChangeStates("Harvest");
                             }
                             break;
@@ -351,6 +351,7 @@ namespace Assets.Scripts.Controllers
                             miner.TargetResource = hit.transform.GetComponent<Minerals>();
                             if (miner.TargetResource != null)
                             {
+                                miner.theRecentMineralDeposit = hit.transform.gameObject;
                                 miner.ChangeStates("Harvest");
                             }
                             break;
@@ -378,6 +379,7 @@ namespace Assets.Scripts.Controllers
                                 extractor.TargetResource = hit.transform.GetComponent<Gas>();
                                 if (extractor.TargetResource != null)
                                 {
+                                    extractor.theRecentGeyser = hit.transform.gameObject;
                                     extractor.ChangeStates("Harvest");
                                 }
                                 break;
@@ -386,6 +388,7 @@ namespace Assets.Scripts.Controllers
                                 miner.TargetResource = hit.transform.GetComponent<Minerals>();
                                 if (miner.TargetResource != null)
                                 {
+                                    miner.theRecentMineralDeposit = hit.transform.gameObject;
                                     miner.ChangeStates("Harvest");
                                 }
                                 break;
@@ -394,6 +397,7 @@ namespace Assets.Scripts.Controllers
                                 harvester.TargetResource = hit.transform.GetComponent<Food>();
                                 if (harvester.TargetResource != null)
                                 {
+                                    harvester.theRecentTree = hit.transform.gameObject;
                                     harvester.ChangeStates("Harvest");
                                 }
                                 break;
