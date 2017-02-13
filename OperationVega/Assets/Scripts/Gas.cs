@@ -156,7 +156,6 @@ namespace Assets.Scripts
 		private void Update()
 		{
 			this.Refresh();
-			this.Reset();
 		}
 	}
 }
