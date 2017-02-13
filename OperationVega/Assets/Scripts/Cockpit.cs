@@ -7,6 +7,8 @@ namespace Assets.Scripts
 
 	using Assets.Scripts.Interfaces;
 
+	using UnityEditor;
+
 	using UnityEngine;
 
 	/// <summary>
@@ -37,6 +39,27 @@ namespace Assets.Scripts
 		/// The quality.
 		/// </summary>
 		private uint quality;
+
+		/// <summary>
+		/// The ship.
+		/// </summary>
+		private Rocket ship;
+
+		/// <summary>
+		/// Gets or sets the carrying.
+		/// </summary>
+		public int Carrying
+		{
+			get
+			{
+				return this.capacity;
+			}
+
+			set
+			{
+				this.capacity = value;
+			}
+		}
 
 		/// <summary>
 		/// The ship.
@@ -111,6 +134,17 @@ namespace Assets.Scripts
 		/// Function for adding the parts to the list.
 		/// Need to work on removing parts if one of the same type is selected.
 		/// </summary>
+		public void AddParts()
+		{
+			if (this.ship.PartList.OfType<Cockpit>().Any())
+			{
+				this.ship.PartList.Remove(this);
+				Debug.Log("Removed");
+			}
+			else if (!this.ship.PartList.OfType<Cockpit>().Any())
+			{
+				this.ship.PartList.Add(this);
+				Debug.Log("Added");
 		/// <param name="secondaryList">
 		/// The secondaryList. A second list of the parts.
 		/// Solves error that's thrown when a part is removed from the list.
@@ -165,6 +199,12 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Update()
 		{
+
+			if (Input.GetMouseButtonDown(0))
+			{
+				this.AddParts();
+			}
+
 			var cockpitList = this.ship.PartList.ToList();
 
 			if (Input.GetMouseButtonDown(0))
