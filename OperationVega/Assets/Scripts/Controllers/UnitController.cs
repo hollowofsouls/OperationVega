@@ -283,7 +283,7 @@ namespace Assets.Scripts.Controllers
                             Miner miner = this.theUnit as Miner;
                             miner.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
                             miner.theEnemy = hit.transform.gameObject;
-                            miner.ChangeStates("Battle");
+                           miner.ChangeStates("Battle");
                             break;
                         case "Assets.Scripts.Harvester":
                             Harvester harvester = this.theUnit as Harvester;

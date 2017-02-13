@@ -13,6 +13,9 @@ namespace Assets.Scripts
     /// </summary>
     public class Extractor : MonoBehaviour, IUnit, ICombat, IGather, IDamageable
     {
+        /// <summary>
+        /// Reference to the clean gas pefab
+        /// </summary>
         public GameObject cleangas;
 
         /// <summary>
@@ -26,6 +29,9 @@ namespace Assets.Scripts
         /// </summary>
         public GameObject theEnemy;
 
+        /// <summary>
+        /// The recent geyser reference that we were farming from.
+        /// </summary>
         public GameObject theRecentGeyser;
 
         /// <summary>
@@ -118,8 +124,15 @@ namespace Assets.Scripts
         /// </summary>
         private float harvesttime;
 
+        /// <summary>
+        /// The drop off time reference.
+        /// How long it takes to drop off the resource at the silo.
+        /// </summary>
         private float dropofftime;
 
+        /// <summary>
+        /// The navigation agent reference.
+        /// </summary>
         private NavMeshAgent navagent;
 
         /// <summary>
@@ -179,8 +192,8 @@ namespace Assets.Scripts
                 Debug.Log("My Resource count " + this.Resourcecount);
 
                 this.harvesttime = 0;
-                if (this.Resourcecount >= 5 && !this.TargetResource.Taint)
-                { // Create the clean food object and parent it to the front of the harvester
+                if (this.Resourcecount >= 5)
+                { // Create the clean gas object and parent it to the front of the extractor
                     var clone = Instantiate(this.cleangas, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
                     this.ChangeStates("Stock");
@@ -188,19 +201,7 @@ namespace Assets.Scripts
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
                     this.navagent.SetDestination(destination);
                 }
-                else if (this.Resourcecount >= 5 && this.TargetResource.Taint)
-                {
-                    // The resource is tainted go to decontamination center
-                }
             }
-        }
-
-        /// <summary>
-        /// The decontaminate function provides functionality of the extractor to decontaminate a resource.
-        /// </summary>
-        public void Decontaminate()
-        {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -228,6 +229,11 @@ namespace Assets.Scripts
                     this.timebetweenattacks = 0;
                 }
             }
+        }
+
+        public void Decontaminate()
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

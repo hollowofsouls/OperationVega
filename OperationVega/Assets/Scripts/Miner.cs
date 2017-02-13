@@ -11,7 +11,15 @@ namespace Assets.Scripts
     /// </summary>
     public class Miner : MonoBehaviour, IUnit, IGather, ICombat, IDamageable
     {
+        /// <summary>
+        /// Reference to the clean mineral pefab
+        /// </summary>
         public GameObject cleanmineral;
+
+        /// <summary>
+        /// Reference to the dirty mineral pefab
+        /// </summary>
+        public GameObject dirtymineral;
         
         /// <summary>
         /// The miner finite state machine.
@@ -30,10 +38,13 @@ namespace Assets.Scripts
         /// </summary>
         public GameObject theEnemy;
 
+        /// <summary>
+        /// The reference to the most recent mineral deposit.
+        /// </summary>
         public GameObject theRecentMineralDeposit;
 
         /// <summary>
-        /// The resource to taint.
+        /// The target resource.
         /// </summary>
         [HideInInspector]
         public IResources TargetResource;
@@ -104,11 +115,14 @@ namespace Assets.Scripts
         [HideInInspector]
         public uint Resourcecount;
 
+        /// <summary>
+        /// The navigation agent reference.
+        /// </summary>
         private NavMeshAgent navagent;
 
         /// <summary>
         /// The time between attacks reference.
-        /// Stores the reference to the timer between attacks
+        /// Stores the reference to the timer between attacks.
         /// </summary>
         private float timebetweenattacks;
 
@@ -118,6 +132,16 @@ namespace Assets.Scripts
         /// </summary>
         private float harvesttime;
 
+        /// <summary>
+        /// The decontaminate time reference.
+        /// How long to take to decontaminate the resource.
+        /// </summary>
+        private float decontime;
+
+        /// <summary>
+        /// The drop off time reference.
+        /// How long it takes to drop off the resource at the silo.
+        /// </summary>
         private float dropofftime;
 
         /// <summary>
@@ -143,6 +167,12 @@ namespace Assets.Scripts
         /// Called in changing to the stock state.
         /// </summary>
         private RangeHandler stockHandler;
+
+        /// <summary>
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the decontamination state.
+        /// </summary>
+        private RangeHandler decontaminationHandler;
 
         /// <summary>
         /// The range handler delegate.
@@ -178,7 +208,7 @@ namespace Assets.Scripts
 
                 this.harvesttime = 0;
                 if (this.Resourcecount >= 5 && !this.TargetResource.Taint)
-                { // Create the clean food object and parent it to the front of the harvester
+                { // Create the clean mineral object and parent it to the front of the miner
                     var clone = Instantiate(this.cleanmineral, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
                     this.ChangeStates("Stock");
@@ -189,6 +219,14 @@ namespace Assets.Scripts
                 else if (this.Resourcecount >= 5 && this.TargetResource.Taint)
                 {
                     // The resource is tainted go to decontamination center
+                    // Create the dirty mineral object and parent it to the front of the miner
+                    var clone = Instantiate(this.dirtymineral, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
+                    clone.transform.SetParent(this.transform);
+                    this.ChangeStates("Decontaminate");
+                    GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
+                    Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                    Vector3 destination = new Vector3(thedoor.position.x + this.transform.forward.x, 0.5f, thedoor.position.z + this.transform.forward.z);
+                    this.navagent.SetDestination(destination);
                 }
             }
         }
@@ -198,7 +236,28 @@ namespace Assets.Scripts
         /// </summary>
         public void Decontaminate()
         {
-            throw new System.NotImplementedException();
+            if (this.decontime >= 1.0f)
+            {
+                Debug.Log("Decontaminating");
+                this.Resourcecount--;
+                this.decontime = 0;
+
+                if (this.Resourcecount <= 0)
+                {
+                    for (int i = 0; i < this.transform.childCount; i++)
+                    {
+                        Destroy(this.transform.GetChild(i).gameObject);
+                    }
+
+                    this.Resourcecount = 5;
+                    var clone = Instantiate(this.cleanmineral, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
+                    clone.transform.SetParent(this.transform);
+                    this.ChangeStates("Stock");
+                    GameObject thesilo = GameObject.Find("Silo");
+                    Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+                    this.navagent.SetDestination(destination);
+                }
+            }
         }
 
         /// <summary>
@@ -281,6 +340,9 @@ namespace Assets.Scripts
                 case "Stock":
                     this.TheMinerFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
                     break;
+                case "Decontaminate":
+                    this.TheMinerFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    break;
                 default:
                     break;
             }
@@ -294,6 +356,7 @@ namespace Assets.Scripts
         {
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
+            this.decontime += 1 * Time.deltaTime;
 
             switch (this.TheMinerFsm.CurrentState.Statename)
             {
@@ -307,6 +370,9 @@ namespace Assets.Scripts
                     break;
                 case "Stock":
                     this.StockState();
+                    break;
+                case "Decontaminate":
+                    this.DecontaminationState();
                     break;
                 default:
                     break;
@@ -323,6 +389,7 @@ namespace Assets.Scripts
             this.Attackspeed = 3;
             this.Speed = 2;
             this.harvesttime = 1.0f;
+            this.decontime = 1.0f;
 
             this.timebetweenattacks = this.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -412,6 +479,17 @@ namespace Assets.Scripts
             }
         }
 
+        /// <summary>
+        /// The decontamination state function.
+        /// Handles the decontamination of resources at the decontamination building.
+        /// </summary>
+        private void DecontaminationState()
+        {
+            if (this.navagent.remainingDistance <= 1.0f)
+            {
+                this.Decontaminate();
+            }
+        }
 
         /// <summary>
         /// The awake function.
@@ -422,12 +500,14 @@ namespace Assets.Scripts
             this.battleHandler = this.ResetStoppingDistance;
             this.harvestHandler = this.ResetStoppingDistance;
             this.stockHandler = this.ResetStoppingDistance;
+            this.decontaminationHandler = this.ResetStoppingDistance;
 
             this.TheMinerFsm.CreateState("Init", null);
             this.TheMinerFsm.CreateState("Idle", this.idleHandler);
             this.TheMinerFsm.CreateState("Battle", this.battleHandler);
             this.TheMinerFsm.CreateState("Harvest", this.harvestHandler);
             this.TheMinerFsm.CreateState("Stock", this.stockHandler);
+            this.TheMinerFsm.CreateState("Decontaminate", this.decontaminationHandler);
 
             this.TheMinerFsm.AddTransition("Init", "Idle", "auto");
             this.TheMinerFsm.AddTransition("Idle", "Battle", "IdleToBattle");
@@ -440,6 +520,10 @@ namespace Assets.Scripts
             this.TheMinerFsm.AddTransition("Battle", "Stock", "BattleToStock");
             this.TheMinerFsm.AddTransition("Stock", "Battle", "StockToBattle");
             this.TheMinerFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
+            this.TheMinerFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
+            this.TheMinerFsm.AddTransition("Decontaminate", "Harvest", "DecontaminateToHarvest");
+            this.TheMinerFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
+
         }
 
         /// <summary>
