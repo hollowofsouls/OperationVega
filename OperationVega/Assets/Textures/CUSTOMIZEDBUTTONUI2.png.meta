@@ -1,31 +1,38 @@
 fileFormatVersion: 2
-guid: 3dafbff404235d94da41fd52b17a0a03
-timeCreated: 1487006942
+guid: 535a464d6fdbb9747a48037f123142ae
+timeCreated: 1487009546
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: ESCBUTTON
-    21300002: XBUTTON
-    21300004: OBUTTON
-    21300006: WASDARROWSBUTTON
-    21300008: SPACEBUTTON
-    21300010: MBUTTON
-    21300012: SHIFTMBUTTON
-    21300014: F5BUTTON
-    21300016: CBUTTON
-    21300018: SLASHBUTTON
-    21300020: SHIFTEBUTTON
-    21300022: TABBUTTON
-    21300024: NBUTTON
-    21300026: YBUTTON
-    21300028: RBUTTON
-    21300030: SHIFTHBUTTON
-    21300032: HBUTTON
-    21300034: F1BUTTON
-    21300036: F2BUTTON
-    21300038: RESTORETODEFAULTBUTTON
-    21300040: F4BUTTON
-    21300042: F3BUTTON
+    21300000: FBUTTON
+    21300002: 4BUTTON
+    21300004: 3BUTTON
+    21300006: GBUTTON
+    21300008: 5BUTTON
+    21300010: 2BUTTON
+    21300012: IBUTTON
+    21300014: 6BUTTON
+    21300016: 1BUTTON
+    21300018: JBUTTON
+    21300020: 7BUTTON
+    21300022: F8BUTTON
+    21300024: KBUTTON
+    21300026: 8BUTTON
+    21300028: F7BUTTON
+    21300030: PBUTTON
+    21300032: F6BUTTON
+    21300034: QBUTTON
+    21300036: ENTERBUTTON
+    21300038: ZBUTTON
+    21300040: NBUTTON
+    21300042: EBUTTON
+    21300044: XBUTTON
+    21300046: LBUTTON
+    21300048: 9BUTTON
+    21300050: VBUTTON
+    21300052: BBUTTON
+    21300054: 0BUTTON
+    21300056: UBUTTON
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -88,27 +95,11 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ESCBUTTON
+      name: FBUTTON
       rect:
         serializedVersion: 2
         x: 651
@@ -121,20 +112,33 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: XBUTTON
+      name: 4BUTTON
       rect:
         serializedVersion: 2
-        x: 1790
-        y: 959
-        width: 80
-        height: 62
+        x: 960
+        y: 891
+        width: 279
+        height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: OBUTTON
+      name: 3BUTTON
+      rect:
+        serializedVersion: 2
+        x: 1250
+        y: 891
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: GBUTTON
       rect:
         serializedVersion: 2
         x: 651
@@ -147,12 +151,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: WASDARROWSBUTTON
+      name: 5BUTTON
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 864
-        width: 369
+        x: 960
+        y: 796
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -160,12 +164,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SPACEBUTTON
+      name: 2BUTTON
       rect:
         serializedVersion: 2
-        x: 1493
-        y: 866
-        width: 369
+        x: 1250
+        y: 796
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -173,7 +177,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: MBUTTON
+      name: IBUTTON
       rect:
         serializedVersion: 2
         x: 652
@@ -186,12 +190,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SHIFTMBUTTON
+      name: 6BUTTON
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 762
-        width: 369
+        x: 961
+        y: 702
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -199,12 +203,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: F5BUTTON
+      name: 1BUTTON
       rect:
         serializedVersion: 2
-        x: 1494
-        y: 765
-        width: 369
+        x: 1251
+        y: 702
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -212,7 +216,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: CBUTTON
+      name: JBUTTON
       rect:
         serializedVersion: 2
         x: 651
@@ -225,12 +229,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SLASHBUTTON
+      name: 7BUTTON
       rect:
         serializedVersion: 2
-        x: 1101
-        y: 658
-        width: 369
+        x: 960
+        y: 607
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -238,12 +242,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SHIFTEBUTTON
+      name: F8BUTTON
       rect:
         serializedVersion: 2
-        x: 1494
-        y: 658
-        width: 369
+        x: 1250
+        y: 607
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -251,7 +255,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: TABBUTTON
+      name: KBUTTON
       rect:
         serializedVersion: 2
         x: 651
@@ -264,12 +268,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: NBUTTON
+      name: 8BUTTON
       rect:
         serializedVersion: 2
-        x: 1101
-        y: 557
-        width: 369
+        x: 960
+        y: 515
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -277,12 +281,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: YBUTTON
+      name: F7BUTTON
       rect:
         serializedVersion: 2
-        x: 1493
-        y: 557
-        width: 369
+        x: 1250
+        y: 515
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -290,7 +294,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RBUTTON
+      name: PBUTTON
       rect:
         serializedVersion: 2
         x: 654
@@ -303,12 +307,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: SHIFTHBUTTON
+      name: F6BUTTON
       rect:
         serializedVersion: 2
-        x: 1325
-        y: 440
-        width: 369
+        x: 1253
+        y: 423
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -316,7 +320,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: HBUTTON
+      name: QBUTTON
       rect:
         serializedVersion: 2
         x: 654
@@ -329,7 +333,33 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: F1BUTTON
+      name: ENTERBUTTON
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 333
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ZBUTTON
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 333
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: NBUTTON
       rect:
         serializedVersion: 2
         x: 654
@@ -342,7 +372,33 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: F2BUTTON
+      name: EBUTTON
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 243
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: XBUTTON
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 243
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: LBUTTON
       rect:
         serializedVersion: 2
         x: 654
@@ -355,12 +411,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RESTORETODEFAULTBUTTON
+      name: 9BUTTON
       rect:
         serializedVersion: 2
-        x: 1151
-        y: 130
-        width: 518
+        x: 963
+        y: 153
+        width: 279
         height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -368,10 +424,36 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: F4BUTTON
+      name: VBUTTON
       rect:
         serializedVersion: 2
-        x: 361
+        x: 1253
+        y: 153
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: BBUTTON
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 61
+        width: 279
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: 0BUTTON
+      rect:
+        serializedVersion: 2
+        x: 960
         y: 60
         width: 279
         height: 84
@@ -381,10 +463,10 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: F3BUTTON
+      name: UBUTTON
       rect:
         serializedVersion: 2
-        x: 654
+        x: 1253
         y: 61
         width: 279
         height: 84
