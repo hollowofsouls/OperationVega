@@ -157,6 +157,7 @@ namespace Assets.Scripts
 		{
 			this.Refresh();
 			this.Reset();
+
 		}
 	}
 }
