@@ -39,12 +39,7 @@ namespace Assets.Scripts
 		/// The quality.
 		/// </summary>
 		private uint quality;
-
-		/// <summary>
-		/// The ship.
-		/// </summary>
-		//private Rocket ship;
-
+		
 		/// <summary>
 		/// Gets or sets the carrying.
 		/// </summary>
@@ -118,7 +113,6 @@ namespace Assets.Scripts
 			this.steel = 200;
 			this.fuel = 0;
 			this.capacity = 20;
-			//this.ship = FindObjectOfType<Rocket>();
 		}
 
 		/// <summary>
