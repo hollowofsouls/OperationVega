@@ -6,11 +6,7 @@ using Assets.Scripts;
 
 namespace Assets.Scripts
 {
-    using Interfaces;
-    
-
-
-    public class Craft 
+    public class Craft : MonoBehaviour
     {
         //Will be used to desribe resources as Items
         string Items;
@@ -24,9 +20,13 @@ namespace Assets.Scripts
             this.Items = item;
             this.Amount = amount;
         }
+
+       
+
+       
     }
 
-    public class CanCraft
+    public class CanCraft 
     {
         //Public List that holds on the ingredients.
         public List<Craft> Ingredients;
@@ -43,6 +43,7 @@ namespace Assets.Scripts
             User.SteelCount++;
             User.FuelCount++;
 
+            //Checks through craft list to see if it has required ingredients.
             foreach (Craft item in Ingredients)
             {
                 if (Ingredients.Contains(item))
@@ -62,6 +63,9 @@ namespace Assets.Scripts
             Ingredients.Add(new Craft("Minerals", 1));
             Ingredients.Add(new Craft("Gas", 1));
             CraftItem = false;
+
+            //Will say that Fuel has been created.
+            Debug.Log("Fuel Created");
             
             
         }
@@ -77,7 +81,9 @@ namespace Assets.Scripts
             Ingredients.Add(new Craft("Minerals", 1));
             Ingredients.Add(new Craft("Fuel", 1));
             CraftItem = false;
-            
+
+            //Will say that Steel has been created.
+            Debug.Log("Steel Created");
         }
     }
 
@@ -91,7 +97,13 @@ namespace Assets.Scripts
             Ingredients.Add(new Craft("Food", 1));
             Ingredients.Add(new Craft("Gas", 1));
             CraftItem = false;
+
+            //Will dipslay when the food is cooked.
+            Debug.Log("CookedFood Created");
         }
         
     }
+
+
+    
 }
