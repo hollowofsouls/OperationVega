@@ -23,13 +23,13 @@ namespace Assets.Scripts
 		/// </summary>
 		private int totalQuality;
 
-		private Cockpit tempCockpit;
+		private Cockpit selectableCockpit;
 
-		private Chassis tempChassis;
+		private Chassis selectableChassis;
 
-		private Wings tempWings;
+		private Wings selectableWings;
 
-		private Thrusters tempThrusters;
+		private Thrusters selectableThrusters;
 
 		/// <summary>
 		/// Gets or sets the part list.
@@ -92,162 +92,23 @@ namespace Assets.Scripts
 		/// <param name="selectedParts">
 		/// The selected Parts.
 		/// </param>
-		public void AddCockpit(List<IRocketParts> secondaryList, Cockpit selectedParts)
+		public void AddParts(List<IRocketParts> secondaryList, IRocketParts selectedParts)
 		{
-			if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
+			if (selectedParts != null)
 			{
-				if (this.allParts.OfType<Cockpit>().Any())
+				if (this.allParts.Contains(selectedParts))
 				{
-					foreach (var go in secondaryList)
+					this.allParts.Remove(selectedParts);
+				}
+				else if (!this.allParts.Contains(selectedParts))
+				{
+					if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
 					{
-						if (go as Cockpit)
-						{
-							this.allParts.Remove(go);
-						}
+						this.allParts.Add(selectedParts);
+						User.SteelCount -= selectedParts.SteelCost;
+						User.FuelCount -= selectedParts.FuelCost;
 					}
 				}
-				else if (!this.allParts.OfType<Cockpit>().Any())
-				{
-					this.allParts.Add(selectedParts);
-					User.SteelCount -= selectedParts.SteelCost;
-					User.FuelCount -= selectedParts.FuelCost;
-				}
-			}
-
-			if (User.SteelCount < selectedParts.SteelCost)
-			{
-				Debug.Log("You don't have enough steel.");
-			}
-
-			if (User.FuelCount < selectedParts.FuelCost)
-			{
-				Debug.Log("You don't have enough fuel.");
-			}
-		}
-
-		/// <summary>
-		/// Function for adding a chassis to the list.
-		/// </summary>
-		/// <param name="secondaryList">
-		/// The secondaryList. A second list of the parts.
-		/// </param>
-		/// <param name="selectedParts">
-		/// The selected Parts.
-		/// </param>
-		public void AddChassis(List<IRocketParts> secondaryList, Chassis selectedParts)
-		{
-			if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
-			{
-				if (this.allParts.OfType<Chassis>().Any())
-				{
-					foreach (var go in secondaryList)
-					{
-						if (go as Chassis)
-						{
-							this.allParts.Remove(go);
-						}
-					}
-				}
-				else if (!this.allParts.OfType<Chassis>().Any())
-				{
-					this.allParts.Add(selectedParts);
-					User.SteelCount -= selectedParts.SteelCost;
-					User.FuelCount -= selectedParts.FuelCost;
-				}
-			}
-
-			if (User.SteelCount < selectedParts.SteelCost)
-			{
-				Debug.Log("You don't have enough steel.");
-			}
-
-			if (User.FuelCount < selectedParts.FuelCost)
-			{
-				Debug.Log("You don't have enough fuel.");
-			}
-		}
-
-		/// <summary>
-		/// Function for adding wings to the list.
-		/// </summary>
-		/// <param name="secondaryList">
-		/// The secondaryList. A second list of the parts.
-		/// </param>
-		/// <param name="selectedParts">
-		/// The selected Parts.
-		/// </param>
-		public void AddWings(List<IRocketParts> secondaryList, Wings selectedParts)
-		{
-			if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
-			{
-				if (this.allParts.OfType<Wings>().Any())
-				{
-					foreach (var go in secondaryList)
-					{
-						if (go as Wings)
-						{
-							this.allParts.Remove(go);
-						}
-					}
-				}
-				else if (!this.allParts.OfType<Wings>().Any())
-				{
-					this.allParts.Add(selectedParts);
-					User.SteelCount -= selectedParts.SteelCost;
-					User.FuelCount -= selectedParts.FuelCost;
-				}
-			}
-
-			if (User.SteelCount < selectedParts.SteelCost)
-			{
-				Debug.Log("You don't have enough steel.");
-			}
-
-			if (User.FuelCount < selectedParts.FuelCost)
-			{
-				Debug.Log("You don't have enough fuel.");
-			}
-		}
-
-		/// <summary>
-		/// Function for adding thrusters to the list.
-		/// </summary>
-		/// <param name="secondaryList">
-		/// The secondaryList. A second list of the parts.
-		/// </param>
-		/// <param name="selectedParts">
-		/// The selected Parts.
-		/// </param>
-		public void AddThrusters(List<IRocketParts> secondaryList, Thrusters selectedParts)
-		{
-			if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
-			{
-				if (this.allParts.OfType<Thrusters>().Any())
-				{
-					foreach (var go in secondaryList)
-					{
-						if (go as Thrusters)
-						{
-							this.allParts.Remove(go);
-						}
-					}
-				}
-				else if (!this.allParts.OfType<Thrusters>().Any())
-				{
-					this.allParts.Add(selectedParts);
-					User.SteelCount -= selectedParts.SteelCost;
-					User.FuelCount -= selectedParts.FuelCost;
-				}
-			}
-
-			if (User.SteelCount < selectedParts.SteelCost)
-			{
-				Debug.Log("You don't have enough steel.");
-			}
-
-			if (User.FuelCount < selectedParts.FuelCost)
-			{
-				Debug.Log("You don't have enough fuel.");
 			}
 		}
 
@@ -257,10 +118,10 @@ namespace Assets.Scripts
 		private void Start()
 		{
 			this.allParts = new List<IRocketParts>();
-			this.tempCockpit = FindObjectOfType<Cockpit>();
-			this.tempChassis = FindObjectOfType<Chassis>();
-			this.tempWings = FindObjectOfType<Wings>();
-			this.tempThrusters = FindObjectOfType<Thrusters>();
+			this.selectableCockpit = FindObjectOfType<Cockpit>();
+			this.selectableChassis = FindObjectOfType<Chassis>();
+			this.selectableWings = FindObjectOfType<Wings>();
+			this.selectableThrusters = FindObjectOfType<Thrusters>();
 		}
 
 		/// <summary>
@@ -269,25 +130,24 @@ namespace Assets.Scripts
 		private void Update()
 		{
 			var spareList = this.allParts.ToList();
-
 			if (Input.GetMouseButtonDown(0))
 			{
-				this.AddCockpit(spareList, this.tempCockpit);
+				this.AddParts(spareList, this.selectableCockpit);
 			}
 
 			if (Input.GetMouseButtonDown(1))
 			{
-				this.AddChassis(spareList, this.tempChassis);
+				this.AddParts(spareList, this.selectableChassis);
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad1))
 			{
-				this.AddWings(spareList, this.tempWings);
+				this.AddParts(spareList, this.selectableWings);
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad2))
 			{
-				this.AddThrusters(spareList, this.tempThrusters);
+				this.AddParts(spareList, this.selectableThrusters);
 			}
 
 			if (Input.GetKeyDown(KeyCode.A))

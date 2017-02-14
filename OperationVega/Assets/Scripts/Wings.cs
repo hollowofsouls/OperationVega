@@ -34,11 +34,6 @@ namespace Assets.Scripts
 		private uint fuel;
 
 		/// <summary>
-		/// The ship.
-		/// </summary>
-		//private Rocket ship;
-
-		/// <summary>
 		/// Gets or sets the quality.
 		/// </summary>
 		public uint Quality
@@ -94,7 +89,6 @@ namespace Assets.Scripts
 			this.quality = 20;
 			this.steel = 200;
 			this.fuel = 0;
-			//this.ship = FindObjectOfType<Rocket>();
 		}
 
 		/// <summary>
