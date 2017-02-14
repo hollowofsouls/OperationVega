@@ -1,69 +1,161 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Resource;
+﻿
 
-public class Food : MonoBehaviour, IResources
+namespace Assets.Scripts
 {
-	int iMaxAmount;
-	int iAmount;
-	bool bRefill;
-	bool bState;
+	using Assets.Scripts.Interfaces;
 
-	public int Count
-	{
-		get { return iAmount; }
-		set { iAmount = value; }
-	}
+	using UnityEngine;
 
-	public bool Renewable
+	/// <summary>
+	/// The food class.
+	/// </summary>
+	public class Food : MonoBehaviour, IResources
 	{
-		get { return bRefill; }
-		set { bRefill = value; }
-	}
+		/// <summary>
+		/// The max amount.
+		/// The max amount of the resource available.
+		/// </summary>
+		private int maxAmount;
 
-	public bool Taint
-	{
-		get { return bState; }
-		set { bState = value; }
-	}
+		/// <summary>
+		/// The amount.
+		/// The current amount of the resource available.
+		/// Accessible through the Count property.
+		/// </summary>
+		private int amount;
 
-	// Use this for initialization
-	void Start ()
-	{
-		iMaxAmount = 150;
-		iAmount = iMaxAmount;
-		bRefill = true;
-		bState = false;
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		
-	}
+		/// <summary>
+		/// The refill.
+		/// Boolean for if the resource is renewable.
+		/// Accessible through the Renewable property.
+		/// </summary>
+		private bool refill;
 
-	public int Refresh(int i, bool b)
-	{
-		float fTimer = 0.0f;
-		if (i < iMaxAmount && b == true)
+		/// <summary>
+		/// The state.
+		/// Boolean for if the resource is tainted.
+		/// Accessible through the Taint property.
+		/// </summary>
+		private bool state;
+
+		/// <summary>
+		/// The refill timer.
+		/// Float to represent a timer.
+		/// Used to calculate when the amount will be increased.
+		/// </summary>
+		private float refillTimer;
+
+		/// <summary>
+		/// The reset timer.
+		/// Float to represent a timer.
+		/// Used to calculate when the state should be set to false.
+		/// </summary>
+		private float resetTimer;
+
+		/// <summary>
+		/// Gets or sets the count.
+		/// </summary>
+		public int Count
 		{
-			fTimer += Time.fixedDeltaTime;
-			if (fTimer >= 15.0f)
+			get
 			{
-				i += 15;
-				fTimer = 0.0f;
+				return this.amount;
+			}
+
+			set
+			{
+				this.amount = value;
 			}
 		}
-		return i;
-	}
 
-	public void Reset()
-	{
-		float fTimer = 0.0f;
-		if(fTimer >= 60.0f)
+		/// <summary>
+		/// Gets or sets a value indicating whether renewable.
+		/// </summary>
+		public bool Renewable
 		{
-			bState = false;
+			get
+			{
+				return this.refill;
+			}
+
+			set
+			{
+				this.refill = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether taint.
+		/// </summary>
+		public bool Taint
+		{
+			get
+			{
+				return this.state;
+			}
+
+			set
+			{
+				this.state = value;
+			}
+		}
+
+		/// <summary>
+		/// The refresh.
+		/// Checks the current amount of Food.
+		/// Checks if Food is renewable.
+		/// Starts a timer that will increment the current amount
+		/// if renewable is true and amount is less than a specified value.
+		/// </summary>
+		public void Refresh()
+		{
+			if (this.amount < this.maxAmount && this.refill)
+			{
+				this.refillTimer += Time.fixedDeltaTime;
+				if (this.refillTimer >= 15.0f)
+				{
+					this.amount += 15;
+					this.refillTimer = 0.0f;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The reset.
+		/// Checks if Food is tainted.
+		/// And starts a timer that will reset its state.
+		/// </summary>
+		public void Reset()
+		{
+			if (this.state)
+			{
+				this.resetTimer += Time.fixedDeltaTime;
+				if (this.resetTimer >= 60.0f)
+				{
+					this.state = false;
+					this.resetTimer = 0.0f;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Use this for initialization
+		/// </summary>
+		private void Start()
+		{
+			this.maxAmount = 150;
+			this.amount = this.maxAmount;
+			this.refill = true;
+			this.state = false;
+		}
+
+		/// <summary>
+		/// Update is called once per frame
+		/// </summary>
+		private void Update()
+		{
+			this.Refresh();
+			this.Reset();
 		}
 	}
 }
