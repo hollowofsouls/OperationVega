@@ -1,6 +1,7 @@
 ﻿
 namespace Assets.Scripts
 {
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -21,14 +22,26 @@ namespace Assets.Scripts
 		/// <summary>
 		/// The total quality.
 		/// </summary>
-		private int totalQuality;
+		private uint totalQuality;
 
+		/// <summary>
+		/// The selectable cockpit.
+		/// </summary>
 		private Cockpit selectableCockpit;
 
+		/// <summary>
+		/// The selectable chassis.
+		/// </summary>
 		private Chassis selectableChassis;
 
+		/// <summary>
+		/// The selectable wings.
+		/// </summary>
 		private Wings selectableWings;
 
+		/// <summary>
+		/// The selectable thrusters.
+		/// </summary>
 		private Thrusters selectableThrusters;
 
 		/// <summary>
@@ -50,7 +63,7 @@ namespace Assets.Scripts
 		/// <summary>
 		/// Gets or sets the total quality.
 		/// </summary>
-		public int FullQuality
+		public uint FullQuality
 		{
 			get
 			{
@@ -94,20 +107,29 @@ namespace Assets.Scripts
 		/// </param>
 		public void AddParts(List<IRocketParts> secondaryList, IRocketParts selectedParts)
 		{
-			if (selectedParts != null)
+			if (this.allParts.Contains(selectedParts))
 			{
-				if (this.allParts.Contains(selectedParts))
+				this.allParts.Remove(selectedParts);
+				this.totalQuality -= selectedParts.Quality;
+			}
+			else if (!this.allParts.Contains(selectedParts))
+			{
+				if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
 				{
-					this.allParts.Remove(selectedParts);
+					this.allParts.Add(selectedParts);
+					this.totalQuality += selectedParts.Quality;
+					User.SteelCount -= selectedParts.SteelCost;
+					User.FuelCount -= selectedParts.FuelCost;
 				}
-				else if (!this.allParts.Contains(selectedParts))
+
+				if (User.SteelCount < selectedParts.SteelCost)
 				{
-					if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
-					{
-						this.allParts.Add(selectedParts);
-						User.SteelCount -= selectedParts.SteelCost;
-						User.FuelCount -= selectedParts.FuelCost;
-					}
+					Debug.Log("You don't have enough steel.");
+				}
+
+				if (User.FuelCount < selectedParts.FuelCost)
+				{
+					Debug.Log("You don't have enough fuel.");
 				}
 			}
 		}
@@ -130,6 +152,7 @@ namespace Assets.Scripts
 		private void Update()
 		{
 			var spareList = this.allParts.ToList();
+
 			if (Input.GetMouseButtonDown(0))
 			{
 				this.AddParts(spareList, this.selectableCockpit);
@@ -159,8 +182,9 @@ namespace Assets.Scripts
 			{
 				User.FuelCount += 100;
 			}
-			Debug.Log(this.ShipBuild());
+
 			Debug.Log(this.allParts.Count);
+			Debug.Log("Total: " + this.totalQuality);
 		}
 	}
 }
