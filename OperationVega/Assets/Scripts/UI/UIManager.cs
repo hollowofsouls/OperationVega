@@ -12,6 +12,7 @@ using Assets.Scripts.Managers;
 namespace UI
 {
     using Assets.Scripts;
+    
     public class UIManager : MonoBehaviour
     {     
         #region -- VARIABLES --
@@ -139,6 +140,9 @@ namespace UI
             m_CookedFoodT.text = "" + User.CookedFoodCount;
             m_GasT.text = " " + User.GasCount;
             m_FuelT.text = "" + User.FuelCount;
+
+
+            
         }
         public void OnRallyClick()
         {
@@ -180,11 +184,13 @@ namespace UI
 
         public void OnCraftClick()
         {
+
             //This function will run the craft function
             EventManager.Publish("Craft");
         }
         void OnCraft()
         {
+           
             Debug.Log("Craft");
         }
         public void OnClearClick()
@@ -274,15 +280,21 @@ namespace UI
         }
         public void OnMinerals()
         {
+            //Will Change the source image to the first craft slot
+            //Second Slot if first one is selected.
             Debug.Log("Minerals");
         }
         
         public void Food()
         {
+
             EventManager.Publish("Food");
         }
         public void OnFood()
         {
+            //Will Change the source image to the first craft slot
+            //Second Slot if first one is selected.
+            User.FoodCount++;
             Debug.Log("Food");
         }
         
@@ -293,6 +305,8 @@ namespace UI
 
         public void OnCookedFood()
         {
+            //Will Change the source image to the first craft slot
+            //Second Slot if first one is selected.
             Debug.Log("Cooked Food");
         }
 
@@ -303,6 +317,9 @@ namespace UI
 
         public void OnGas()
         {
+            //Will Change the source image to the first craft slot
+            //Second Slot if first one is selected.
+            User.GasCount++;
             Debug.Log("Gas");
         }
 
@@ -313,6 +330,9 @@ namespace UI
 
         public void OnFuel()
         {
+            //Will Change the source image to the first craft slot
+            //Second Slot if first one is selected.
+            User.FuelCount++;
             
             Debug.Log("Fuel");
         }

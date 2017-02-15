@@ -121,7 +121,18 @@ namespace Assets.Scripts
         /// <summary>
         /// The navigation agent reference.
         /// </summary>
-        private NavMeshAgent navagent;
+        public NavMeshAgent navagent;
+
+        /// <summary>
+        /// The dropped item reference.
+        /// Determines whether an item was dropped or not.
+        /// </summary>
+        private bool droppeditem;
+
+        /// <summary>
+        /// The reference the physical item dropped.
+        /// </summary>
+        private GameObject theitemdropped;
 
         /// <summary>
         /// The time between attacks reference.
@@ -203,6 +214,7 @@ namespace Assets.Scripts
                 { // Create the clean food object and parent it to the front of the harvester
                     var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
+                    clone.name = "PickupFood";
                     this.ChangeStates("Stock");
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
@@ -214,7 +226,7 @@ namespace Assets.Scripts
                     // Create the dirty food object and parent it to the front of the harvester
                     var clone = Instantiate(this.dirtyfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
-                    clone.name = "PickupFoodTaint";
+                    clone.name = "PickupFood";
                     this.ChangeStates("Decontaminate");
                     GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
                     Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
@@ -347,6 +359,7 @@ namespace Assets.Scripts
             switch (this.TheHarvesterFsm.CurrentState.Statename)
             {
                 case "Idle":
+                    this.IdleState();
                     break;
                 case "Battle":
                     this.BattleState();
@@ -376,6 +389,7 @@ namespace Assets.Scripts
             this.Speed = 2;
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
+            this.droppeditem = false;
 
             this.timebetweenattacks = this.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -396,6 +410,27 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The idle state function.
+        /// Has the funtionality of checking for dropped items.
+        /// </summary>
+        private void IdleState()
+        {
+            if (this.droppeditem)
+            {
+                this.navagent.SetDestination(this.theitemdropped.transform.position);
+
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && this.theitemdropped.name == "PickupFood")
+                {
+                    Debug.Log("Found my food");
+                    this.theitemdropped.transform.SetParent(this.transform);
+                    this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+                    this.droppeditem = false;
+                    this.theitemdropped = null;
+                }
+            }
+        }
+
+        /// <summary>
         /// The battle state function.
         /// The function called while in the battle state.
         /// </summary>
@@ -403,6 +438,16 @@ namespace Assets.Scripts
         {
             if (this.Target != null)
             {
+                if (this.transform.childCount > 0)
+                {
+                    this.transform.GetChild(0).gameObject.transform.position = new Vector3(this.transform.GetChild(0).gameObject.transform.position.x, 0.2f, this.transform.GetChild(0).gameObject.transform.position.z);
+                    this.theitemdropped = this.transform.GetChild(0).gameObject;
+                    this.transform.DetachChildren();
+                    this.droppeditem = true;
+                }
+
+                this.transform.DetachChildren();
+
                 if (this.navagent.remainingDistance <= this.Healrange && !this.navagent.pathPending)
                 {
                     this.HealStun();
@@ -416,7 +461,7 @@ namespace Assets.Scripts
         /// </summary>
         private void HarvestState()
         {
-            if (this.TargetResource != null && this.TargetResource.Count > 0)
+            if (this.TargetResource != null && this.TargetResource.Count > 0 && this.transform.childCount <= 0)
             {
                 if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
@@ -512,6 +557,8 @@ namespace Assets.Scripts
             this.TheHarvesterFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
             this.TheHarvesterFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
             this.TheHarvesterFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
+            this.TheHarvesterFsm.AddTransition("Decontaminate", "Battle", "DecontaminateToBattle");
+            this.TheHarvesterFsm.AddTransition("Battle", "Decontaminate", "BattleToDecontaminate");
         }
 
         /// <summary>
