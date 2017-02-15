@@ -1,6 +1,7 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
+    using System.Collections;
     using System.Collections.Generic;
 
     using Interfaces;
@@ -34,6 +35,9 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private Vector3 startclick = -Vector3.one;
 
+        /// <summary>
+        /// The the selected object reference.
+        /// </summary>
         public GameObject theselectedobject;
 
         /// <summary>
@@ -150,6 +154,9 @@ namespace Assets.Scripts.Controllers
             this.ActivateDragScreen();
             this.SelectUnits();
             this.CommandUnits();
+            //Vector3 avgpositions = Vector3.zero;
+            //this.Units.ForEach(u => avgpositions += u.transform.position / this.Units.Count);
+           // Debug.DrawLine(avgpositions, this.Units[0].GetComponent<NavMeshAgent>().destination, Color.green);
         }
 
         /// <summary>
@@ -240,7 +247,8 @@ namespace Assets.Scripts.Controllers
 
                 if (Physics.Raycast(ray.origin, ray.direction, out hit))
                 {
-                    this.CheckTheClickedObject(hit);
+                    this.theclickedactionobject = hit.transform.gameObject;
+                    this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
 
                     if (hit.transform.GetComponent<Enemy>())
                     {
@@ -262,8 +270,6 @@ namespace Assets.Scripts.Controllers
                     {
                         this.CommandToIdle();
                     }
-
-                    this.CommandToMove();
                 }
             }
         }
@@ -330,8 +336,8 @@ namespace Assets.Scripts.Controllers
                             case "Assets.Scripts.Harvester":
                                 Harvester harvester = unit as Harvester;
                                 harvester.Target = (IDamageable)hit.transform.GetComponent(typeof(IDamageable));
-                                harvester.theEnemy = hit.transform.gameObject;
                                 harvester.SetTheTargetPosition(hit.transform.position);
+                                harvester.theEnemy = hit.transform.gameObject;
                                 harvester.ChangeStates("Battle");
                                 break;
                        }
@@ -356,7 +362,8 @@ namespace Assets.Scripts.Controllers
                         case "Assets.Scripts.Extractor":
                             Extractor extractor = this.theUnit as Extractor;
                             extractor.TargetResource = hit.transform.GetComponent<Gas>();
-                            if (extractor.TargetResource != null)
+                            
+                        if (extractor.TargetResource != null)
                             {
                                 extractor.theRecentGeyser = hit.transform.gameObject;
                                 extractor.SetTheTargetPosition(hit.transform.position);
@@ -366,7 +373,8 @@ namespace Assets.Scripts.Controllers
                         case "Assets.Scripts.Miner":
                             Miner miner = this.theUnit as Miner;
                             miner.TargetResource = hit.transform.GetComponent<Minerals>();
-                            if (miner.TargetResource != null)
+                            
+                        if (miner.TargetResource != null)
                             {
                                 miner.theRecentMineralDeposit = hit.transform.gameObject;
                                 miner.SetTheTargetPosition(hit.transform.position);
@@ -395,6 +403,7 @@ namespace Assets.Scripts.Controllers
                         {
                             case "Assets.Scripts.Extractor":
                                 Extractor extractor = unit as Extractor;
+                                if (extractor.TargetResource != null) continue;
                                 extractor.TargetResource = hit.transform.GetComponent<Gas>();
                                 if (extractor.TargetResource != null)
                                 {
@@ -405,6 +414,7 @@ namespace Assets.Scripts.Controllers
                                 break;
                             case "Assets.Scripts.Miner":
                                 Miner miner = unit as Miner;
+                                if (miner.TargetResource != null) continue;
                                 miner.TargetResource = hit.transform.GetComponent<Minerals>();
                                 if (miner.TargetResource != null)
                                 {
@@ -415,6 +425,7 @@ namespace Assets.Scripts.Controllers
                                 break;
                             case "Assets.Scripts.Harvester":
                                 Harvester harvester = unit as Harvester;
+                                if (harvester.TargetResource != null) continue;
                                 harvester.TargetResource = hit.transform.GetComponent<Food>();
                                 if (harvester.TargetResource != null)
                                 {
@@ -426,41 +437,6 @@ namespace Assets.Scripts.Controllers
                         }
                     }
                 }
-        }
-
-        /// <summary>
-        /// The command to move function.
-        /// Sends units to appropriate destinations.
-        /// </summary>
-        private void CommandToMove()
-        {
-            IResources theResource = (IResources)this.theclickedactionobject.GetComponent(typeof(IResources));
-
-            if (this.Units.Count > 0)
-            {
-                if (theResource != null)
-                {
-                    foreach (GameObject p in this.Units)
-                    {
-                        IGather g = (IGather)p.GetComponent(typeof(IGather));
-                        this.UnitToResource(theResource, g);
-                    }
-                }
-                else
-                {
-                    // Circle formation
-                    for (int i = 0; i < this.Units.Count; i++)
-                    {
-                        float angle = i * (2 * 3.14159f / this.Units.Count);
-                        float x = Mathf.Cos(angle) * 1.5f;
-                        float z = Mathf.Sin(angle) * 1.5f;
-
-                        IGather g = (IGather)this.Units[i].GetComponent(typeof(IGather));
-                        this.clickdestination = new Vector3(this.clickdestination.x + x, 0.5f, this.clickdestination.z + z);
-                        g.SetTheTargetPosition(this.clickdestination);
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -505,9 +481,9 @@ namespace Assets.Scripts.Controllers
             }
             else if (this.Units.Count > 0)
             {
-                foreach (GameObject go in this.Units)
+                for (int i = 0; i < this.Units.Count; i++)
                 {
-                    IGather unit = (IGather)go.GetComponent(typeof(IGather));
+                    IGather unit = (IGather)this.Units[i].GetComponent(typeof(IGather));
 
                     switch (unit.GetType().ToString())
                     {
@@ -530,7 +506,41 @@ namespace Assets.Scripts.Controllers
                             harvester.ChangeStates("Idle");
                             break;
                     }
+
+                    float angle = i * (2 * 3.14159f / this.Units.Count);
+                    float x = Mathf.Cos(angle) * 1.5f;
+                    float z = Mathf.Sin(angle) * 1.5f;
+
+                    this.clickdestination = new Vector3(this.clickdestination.x + x, 0.5f, this.clickdestination.z + z);
+                    unit.SetTheTargetPosition(this.clickdestination);
                 }
+
+                //foreach (GameObject go in this.Units)
+                //{
+                //    IGather unit = (IGather)go.GetComponent(typeof(IGather));
+
+                //    switch (unit.GetType().ToString())
+                //    {
+                //        case "Assets.Scripts.Extractor":
+                //            Extractor extractor = unit as Extractor;
+                //            extractor.Target = null;
+                //            extractor.theEnemy = null;
+                //            extractor.ChangeStates("Idle");
+                //            break;
+                //        case "Assets.Scripts.Miner":
+                //            Miner miner = unit as Miner;
+                //            miner.Target = null;
+                //            miner.theEnemy = null;
+                //            miner.ChangeStates("Idle");
+                //            break;
+                //        case "Assets.Scripts.Harvester":
+                //            Harvester harvester = unit as Harvester;
+                //            harvester.Target = null;
+                //            harvester.theEnemy = null;
+                //            harvester.ChangeStates("Idle");
+                //            break;
+                //    }
+                //}
             }
         }
 
@@ -612,6 +622,9 @@ namespace Assets.Scripts.Controllers
         /// The command to decontaminate function.
         /// Send units to decontaminate.
         /// </summary>
+        /// <param name="hit">
+        /// The hit.
+        /// </param>
         private void CommandToDecontaminate(RaycastHit hit)
         {
             if (this.theUnit != null)
@@ -622,7 +635,7 @@ namespace Assets.Scripts.Controllers
                     case "Assets.Scripts.Miner":
                         Miner miner = this.theUnit as Miner;
                         Debug.Log("Decontamination clicked for miner");
-                        if (miner.transform.GetChild(0).name == "MineralsTaint")
+                        if (miner.transform.GetChild(0).name == "Minerals")
                         {
                             miner.ChangeStates("Decontaminate");
                             Transform thedoor = hit.transform.GetChild(1);
@@ -633,7 +646,7 @@ namespace Assets.Scripts.Controllers
                         break;
                     case "Assets.Scripts.Harvester":
                         Harvester harvester = this.theUnit as Harvester;
-                        if (harvester.transform.GetChild(0).name == "PickupFoodTaint")
+                        if (harvester.transform.GetChild(0).name == "PickupFood")
                         {
                             harvester.ChangeStates("Decontaminate");
                             Transform thedoor = hit.transform.GetChild(1);
@@ -654,7 +667,7 @@ namespace Assets.Scripts.Controllers
                     {
                         case "Assets.Scripts.Miner":
                             Miner miner = unit as Miner;
-                            if (miner.transform.GetChild(0).name == "MineralsTaint")
+                            if (miner.transform.GetChild(0).name == "Minerals")
                             {
                                 miner.ChangeStates("Decontaminate");
                                 Transform thedoor = hit.transform.GetChild(1);
@@ -665,7 +678,7 @@ namespace Assets.Scripts.Controllers
                             break;
                         case "Assets.Scripts.Harvester":
                             Harvester harvester = unit as Harvester;
-                            if (harvester.transform.GetChild(0).name == "PickupFoodTaint")
+                            if (harvester.transform.GetChild(0).name == "PickupFood")
                             {
                                 harvester.ChangeStates("Decontaminate");
                                 Transform thedoor = hit.transform.GetChild(1);
@@ -677,68 +690,6 @@ namespace Assets.Scripts.Controllers
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// The check clicked object function.
-        /// This determines the type of object clicked.
-        /// </summary>
-        /// <param name="hit">
-        /// The object hit by the ray cast.
-        /// </param>
-        private void CheckTheClickedObject(RaycastHit hit)
-        {
-            this.theclickedactionobject = hit.transform.gameObject;
-
-            if (hit.transform.GetComponent<Enemy>() || hit.transform.GetComponent(typeof(IResources)))
-            {
-                this.clickdestination = new Vector3(
-                    this.theclickedactionobject.transform.position.x,
-                    0.5f,
-                    this.theclickedactionobject.transform.position.z);
-            }
-            else
-            {
-                this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
-            }
-        }
-
-        /// <summary>
-        /// The check unit type function.
-        /// This function allows movement but restricts movement of the unit going to the wrong resource.
-        /// </summary>
-        /// <param name="theResource">
-        /// The the Resource.
-        /// </param>
-        /// <param name="gatheringunit">
-        /// The gathering unit.
-        /// </param>
-        private void UnitToResource(IResources theResource, IGather gatheringunit)
-        {
-                switch (gatheringunit.GetType().ToString())
-                {
-                    case "Assets.Scripts.Extractor":
-                        Gas thegas = theResource as Gas;
-                        if (thegas != null)
-                        {
-                            gatheringunit.SetTheTargetPosition(this.clickdestination);
-                        }
-                        break;
-                    case "Assets.Scripts.Miner":
-                        Minerals themineral = theResource as Minerals;
-                        if (themineral != null)
-                        {
-                            gatheringunit.SetTheTargetPosition(this.clickdestination);
-                        }
-                        break;
-                    case "Assets.Scripts.Harvester":
-                        Food thefood = theResource as Food;
-                        if (thefood != null)
-                        {
-                            gatheringunit.SetTheTargetPosition(this.clickdestination);
-                        }
-                        break;
-                }
         }
 
         /// <summary>
