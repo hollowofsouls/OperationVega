@@ -9,7 +9,7 @@ namespace Assets.Scripts
     /// <summary>
     /// The miner class.
     /// </summary>
-    public class Miner : MonoBehaviour, IUnit, IGather, ICombat, IDamageable
+    public class Miner : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
         /// Reference to the clean mineral pefab
@@ -30,23 +30,23 @@ namespace Assets.Scripts
         /// <summary>
         /// The target to attack.
         /// </summary>
-        [HideInInspector]
-        public IDamageable Target;
+        public ICombat Target;
 
         /// <summary>
         /// The enemy gameobject reference.
         /// </summary>
+        [HideInInspector]
         public GameObject theEnemy;
 
         /// <summary>
         /// The reference to the most recent mineral deposit.
         /// </summary>
+        [HideInInspector]
         public GameObject theRecentMineralDeposit;
 
         /// <summary>
         /// The target resource.
         /// </summary>
-        [HideInInspector]
         public IResources TargetResource;
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Assets.Scripts
         /// <summary>
         /// The navigation agent reference.
         /// </summary>
-        public NavMeshAgent navagent;
+        private NavMeshAgent navagent;
 
         /// <summary>
         /// The dropped item reference.
@@ -131,6 +131,10 @@ namespace Assets.Scripts
         /// </summary>
         private GameObject theitemdropped;
 
+        /// <summary>
+        /// The is mineral tainted reference.
+        /// Holds a reference to whether the held resource is tainted or not.
+        /// </summary>
         private bool ismineraltainted;
 
         /// <summary>
@@ -209,6 +213,7 @@ namespace Assets.Scripts
                 Debug.Log("My Resource count " + this.Resourcecount);
 
                 this.harvesttime = 0;
+
                 if (this.Resourcecount >= 5 && !this.TargetResource.Taint)
                 {
                     this.ismineraltainted = false;
@@ -319,7 +324,7 @@ namespace Assets.Scripts
         /// <param name="targetPos">
         /// The target position to go to when clicked.
         /// </param>
-        public void SetTheTargetPosition(Vector3 targetPos)
+        public void SetTheMovePosition(Vector3 targetPos)
         {
             this.navagent.SetDestination(targetPos);
         }
@@ -352,6 +357,40 @@ namespace Assets.Scripts
                     break;
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// The set target function.
+        /// Sets the object as the target for the unit.
+        /// </summary>
+        /// <param name="theTarget">
+        /// The target to set.
+        /// </param>
+        public void SetTarget(GameObject theTarget)
+        {
+            this.theEnemy = theTarget;
+            if (this.theEnemy != null)
+            {
+                this.Target = (ICombat)theTarget.GetComponent(typeof(ICombat));
+            }
+        }
+
+        /// <summary>
+        /// The set target resource function.
+        /// The function sets the unit with the resource.
+        /// </summary>
+        /// <param name="theResource">
+        /// The resource to set the unit to go to.
+        /// </param>
+        public void SetTargetResource(GameObject theResource)
+        {
+            if (this.TargetResource == null && theResource.GetComponent<Minerals>())
+            {
+                this.TargetResource = (IResources)theResource.GetComponent(typeof(IResources));
+                this.navagent.SetDestination(theResource.transform.position);
+                this.theRecentMineralDeposit = theResource;
+                this.ChangeStates("Harvest");
             }
         }
 
@@ -499,7 +538,7 @@ namespace Assets.Scripts
         /// </summary>
         private void StockState()
         {
-            if (!this.ismineraltainted)
+            if (!this.ismineraltainted && !this.droppeditem)
             {
                 if (this.Resourcecount <= 0)
                 {
@@ -585,6 +624,7 @@ namespace Assets.Scripts
             this.TheMinerFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
             this.TheMinerFsm.AddTransition("Stock", "Decontaminate", "StockToDecontaminate");
             this.TheMinerFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
+            this.TheMinerFsm.AddTransition("Decontaminate", "Harvest", "DecontaminateToHarvest");
             this.TheMinerFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
             this.TheMinerFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
             this.TheMinerFsm.AddTransition("Decontaminate", "Battle", "DecontaminateToBattle");

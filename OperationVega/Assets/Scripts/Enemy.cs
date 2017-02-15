@@ -9,7 +9,7 @@ namespace Assets.Scripts
     /// The enemy class.
     /// </summary>
     [RequireComponent(typeof(MeshCollider))]
-    public class Enemy : MonoBehaviour, IUnit, ICombat, IDamageable
+    public class Enemy : MonoBehaviour, ICombat
     {
         /// <summary>
         /// The enemy finite state machine.
@@ -21,7 +21,7 @@ namespace Assets.Scripts
         /// The target to attack.
         /// </summary>
         [HideInInspector]
-        public IDamageable Target;
+        public ICombat Target;
 
         /// <summary>
         /// The resource to taint.
@@ -76,14 +76,6 @@ namespace Assets.Scripts
         /// </summary>
         [HideInInspector]
         public uint Attackrange;
-
-        /// <summary>
-        /// The move function providing move functionality to the enemy.
-        /// </summary>
-        public void Move()
-        {
-            Debug.Log("I Am Moving");
-        }
 
         /// <summary>
         /// The attack function gives the enemy functionality to attack.

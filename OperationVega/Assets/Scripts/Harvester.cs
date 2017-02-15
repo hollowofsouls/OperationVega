@@ -12,7 +12,7 @@ namespace Assets.Scripts
     /// <summary>
     /// The harvester class.
     /// </summary>
-    public class Harvester : MonoBehaviour, IUnit, IGather, IDamageable
+    public class Harvester : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
         /// Reference to the clean food pefab
@@ -33,23 +33,23 @@ namespace Assets.Scripts
         /// <summary>
         /// The target to heal/stun.
         /// </summary>
-        [HideInInspector]
-        public IDamageable Target;
+        public ICombat Target;
 
         /// <summary>
         /// The enemy gameobject reference.
         /// </summary>
+        [HideInInspector]
         public GameObject theEnemy;
 
         /// <summary>
         /// The recent tree reference that we were farming from.
         /// </summary>
+        [HideInInspector]
         public GameObject theRecentTree;
 
         /// <summary>
         /// The resource to taint.
         /// </summary>
-        [HideInInspector]
         public IResources TargetResource;
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Assets.Scripts
         /// <summary>
         /// The navigation agent reference.
         /// </summary>
-        public NavMeshAgent navagent;
+        private NavMeshAgent navagent;
 
         /// <summary>
         /// The dropped item reference.
@@ -134,7 +134,11 @@ namespace Assets.Scripts
         /// </summary>
         private GameObject theitemdropped;
 
-        private bool ismineraltainted;
+        /// <summary>
+        /// The is food tainted reference.
+        /// Holds a reference to whether the held resource is tainted or not.
+        /// </summary>
+        private bool isfoodtainted;
 
         /// <summary>
         /// The time between attacks reference.
@@ -199,6 +203,33 @@ namespace Assets.Scripts
         private delegate void RangeHandler(float number);
 
         /// <summary>
+        /// The attack function houses the Heal Stun ability funtion.
+        /// </summary>
+        public void Attack()
+        {
+            if (this.timebetweenattacks >= this.Attackspeed)
+            {
+                Vector3 thedisplacement = (this.transform.position - this.theEnemy.transform.position).normalized;
+                if (Vector3.Dot(thedisplacement, this.theEnemy.transform.forward) < 0)
+                {
+                    Debug.Log("Harvester hit crit!");
+                    this.Target.TakeDamage(10);
+                    Enemy e = this.Target as Enemy;
+                    Debug.Log(e.Health);
+                    this.timebetweenattacks = 0;
+                }
+                else
+                {
+                    Debug.Log("Harvester attacking normal damage");
+                    this.Target.TakeDamage(5);
+                    Enemy e = this.Target as Enemy;
+                    Debug.Log(e.Health);
+                    this.timebetweenattacks = 0;
+                }
+            }
+        }
+
+        /// <summary>
         /// The harvest function provides functionality of the harvester to harvest a resource.
         /// </summary>
         public void Harvest()
@@ -214,7 +245,7 @@ namespace Assets.Scripts
                 this.harvesttime = 0;
                 if (this.Resourcecount >= 5 && !this.TargetResource.Taint)
                 {
-                    this.ismineraltainted = false;
+                    this.isfoodtainted = false;
                     // Create the clean food object and parent it to the front of the harvester
                     var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
@@ -226,7 +257,7 @@ namespace Assets.Scripts
                 }
                 else if (this.Resourcecount >= 5 && this.TargetResource.Taint)
                 {
-                    this.ismineraltainted = true;
+                    this.isfoodtainted = true;
                     // The resource is tainted go to decontamination center
                     // Create the dirty food object and parent it to the front of the harvester
                     var clone = Instantiate(this.dirtyfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
@@ -266,7 +297,7 @@ namespace Assets.Scripts
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
                     this.navagent.SetDestination(destination);
-                    this.ismineraltainted = false;
+                    this.isfoodtainted = false;
                 }
             }
         }
@@ -277,9 +308,19 @@ namespace Assets.Scripts
         /// <param name="targetPos">
         /// The target position to go to when clicked.
         /// </param>
-        public void SetTheTargetPosition(Vector3 targetPos)
+        public void SetTheMovePosition(Vector3 targetPos)
         {
             this.navagent.SetDestination(targetPos);
+        }
+
+        /// <summary>
+        /// The heal stun ability for the harvester.
+        /// This function will be the ability to allow the harvester to
+        /// stun enemies and heal other units.
+        /// </summary>
+        public void HealStun()
+        {
+
         }
 
         /// <summary>
@@ -325,31 +366,37 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The heal stun function gives the harvester functionality to heal units and stun enemies.
+        /// The set target function.
+        /// Sets the object as the target for the unit.
         /// </summary>
-        public void HealStun()
+        /// <param name="theTarget">
+        /// The target to set.
+        /// </param>
+        public void SetTarget(GameObject theTarget)
         {
-            if (this.timebetweenattacks >= this.Attackspeed)
+            this.theEnemy = theTarget;
+            if (this.theEnemy != null)
             {
-                Vector3 thedisplacement = (this.transform.position - this.theEnemy.transform.position).normalized;
-                if (Vector3.Dot(thedisplacement, this.theEnemy.transform.forward) < 0)
-                {
-                    Debug.Log("Harvester hit crit!");
-                    this.Target.TakeDamage(10);
-                    Enemy e = this.Target as Enemy;
-                    Debug.Log(e.Health);
-                    this.timebetweenattacks = 0;
-                }
-                else
-                {
-                    Debug.Log("Harvester attacking normal damage");
-                    this.Target.TakeDamage(5);
-                    Enemy e = this.Target as Enemy;
-                    Debug.Log(e.Health);
-                    this.timebetweenattacks = 0;
-                }
+                this.Target = (ICombat)theTarget.GetComponent(typeof(ICombat));
             }
+        }
 
+        /// <summary>
+        /// The set target resource function.
+        /// The function sets the unit with the resource.
+        /// </summary>
+        /// <param name="theResource">
+        /// The resource to set the unit to go to.
+        /// </param>
+        public void SetTargetResource(GameObject theResource)
+        {
+            if (this.TargetResource == null && theResource.GetComponent<Food>())
+            {
+                this.TargetResource = (IResources)theResource.GetComponent(typeof(IResources));
+                this.navagent.SetDestination(theResource.transform.position);
+                this.theRecentTree = theResource;
+                this.ChangeStates("Harvest");
+            }
         }
 
         /// <summary>
@@ -396,7 +443,7 @@ namespace Assets.Scripts
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
             this.droppeditem = false;
-            this.ismineraltainted = false;
+            this.isfoodtainted = false;
 
             this.timebetweenattacks = this.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -434,7 +481,7 @@ namespace Assets.Scripts
                     this.droppeditem = false;
                     this.theitemdropped = null;
 
-                    if (this.ismineraltainted)
+                    if (this.isfoodtainted)
                     {
                         this.ChangeStates("Decontaminate");
                         GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
@@ -470,7 +517,7 @@ namespace Assets.Scripts
 
                 if (this.navagent.remainingDistance <= this.Healrange && !this.navagent.pathPending)
                 {
-                    this.HealStun();
+                    this.Attack();
                 }
             }
         }
@@ -496,7 +543,7 @@ namespace Assets.Scripts
         /// </summary>
         private void StockState()
         {
-            if (!this.ismineraltainted)
+            if (!this.isfoodtainted && !this.droppeditem)
             {
                 if (this.Resourcecount <= 0)
                 {
@@ -540,7 +587,7 @@ namespace Assets.Scripts
         /// </summary>
         private void DecontaminationState()
         {
-            if (this.ismineraltainted)
+            if (this.isfoodtainted)
             {
                 if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
@@ -606,5 +653,5 @@ namespace Assets.Scripts
             UnitController.Self.CheckIfSelected(this.gameObject);
             this.UpdateUnit();
         }
-    }
+      }
 }

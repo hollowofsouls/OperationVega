@@ -145,7 +145,7 @@ namespace Assets.Scripts
 			this.maxAmount = 250;
 			this.amount = this.maxAmount;
 			this.refill = false;
-			this.state = false;
+			this.state = true;
 		}
 
 		/// <summary>

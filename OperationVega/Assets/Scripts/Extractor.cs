@@ -1,8 +1,6 @@
 ﻿
 namespace Assets.Scripts
 {
-    using System.Collections;
-
     using Controllers;
     using Interfaces;
     using UnityEngine;
@@ -11,7 +9,7 @@ namespace Assets.Scripts
     /// <summary>
     /// The extractor class.
     /// </summary>
-    public class Extractor : MonoBehaviour, IUnit, ICombat, IGather, IDamageable
+    public class Extractor : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
         /// Reference to the clean gas pefab
@@ -21,23 +19,23 @@ namespace Assets.Scripts
         /// <summary>
         /// The target to attack.
         /// </summary>
-        [HideInInspector]
-        public IDamageable Target;
+        public ICombat Target;
 
         /// <summary>
         /// The enemy gameobject reference.
         /// </summary>
+        [HideInInspector]
         public GameObject theEnemy;
 
         /// <summary>
         /// The recent geyser reference that we were farming from.
         /// </summary>
+        [HideInInspector]
         public GameObject theRecentGeyser;
 
         /// <summary>
         /// The resource to taint.
         /// </summary>
-        [HideInInspector]
         public IResources TargetResource;
 
         /// <summary>
@@ -133,7 +131,7 @@ namespace Assets.Scripts
         /// <summary>
         /// The navigation agent reference.
         /// </summary>
-        public NavMeshAgent navagent;
+        private NavMeshAgent navagent;
 
         /// <summary>
         /// The dropped item reference.
@@ -257,7 +255,7 @@ namespace Assets.Scripts
         /// <param name="targetPos">
         /// The target position to go to when clicked.
         /// </param>
-        public void SetTheTargetPosition(Vector3 targetPos)
+        public void SetTheMovePosition(Vector3 targetPos)
         {
             this.navagent.SetDestination(targetPos);
         }
@@ -285,6 +283,68 @@ namespace Assets.Scripts
                     break;
                 case "Stock":
                     this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// The set target function.
+        /// Sets the object as the target for the unit.
+        /// </summary>
+        /// <param name="theTarget">
+        /// The target to set.
+        /// </param>
+        public void SetTarget(GameObject theTarget)
+        {
+            this.theEnemy = theTarget;
+            if (this.theEnemy != null)
+            {
+                this.Target = (ICombat)theTarget.GetComponent(typeof(ICombat));
+            }
+        }
+
+        /// <summary>
+        /// The set target resource function.
+        /// The function sets the unit with the resource.
+        /// </summary>
+        /// <param name="theResource">
+        /// The resource to set the unit to go to.
+        /// </param>
+        public void SetTargetResource(GameObject theResource)
+        {
+            if (this.TargetResource == null && theResource.GetComponent<Gas>())
+            {
+                this.TargetResource = (IResources)theResource.GetComponent(typeof(IResources));
+                this.navagent.SetDestination(theResource.transform.position);
+                this.theRecentGeyser = theResource;
+                this.ChangeStates("Harvest");
+            }
+        }
+
+        /// <summary>
+        /// The update unit function.
+        /// This updates the units behavior.
+        /// </summary>
+        private void UpdateUnit()
+        {
+            this.timebetweenattacks += 1 * Time.deltaTime;
+            this.harvesttime += 1 * Time.deltaTime;
+
+            switch (this.TheExtractorFsm.CurrentState.Statename)
+            {
+                case "Idle":
+                    this.IdleState();
+                    break;
+                case "Battle":
+                    this.BattleState();
+                    break;
+                case "Harvest":
+                    this.HarvestState();
+                    break;
+                case "Stock":
+                    this.StockState();
                     break;
                 default:
                     break;
@@ -363,7 +423,7 @@ namespace Assets.Scripts
                     this.droppeditem = true;
                 }
 
-                if (this.navagent.remainingDistance <= this.Attackrange && this.navagent.remainingDistance >= 1.5f)
+                if (this.navagent.remainingDistance <= this.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();
                 }
@@ -391,36 +451,39 @@ namespace Assets.Scripts
         /// </summary>
         private void StockState()
         {
-            if (this.Resourcecount <= 0)
+            if (!this.droppeditem)
             {
-                for (int i = 0; i < this.transform.childCount; i++)
+                if (this.Resourcecount <= 0)
                 {
-                    Destroy(this.transform.GetChild(i).gameObject);
+                    for (int i = 0; i < this.transform.childCount; i++)
+                    {
+                        Destroy(this.transform.GetChild(i).gameObject);
+                    }
+
+                    if (this.TargetResource != null && this.TargetResource.Count > 0)
+                    {
+                        this.navagent.SetDestination(this.theRecentGeyser.transform.position);
+                        this.ChangeStates("Harvest");
+                    }
+                    else
+                    {
+                        this.ChangeStates("Idle");
+                    }
                 }
 
-                if (this.TargetResource != null && this.TargetResource.Count > 0)
-                {
-                    this.navagent.SetDestination(this.theRecentGeyser.transform.position);
-                    this.ChangeStates("Harvest");
-                }
-                else
-                {
-                    this.ChangeStates("Idle");
-                }
-            }
+                dropofftime += 1 * Time.deltaTime;
 
-            dropofftime += 1 * Time.deltaTime;
-
-            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance)
-            {
-                if (this.dropofftime >= 1.0f)
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance)
                 {
-                    Debug.Log("Dropping off the goods");
-                    this.Resourcecount--;
-                    Debug.Log("My resource count " + this.Resourcecount);
-                    User.GasCount++;
-                    Debug.Log("I have now stocked " + User.GasCount + " gas");
-                    this.dropofftime = 0;
+                    if (this.dropofftime >= 1.0f)
+                    {
+                        Debug.Log("Dropping off the goods");
+                        this.Resourcecount--;
+                        Debug.Log("My resource count " + this.Resourcecount);
+                        User.GasCount++;
+                        Debug.Log("I have now stocked " + User.GasCount + " gas");
+                        this.dropofftime = 0;
+                    }
                 }
             }
         }
@@ -472,34 +535,6 @@ namespace Assets.Scripts
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
             this.UpdateUnit();
-        }
-
-        /// <summary>
-        /// The update unit function.
-        /// This updates the units behavior.
-        /// </summary>
-        private void UpdateUnit()
-        {
-            this.timebetweenattacks += 1 * Time.deltaTime;
-            this.harvesttime += 1 * Time.deltaTime;
-
-            switch (this.TheExtractorFsm.CurrentState.Statename)
-            {
-                case "Idle":
-                    this.IdleState();
-                    break;
-                case "Battle":
-                    this.BattleState();
-                    break;
-                case "Harvest":
-                    this.HarvestState();
-                    break;
-                case "Stock":
-                    this.StockState();
-                    break;
-                default:
-                    break;
-            }
         }
     }
 }
