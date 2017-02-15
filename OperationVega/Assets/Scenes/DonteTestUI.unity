@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 21593115}
   - component: {fileID: 21593114}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FoodT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1212,7 +1212,7 @@ GameObject:
   - component: {fileID: 427199686}
   - component: {fileID: 427199685}
   m_Layer: 5
-  m_Name: Text
+  m_Name: GasT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1840,7 +1840,17 @@ MonoBehaviour:
   m_Craft: {fileID: 0}
   m_Clear: {fileID: 0}
   m_CancelAction: {fileID: 0}
+  m_Minerals: {fileID: 0}
+  m_Food: {fileID: 0}
+  m_CookedFood: {fileID: 0}
+  m_Gas: {fileID: 0}
+  m_Fuel: {fileID: 0}
   m_BackgroundUI: {fileID: 0}
+  m_MineralsT: {fileID: 1169772975}
+  m_FoodT: {fileID: 21593114}
+  m_CookedFoodT: {fileID: 1417281392}
+  m_GasT: {fileID: 427199685}
+  m_FuelT: {fileID: 1596045877}
 --- !u!4 &921365794
 Transform:
   m_ObjectHideFlags: 0
@@ -2234,7 +2244,7 @@ GameObject:
   - component: {fileID: 1169772976}
   - component: {fileID: 1169772975}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MineralsT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2677,7 +2687,7 @@ GameObject:
   - component: {fileID: 1417281393}
   - component: {fileID: 1417281392}
   m_Layer: 5
-  m_Name: Text
+  m_Name: CookedFoodT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3217,7 +3227,7 @@ GameObject:
   - component: {fileID: 1596045878}
   - component: {fileID: 1596045877}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FuelT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
