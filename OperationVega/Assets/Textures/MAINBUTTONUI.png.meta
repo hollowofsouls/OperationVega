@@ -1,10 +1,14 @@
 fileFormatVersion: 2
-guid: b7b2602017197c54695d9b68553c6bf4
-timeCreated: 1487108743
+guid: 5f667da416c6bbd4099912bad994e681
+timeCreated: 1487113643
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: CRAFTINGBACKGROUNDUI
+    21300000: SETTINGSBUTTON
+    21300002: +1MINERBUTTON
+    21300004: +1HARVESTERBUTTON
+    21300006: +1EXTRACTORBUTTON
+    21300008: WORKSHOPBUTTON
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -87,13 +91,65 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CRAFTINGBACKGROUNDUI
+      name: SETTINGSBUTTON
       rect:
         serializedVersion: 2
-        x: 665
-        y: 0
-        width: 941
-        height: 279
+        x: 16
+        y: 1002
+        width: 80
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: +1MINERBUTTON
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 1026
+        width: 53
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: +1HARVESTERBUTTON
+      rect:
+        serializedVersion: 2
+        x: 485
+        y: 1025
+        width: 52
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: +1EXTRACTORBUTTON
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 1025
+        width: 52
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: WORKSHOPBUTTON
+      rect:
+        serializedVersion: 2
+        x: 1656
+        y: 153
+        width: 228
+        height: 68
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
