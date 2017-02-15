@@ -82,6 +82,7 @@ namespace UI
             EventManager.Subscribe("Clear", this.OnClear);
             EventManager.Subscribe("Mine", this.OnMine);
             EventManager.Subscribe("Extract", this.OnExtract);
+            EventManager.Subscribe("Crafting", this.OnCraftingClick);
             #endregion
 
             #region -- Main Menu Subscribers --
@@ -113,6 +114,7 @@ namespace UI
             EventManager.UnSubscribe("Clear", this.OnClear);
             EventManager.UnSubscribe("Mine", this.OnMine);
             EventManager.UnSubscribe("Extract", this.OnExtract);
+            EventManager.UnSubscribe("Crafting", this.OnCrafting);
             #endregion
 
             #region -- Main Menu Unsubscribers --
@@ -143,6 +145,26 @@ namespace UI
 
 
             
+        }
+
+        public void OnActionsClick()
+        {
+            EventManager.Publish("Actions");
+        }
+
+        public void OnActions()
+        {
+            Debug.Log("Move Actions Tab down");
+        }
+
+        public void OnCraftingClick()
+        {
+            EventManager.Publish("Crafting");
+        }
+
+        public void OnCrafting()
+        {
+            Debug.Log("Move Crafting Tab down");
         }
         public void OnRallyClick()
         {
@@ -272,6 +294,7 @@ namespace UI
             //Function will quit game upon click.
             Debug.Log("Quit Game");
         }
+        #endregion
 
         #region -- Crafting -- 
         public void Minerals()
@@ -337,8 +360,17 @@ namespace UI
             Debug.Log("Fuel");
         }
 
+        public void OnThrustersClick()
+        {
+            EventManager.Publish("Thursters");
+        }
+        public void OnThrusters()
+        {
+
+        }
+
         #endregion
         #endregion
-        #endregion
+     
     }
 }
