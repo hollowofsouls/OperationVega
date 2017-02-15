@@ -78,8 +78,6 @@ namespace Assets.Scripts.Controllers
         {
             if (Input.mouseScrollDelta.y < 0)
             {
-                float currentSize = Camera.main.orthographicSize * -3;
-                Camera.main.transform.localPosition = new Vector3(0, 0, currentSize);
                 Camera.main.orthographicSize += 0.25f;
             }
             else if (Input.mouseScrollDelta.y > 0)

@@ -1,9 +1,13 @@
 ﻿
 namespace Assets.Scripts
 {
+	using System.Collections;
+	using System.Collections.Generic;
 	using System.Linq;
 
 	using Assets.Scripts.Interfaces;
+
+	using UnityEditor;
 
 	using UnityEngine;
 
@@ -22,25 +26,20 @@ namespace Assets.Scripts
 		/// The amount of steel required to build the part.
 		/// Accessible through the SteelCost property.
 		/// </summary>
-		private int steel;
+		private uint steel;
 
 		/// <summary>
 		/// The fuel.
 		/// The amount of Fuel required to build the part.
 		/// Accessible through the FuelCost property.
 		/// </summary>
-		private int fuel;
+		private uint fuel;
 
 		/// <summary>
 		/// The quality.
 		/// </summary>
-		private int quality;
-
-		/// <summary>
-		/// The ship.
-		/// </summary>
-		private Rocket ship;
-
+		private uint quality;
+		
 		/// <summary>
 		/// Gets or sets the carrying.
 		/// </summary>
@@ -60,7 +59,7 @@ namespace Assets.Scripts
 		/// <summary>
 		/// Gets or sets the quality.
 		/// </summary>
-		public int Quality
+		public uint Quality
 		{
 			get
 			{
@@ -76,7 +75,7 @@ namespace Assets.Scripts
 		/// <summary>
 		/// Gets or sets the steel cost.
 		/// </summary>
-		public int SteelCost
+		public uint SteelCost
 		{
 			get
 			{
@@ -92,7 +91,7 @@ namespace Assets.Scripts
 		/// <summary>
 		/// Gets or sets the fuel cost.
 		/// </summary>
-		public int FuelCost
+		public uint FuelCost
 		{
 			get
 			{
@@ -106,30 +105,6 @@ namespace Assets.Scripts
 		}
 
 		/// <summary>
-		/// Function for adding the parts to the list.
-		/// Need to work on removing parts if one of the same type is selected.
-		/// </summary>
-		public void AddParts()
-		{
-			if (this.ship.PartList.OfType<Cockpit>().Any())
-			{
-				foreach (IRocketParts go in this.ship.PartList)
-				{
-					if (go as Cockpit)
-					{
-						this.ship.PartList.Remove(go);
-					}
-				}
-			}
-			else if (!this.ship.PartList.OfType<Cockpit>().Any())
-			{
-				this.ship.PartList.Add(this);
-				
-				// Debug.Log("Added");
-			}
-		}
-
-		/// <summary>
 		/// Use this for initialization
 		/// </summary>
 		private void Start()
@@ -138,7 +113,6 @@ namespace Assets.Scripts
 			this.steel = 200;
 			this.fuel = 0;
 			this.capacity = 20;
-			this.ship = FindObjectOfType<Rocket>();
 		}
 
 		/// <summary>
@@ -146,10 +120,6 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Update()
 		{
-			if (Input.GetMouseButtonDown(0))
-			{
-				this.AddParts();
-			}
 		}
 	}
 }

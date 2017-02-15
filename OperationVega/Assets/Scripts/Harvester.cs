@@ -3,6 +3,9 @@ namespace Assets.Scripts
 {
     using Controllers;
     using Interfaces;
+
+    using UnityEditor;
+
     using UnityEngine;
     using UnityEngine.AI;
 
@@ -11,7 +14,15 @@ namespace Assets.Scripts
     /// </summary>
     public class Harvester : MonoBehaviour, IUnit, IGather, IDamageable
     {
+        /// <summary>
+        /// Reference to the clean food pefab
+        /// </summary>
         public GameObject cleanfood;
+
+        /// <summary>
+        /// Reference to the dirty food pefab
+        /// </summary>
+        public GameObject dirtyfood;
 
         /// <summary>
         /// The harvester finite state machine.
@@ -107,7 +118,21 @@ namespace Assets.Scripts
         [HideInInspector]
         public uint Resourcecount;
 
-        private NavMeshAgent navagent;
+        /// <summary>
+        /// The navigation agent reference.
+        /// </summary>
+        public NavMeshAgent navagent;
+
+        /// <summary>
+        /// The dropped item reference.
+        /// Determines whether an item was dropped or not.
+        /// </summary>
+        private bool droppeditem;
+
+        /// <summary>
+        /// The reference the physical item dropped.
+        /// </summary>
+        private GameObject theitemdropped;
 
         /// <summary>
         /// The time between attacks reference.
@@ -121,6 +146,16 @@ namespace Assets.Scripts
         /// </summary>
         private float harvesttime;
 
+        /// <summary>
+        /// The decontaminate time reference.
+        /// How long to take to decontaminate the resource.
+        /// </summary>
+        private float decontime;
+
+        /// <summary>
+        /// The drop off time reference.
+        /// How long it takes to drop off the resource at the silo.
+        /// </summary>
         private float dropofftime;
 
         /// <summary>
@@ -148,23 +183,18 @@ namespace Assets.Scripts
         private RangeHandler stockHandler;
 
         /// <summary>
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the decontamination state.
+        /// </summary>
+        private RangeHandler decontaminationHandler;
+
+        /// <summary>
         /// The range handler delegate.
         /// The delegate handles setting the attack range upon changing state.
         /// <para></para>
         /// <remarks><paramref name="number"></paramref> -The number to set the attack range to.</remarks>
         /// </summary>
         private delegate void RangeHandler(float number);
-
-        /// <summary>
-        /// The move function providing movement functionality.
-        /// </summary>
-        public void Move()
-        {
-            if (Vector3.Magnitude(this.transform.position - this.TargetClickPosition) > this.Healrange)
-            {
-                this.transform.position += this.TargetDirection * this.Speed * Time.deltaTime;
-            }
-        }
 
         /// <summary>
         /// The harvest function provides functionality of the harvester to harvest a resource.
@@ -184,6 +214,7 @@ namespace Assets.Scripts
                 { // Create the clean food object and parent it to the front of the harvester
                     var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
+                    clone.name = "PickupFood";
                     this.ChangeStates("Stock");
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
@@ -192,6 +223,15 @@ namespace Assets.Scripts
                 else if (this.Resourcecount >= 5 && this.TargetResource.Taint)
                 {
                     // The resource is tainted go to decontamination center
+                    // Create the dirty food object and parent it to the front of the harvester
+                    var clone = Instantiate(this.dirtyfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
+                    clone.transform.SetParent(this.transform);
+                    clone.name = "PickupFood";
+                    this.ChangeStates("Decontaminate");
+                    GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
+                    Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                    Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
+                    this.navagent.SetDestination(destination);
                 }
             }
         }
@@ -201,7 +241,28 @@ namespace Assets.Scripts
         /// </summary>
         public void Decontaminate()
         {
-            throw new System.NotImplementedException();
+            if (this.decontime >= 1.0f)
+            {
+                Debug.Log("Decontaminating");
+                this.Resourcecount--;
+                this.decontime = 0;
+
+                if (this.Resourcecount <= 0)
+                {
+                    for (int i = 0; i < this.transform.childCount; i++)
+                    {
+                        Destroy(this.transform.GetChild(i).gameObject);
+                    }
+
+                    this.Resourcecount = 5;
+                    var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
+                    clone.transform.SetParent(this.transform);
+                    this.ChangeStates("Stock");
+                    GameObject thesilo = GameObject.Find("Silo");
+                    Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+                    this.navagent.SetDestination(destination);
+                }
+            }
         }
 
         /// <summary>
@@ -249,6 +310,9 @@ namespace Assets.Scripts
                 case "Stock":
                     this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
                     break;
+                case "Decontaminate":
+                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    break;
                 default:
                     break;
             }
@@ -290,10 +354,12 @@ namespace Assets.Scripts
         {
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
+            this.decontime += 1 * Time.deltaTime;
 
             switch (this.TheHarvesterFsm.CurrentState.Statename)
             {
                 case "Idle":
+                    this.IdleState();
                     break;
                 case "Battle":
                     this.BattleState();
@@ -303,6 +369,9 @@ namespace Assets.Scripts
                     break;
                 case "Stock":
                     this.StockState();
+                    break;
+                case "Decontaminate":
+                    this.DecontaminationState();
                     break;
                 default:
                     break;
@@ -319,6 +388,8 @@ namespace Assets.Scripts
             this.Attackspeed = 3;
             this.Speed = 2;
             this.harvesttime = 1.0f;
+            this.decontime = 1.0f;
+            this.droppeditem = false;
 
             this.timebetweenattacks = this.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -339,6 +410,27 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The idle state function.
+        /// Has the funtionality of checking for dropped items.
+        /// </summary>
+        private void IdleState()
+        {
+            if (this.droppeditem)
+            {
+                this.navagent.SetDestination(this.theitemdropped.transform.position);
+
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && this.theitemdropped.name == "PickupFood")
+                {
+                    Debug.Log("Found my food");
+                    this.theitemdropped.transform.SetParent(this.transform);
+                    this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+                    this.droppeditem = false;
+                    this.theitemdropped = null;
+                }
+            }
+        }
+
+        /// <summary>
         /// The battle state function.
         /// The function called while in the battle state.
         /// </summary>
@@ -346,7 +438,17 @@ namespace Assets.Scripts
         {
             if (this.Target != null)
             {
-                if (this.navagent.remainingDistance <= this.Healrange && this.navagent.remainingDistance >= 1.5f)
+                if (this.transform.childCount > 0)
+                {
+                    this.transform.GetChild(0).gameObject.transform.position = new Vector3(this.transform.GetChild(0).gameObject.transform.position.x, 0.2f, this.transform.GetChild(0).gameObject.transform.position.z);
+                    this.theitemdropped = this.transform.GetChild(0).gameObject;
+                    this.transform.DetachChildren();
+                    this.droppeditem = true;
+                }
+
+                this.transform.DetachChildren();
+
+                if (this.navagent.remainingDistance <= this.Healrange && !this.navagent.pathPending)
                 {
                     this.HealStun();
                 }
@@ -359,9 +461,9 @@ namespace Assets.Scripts
         /// </summary>
         private void HarvestState()
         {
-            if (this.TargetResource != null && this.TargetResource.Count > 0)
+            if (this.TargetResource != null && this.TargetResource.Count > 0 && this.transform.childCount <= 0)
             {
-                if (this.navagent.remainingDistance <= 2.0f && this.navagent.remainingDistance >= 1.4f)
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
                     this.Harvest();
                 }
@@ -394,7 +496,7 @@ namespace Assets.Scripts
 
             dropofftime += 1 * Time.deltaTime;
 
-            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance)
+            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
             {
                 if (this.dropofftime >= 1.0f)
                 {
@@ -409,6 +511,18 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The decontamination state function.
+        /// Handles the decontamination of resources at the decontamination building.
+        /// </summary>
+        private void DecontaminationState()
+        {
+            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            {
+                this.Decontaminate();
+            }
+        }
+
+        /// <summary>
         /// The awake function.
         /// </summary>
         private void Awake()
@@ -417,12 +531,14 @@ namespace Assets.Scripts
             this.battleHandler = this.ResetStoppingDistance;
             this.harvestHandler = this.ResetStoppingDistance;
             this.stockHandler = this.ResetStoppingDistance;
+            this.decontaminationHandler = this.ResetStoppingDistance;
 
             this.TheHarvesterFsm.CreateState("Init", null);
             this.TheHarvesterFsm.CreateState("Idle", this.idleHandler);
             this.TheHarvesterFsm.CreateState("Battle", this.battleHandler);
             this.TheHarvesterFsm.CreateState("Harvest", this.harvestHandler);
             this.TheHarvesterFsm.CreateState("Stock", this.stockHandler);
+            this.TheHarvesterFsm.CreateState("Decontaminate", this.decontaminationHandler);
 
             this.TheHarvesterFsm.AddTransition("Init", "Idle", "auto");
             this.TheHarvesterFsm.AddTransition("Idle", "Battle", "IdleToBattle");
@@ -433,8 +549,16 @@ namespace Assets.Scripts
             this.TheHarvesterFsm.AddTransition("Harvest", "Battle", "HarvestToBattle");
             this.TheHarvesterFsm.AddTransition("Harvest", "Stock", "HarvestToStock");
             this.TheHarvesterFsm.AddTransition("Battle", "Stock", "BattleToStock");
+            this.TheHarvesterFsm.AddTransition("Idle", "Stock", "IdleToStock");
+            this.TheHarvesterFsm.AddTransition("Stock", "Idle", "StockToIdle");
             this.TheHarvesterFsm.AddTransition("Stock", "Battle", "StockToBattle");
             this.TheHarvesterFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
+            this.TheHarvesterFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
+            this.TheHarvesterFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
+            this.TheHarvesterFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
+            this.TheHarvesterFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
+            this.TheHarvesterFsm.AddTransition("Decontaminate", "Battle", "DecontaminateToBattle");
+            this.TheHarvesterFsm.AddTransition("Battle", "Decontaminate", "BattleToDecontaminate");
         }
 
         /// <summary>
