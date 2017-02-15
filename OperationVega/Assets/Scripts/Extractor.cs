@@ -298,7 +298,6 @@ namespace Assets.Scripts
         /// </param>
         public void SetTarget(GameObject theTarget)
         {
-            this.TargetResource = null;
             this.theEnemy = theTarget;
             if (this.theEnemy != null)
             {

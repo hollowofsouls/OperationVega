@@ -452,13 +452,13 @@ namespace Assets.Scripts.Controllers
                     {
                         IUnit unit = (IUnit)go.GetComponent(typeof(IUnit));
 
-                        if (go.transform.GetChild(0).name == "Minerals" || this.theselectedobject.transform.GetChild(0).name == "PickupFood")
+                        if (go.transform.GetChild(0).name == "Minerals" || go.transform.GetChild(0).name == "PickupFood")
                         {
-                            this.theUnit.ChangeStates("Decontaminate");
+                            unit.ChangeStates("Decontaminate");
                             Transform thedoor = hit.transform.GetChild(1);
                             Debug.Log(thedoor.name);
                             Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
-                            this.theUnit.SetTheMovePosition(destination);
+                            unit.SetTheMovePosition(destination);
                         }
                     }
                 }

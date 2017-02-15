@@ -293,6 +293,7 @@ namespace Assets.Scripts
                     this.Resourcecount = 5;
                     var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
+                    clone.name = "PickupFood";
                     this.ChangeStates("Stock");
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
@@ -374,7 +375,6 @@ namespace Assets.Scripts
         /// </param>
         public void SetTarget(GameObject theTarget)
         {
-            this.TargetResource = null;
             this.theEnemy = theTarget;
             if (this.theEnemy != null)
             {
