@@ -234,7 +234,7 @@ namespace Assets.Scripts
         /// </summary>
         public void Harvest()
         {
-            if (this.harvesttime >= 1.0f)
+            if (this.harvesttime >= 1.0f && !this.droppeditem)
             {
                 Debug.Log("I am harvesting");
                 this.TargetResource.Count--;
@@ -374,6 +374,7 @@ namespace Assets.Scripts
         /// </param>
         public void SetTarget(GameObject theTarget)
         {
+            this.TargetResource = null;
             this.theEnemy = theTarget;
             if (this.theEnemy != null)
             {
