@@ -134,15 +134,15 @@ namespace Assets.Scripts
         private NavMeshAgent navagent;
 
         /// <summary>
-        /// The dropped item reference.
-        /// Determines whether an item was dropped or not.
-        /// </summary>
-        private bool droppeditem;
-
-        /// <summary>
         /// The reference the physical item dropped.
         /// </summary>
         private GameObject theitemdropped;
+
+        /// <summary>
+        /// The object to pickup.
+        /// </summary>
+        [SerializeField]
+        private GameObject objecttopickup;
 
         /// <summary>
         /// Instance of the RangeHandler delegate.
@@ -169,6 +169,12 @@ namespace Assets.Scripts
         private RangeHandler stockHandler;
 
         /// <summary>
+        /// Instance of the RangeHandler delegate.
+        /// Called in changing to the pickup state.
+        /// </summary>
+        private RangeHandler pickupHandler;
+
+        /// <summary>
         /// The range handler delegate.
         /// The delegate handles setting the attack range upon changing state.
         /// <para></para>
@@ -181,7 +187,7 @@ namespace Assets.Scripts
         /// </summary>
         public void Harvest()
         {
-            if (this.harvesttime >= 1.0f && !this.droppeditem)
+            if (this.harvesttime >= 1.0f && this.Resourcecount < 5)
             {
                 Debug.Log("I am harvesting");
                 this.TargetResource.Count--;
@@ -261,6 +267,23 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The go to pickup function.
+        /// Parses and sends the unit to pickup a dropped resource.
+        /// </summary>
+        /// <param name="thepickup">
+        /// The item to pickup.
+        /// </param>
+        public void GoToPickup(GameObject thepickup)
+        {
+            if (thepickup.name == "GasTank")
+            {
+                this.objecttopickup = thepickup;
+                this.navagent.SetDestination(thepickup.transform.position);
+                this.ChangeStates("PickUp");
+            }
+        }
+
+        /// <summary>
         /// The change states function.
         /// This function changes the state to the passed in state.
         /// <para></para>
@@ -283,6 +306,9 @@ namespace Assets.Scripts
                     break;
                 case "Stock":
                     this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
+                    break;
+                case "PickUp":
+                    this.TheExtractorFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
                     break;
                 default:
                     break;
@@ -314,7 +340,7 @@ namespace Assets.Scripts
         /// </param>
         public void SetTargetResource(GameObject theResource)
         {
-            if (this.TargetResource == null && theResource.GetComponent<Gas>())
+            if (theResource.GetComponent<Gas>())
             {
                 this.TargetResource = (IResources)theResource.GetComponent(typeof(IResources));
                 this.navagent.SetDestination(theResource.transform.position);
@@ -346,6 +372,9 @@ namespace Assets.Scripts
                 case "Stock":
                     this.StockState();
                     break;
+                case "PickUp":
+                    this.PickUpState();
+                    break;
                 default:
                     break;
             }
@@ -361,7 +390,6 @@ namespace Assets.Scripts
             this.Attackspeed = 3;
             this.Speed = 2;
             this.harvesttime = 1.0f;
-            this.droppeditem = false;
 
             this.timebetweenattacks = this.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -387,16 +415,16 @@ namespace Assets.Scripts
         /// </summary>
         private void IdleState()
         {
-            if (this.droppeditem)
+            if (this.theitemdropped != null && this.objecttopickup == null)
             {
                 this.navagent.SetDestination(this.theitemdropped.transform.position);
 
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && this.theitemdropped.name == "GasTank")
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
                     Debug.Log("Found my gas");
                     this.theitemdropped.transform.SetParent(this.transform);
                     this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
-                    this.droppeditem = false;
+                    this.Resourcecount += 5;
                     this.theitemdropped = null;
 
                     this.ChangeStates("Stock");
@@ -419,8 +447,9 @@ namespace Assets.Scripts
                 {
                     this.transform.GetChild(0).gameObject.transform.position = new Vector3(this.transform.GetChild(0).gameObject.transform.position.x, 0.25f, this.transform.GetChild(0).gameObject.transform.position.z);
                     this.theitemdropped = this.transform.GetChild(0).gameObject;
+                    this.theitemdropped.tag = "PickUp";
                     this.transform.DetachChildren();
-                    this.droppeditem = true;
+                    this.Resourcecount = 0;
                 }
 
                 if (this.navagent.remainingDistance <= this.Attackrange && !this.navagent.pathPending)
@@ -438,7 +467,7 @@ namespace Assets.Scripts
         {
             if (this.TargetResource != null && this.TargetResource.Count > 0 && this.transform.childCount <= 0)
             {
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && this.navagent.remainingDistance >= 1.4f)
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
                     this.Harvest();
                 }
@@ -451,7 +480,7 @@ namespace Assets.Scripts
         /// </summary>
         private void StockState()
         {
-            if (!this.droppeditem)
+            if (this.transform.Find("GasTank"))
             {
                 if (this.Resourcecount <= 0)
                 {
@@ -473,7 +502,7 @@ namespace Assets.Scripts
 
                 dropofftime += 1 * Time.deltaTime;
 
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance)
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
                     if (this.dropofftime >= 1.0f)
                     {
@@ -489,6 +518,35 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The pick up state function.
+        /// Regulates game flow while in the pick up state.
+        /// </summary>
+        private void PickUpState()
+        {
+            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            {
+                Transform gastank = this.transform.Find("GasTank");
+
+                if (gastank == null)
+                {
+                    Debug.Log("Im gonna pick this up because i dont have it and their are no decontaminates");
+                    this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+                    this.objecttopickup.transform.SetParent(this.transform);
+                    this.Resourcecount += 5;
+                    Debug.Log(this.Resourcecount);
+                }
+                else
+                {
+                  this.Resourcecount += 5;
+                  Debug.Log(this.Resourcecount);
+                  Destroy(this.objecttopickup);
+                }
+
+                this.ChangeStates("Idle");
+            }
+        }
+
+        /// <summary>
         /// The awake function.
         /// </summary>
         private void Awake()
@@ -497,12 +555,14 @@ namespace Assets.Scripts
             this.battleHandler = this.ResetStoppingDistance;
             this.harvestHandler = this.ResetStoppingDistance;
             this.stockHandler = this.ResetStoppingDistance;
+            this.pickupHandler = this.ResetStoppingDistance;
 
             this.TheExtractorFsm.CreateState("Init", null);
             this.TheExtractorFsm.CreateState("Idle", this.idleHandler);
             this.TheExtractorFsm.CreateState("Battle", this.battleHandler);
             this.TheExtractorFsm.CreateState("Harvest", this.harvestHandler);
             this.TheExtractorFsm.CreateState("Stock", this.stockHandler);
+            this.TheExtractorFsm.CreateState("PickUp", this.pickupHandler);
 
             this.TheExtractorFsm.AddTransition("Init", "Idle", "auto");
             this.TheExtractorFsm.AddTransition("Idle", "Battle", "IdleToBattle");
@@ -517,6 +577,16 @@ namespace Assets.Scripts
             this.TheExtractorFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
             this.TheExtractorFsm.AddTransition("Idle", "Stock", "IdleToStock");
             this.TheExtractorFsm.AddTransition("Stock", "Idle", "StockToIdle");
+            this.TheExtractorFsm.AddTransition("PickUp", "Idle", "PickUpToIdle");
+            this.TheExtractorFsm.AddTransition("PickUp", "Battle", "PickUpToBattle");
+            this.TheExtractorFsm.AddTransition("PickUp", "Harvest", "PickUpToHarvest");
+            this.TheExtractorFsm.AddTransition("PickUp", "Stock", "PickUpToStock");
+            this.TheExtractorFsm.AddTransition("Idle", "PickUp", "IdleToPickUp");
+            this.TheExtractorFsm.AddTransition("Battle", "PickUp", "BattleToPickUp");
+            this.TheExtractorFsm.AddTransition("Harvest", "PickUp", "HarvestToPickUp");
+            this.TheExtractorFsm.AddTransition("Stock", "PickUp", "StockToPickUp");
+
+
         }
 
         /// <summary>

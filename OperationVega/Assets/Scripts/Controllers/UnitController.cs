@@ -1,7 +1,6 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     using Interfaces;
@@ -260,6 +259,10 @@ namespace Assets.Scripts.Controllers
                     {
                         this.CommandToHarvest(hit);
                     }
+                    else if (hit.transform.tag == "PickUp")
+                    {
+                        this.CommandToPickUp(hit);
+                    }
                     else if (hit.transform.gameObject.name == "Silo")
                     {
                         this.CommandToStock(hit);
@@ -388,6 +391,21 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
+        /// The command to pick up function.
+        /// This function sends units to the pickup item.
+        /// </summary>
+        /// <param name="hit">
+        /// The hit.
+        /// </param>
+        private void CommandToPickUp(RaycastHit hit)
+        {
+            if (this.theUnit != null)
+            {
+                this.theUnit.GoToPickup(hit.transform.gameObject);
+            }
+        }
+
+        /// <summary>
         /// The command to stock function.
         /// Sends units to stock.
         /// </summary>
@@ -431,7 +449,7 @@ namespace Assets.Scripts.Controllers
         {
             if (this.theUnit != null)
             {
-                if (this.theselectedobject.transform.GetChild(0).name == "Minerals" || this.theselectedobject.transform.GetChild(0).name == "PickupFood")
+                if (this.theselectedobject.transform.GetChild(0).name == "MineralsTainted" || this.theselectedobject.transform.GetChild(0).name == "FoodTainted")
                 {
                     this.theUnit.ChangeStates("Decontaminate");
                     Transform thedoor = hit.transform.GetChild(1);
@@ -452,7 +470,7 @@ namespace Assets.Scripts.Controllers
                     {
                         IUnit unit = (IUnit)go.GetComponent(typeof(IUnit));
 
-                        if (go.transform.GetChild(0).name == "Minerals" || go.transform.GetChild(0).name == "PickupFood")
+                        if (go.transform.GetChild(0).name == "MineralsTainted" || go.transform.GetChild(0).name == "FoodTainted")
                         {
                             unit.ChangeStates("Decontaminate");
                             Transform thedoor = hit.transform.GetChild(1);

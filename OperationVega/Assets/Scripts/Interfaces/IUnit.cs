@@ -41,6 +41,15 @@ namespace Assets.Scripts.Interfaces
         void SetTheMovePosition(Vector3 theClickPosition);
 
         /// <summary>
+        /// The go to pickup function.
+        /// Parses and sends the unit to pickup a dropped resource.
+        /// </summary>
+        /// <param name="thepickup">
+        /// The item to pickup.
+        /// </param>
+        void GoToPickup(GameObject thepickup);
+
+        /// <summary>
         /// The change states function.
         /// This function changes the state to the passed in state.
         /// <para></para>
