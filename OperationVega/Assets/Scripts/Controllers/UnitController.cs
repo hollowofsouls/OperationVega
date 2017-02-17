@@ -449,7 +449,7 @@ namespace Assets.Scripts.Controllers
         {
             if (this.theUnit != null)
             {
-                if (this.theselectedobject.transform.GetChild(0).name == "MineralsTainted" || this.theselectedobject.transform.GetChild(0).name == "FoodTainted")
+                if (this.theselectedobject.transform.Find("MineralsTainted") || this.theselectedobject.transform.Find("FoodTainted"))
                 {
                     this.theUnit.ChangeStates("Decontaminate");
                     Transform thedoor = hit.transform.GetChild(1);
@@ -470,7 +470,7 @@ namespace Assets.Scripts.Controllers
                     {
                         IUnit unit = (IUnit)go.GetComponent(typeof(IUnit));
 
-                        if (go.transform.GetChild(0).name == "MineralsTainted" || go.transform.GetChild(0).name == "FoodTainted")
+                        if (go.transform.Find("MineralsTainted") || go.transform.Find("FoodTainted"))
                         {
                             unit.ChangeStates("Decontaminate");
                             Transform thedoor = hit.transform.GetChild(1);

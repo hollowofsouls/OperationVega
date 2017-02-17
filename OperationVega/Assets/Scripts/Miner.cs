@@ -113,7 +113,7 @@ namespace Assets.Scripts
         /// The resource count of the miner.
         /// </summary>
         [HideInInspector]
-        public uint Resourcecount;
+        public int Resourcecount;
 
         /// <summary>
         /// The navigation agent reference.
@@ -155,6 +155,12 @@ namespace Assets.Scripts
         /// How long it takes to drop off the resource at the silo.
         /// </summary>
         private float dropofftime;
+
+        /// <summary>
+        /// The already stocked count reference.
+        /// This holds the count of a resource already stocked to keep track.
+        /// </summary>
+        private int alreadystockedcount;
 
         /// <summary>
         /// Instance of the RangeHandler delegate.
@@ -205,7 +211,7 @@ namespace Assets.Scripts
         /// </summary>
         public void Harvest()
         {
-            if (this.harvesttime >= 1.0f && this.Resourcecount < 5)
+            if (this.harvesttime >= 1.0f)
             {
                 Debug.Log("I am harvesting");
                 this.TargetResource.Count--;
@@ -221,6 +227,7 @@ namespace Assets.Scripts
                     var clone = Instantiate(this.cleanmineral, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
                     clone.name = "Minerals";
+                    this.Resourcecount = 0;
                     this.ChangeStates("Stock");
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
@@ -254,18 +261,33 @@ namespace Assets.Scripts
 
                 if (this.Resourcecount <= 0)
                 {
+                    this.Resourcecount = 0;
+                    this.alreadystockedcount = 0;
+                    int counter = 0;
+
                     for (int i = 0; i < this.transform.childCount; i++)
                     {
-                        Destroy(this.transform.GetChild(i).gameObject);
+                        if (this.transform.GetChild(i).name == "MineralsTainted")
+                        {
+                            Destroy(this.transform.GetChild(i).gameObject);
+                            counter++;
+                        }
                     }
 
-                    this.Resourcecount = 5;
-                    var clone = Instantiate(
+                    for (int i = 0; i < counter; i++)
+                    {
+                        var clone = Instantiate(
                         this.cleanmineral,
                         this.transform.position + (this.transform.forward * 0.6f),
                         this.transform.rotation);
-                    clone.transform.SetParent(this.transform);
-                    clone.name = "Minerals";
+                        clone.transform.SetParent(this.transform);
+                        clone.name = "Minerals";
+                        if (i > 0)
+                        {
+                            clone.transform.gameObject.SetActive(false);
+                        }
+                    }
+
                     this.ChangeStates("Stock");
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(
@@ -485,6 +507,32 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The tally resources function.
+        /// This function tallies up the resources in hand.
+        /// </summary>
+        /// <param name="num">
+        /// The number in this case will not be used.
+        /// </param>
+        private void TallyResources(float num)
+        {
+            this.navagent.stoppingDistance = num;
+
+            this.Resourcecount = 0;
+
+            foreach (Transform t in this.transform)
+            {
+                if (t.name == "Minerals")
+                {
+                    this.Resourcecount += 5;
+                }
+            }
+
+            this.Resourcecount -= this.alreadystockedcount;
+
+            Debug.Log("Total to stock" + this.Resourcecount);
+        }
+
+        /// <summary>
         /// The idle state function.
         /// Has the funtionality of checking for dropped items.
         /// </summary>
@@ -492,6 +540,16 @@ namespace Assets.Scripts
         {
             if (this.theitemdropped != null && this.objecttopickup == null)
             {
+
+                if (this.transform.Find("Minerals") && this.theitemdropped.name == "MineralsTainted")
+                {
+                    return;
+                }
+                else if (this.transform.Find("MineralsTainted") && this.theitemdropped.name == "Minerals")
+                {
+                    return;
+                }
+
                 this.navagent.SetDestination(this.theitemdropped.transform.position);
 
                 if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
@@ -499,7 +557,6 @@ namespace Assets.Scripts
                     Debug.Log("Found my mineral");
                     this.theitemdropped.transform.SetParent(this.transform);
                     this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
-                    this.Resourcecount += 5;
                     this.theitemdropped = null;
 
                     if (this.transform.Find("MineralsTainted"))
@@ -528,16 +585,25 @@ namespace Assets.Scripts
         {
             if (this.Target != null)
             {
-                if (this.transform.childCount > 0)
-                {
-                    this.transform.GetChild(0).gameObject.transform.position = new Vector3(
-                            this.transform.GetChild(0).gameObject.transform.position.x,
-                            0f,
-                            this.transform.GetChild(0).gameObject.transform.position.z);
-                    this.theitemdropped = this.transform.GetChild(0).gameObject;
-                    this.theitemdropped.tag = "PickUp";
+                Transform cleanminerals = this.transform.Find("Minerals");
+                Transform dirtyminerals = this.transform.Find("MineralsTainted");
 
-                    this.transform.DetachChildren();
+                if (cleanminerals != null)
+                {
+                    cleanminerals.position = new Vector3(cleanminerals.position.x, 0f, cleanminerals.position.z);
+                    this.theitemdropped = cleanminerals.gameObject;
+                    this.theitemdropped.tag = "PickUp";
+                    cleanminerals.gameObject.SetActive(true);
+                    cleanminerals.transform.parent = null;
+                    this.Resourcecount = 0;
+                }
+                else if (dirtyminerals != null)
+                {
+                    dirtyminerals.position = new Vector3(dirtyminerals.position.x, 0f, dirtyminerals.position.z);
+                    this.theitemdropped = dirtyminerals.gameObject;
+                    this.theitemdropped.tag = "PickUp";
+                    dirtyminerals.gameObject.SetActive(true);
+                    dirtyminerals.transform.parent = null;
                     this.Resourcecount = 0;
                 }
 
@@ -556,9 +622,12 @@ namespace Assets.Scripts
         {
             if (this.TargetResource != null && this.TargetResource.Count > 0)
             {
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+                if (!this.transform.Find("Minerals") && !this.transform.Find("MineralsTainted"))
                 {
-                    this.Harvest();
+                    if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+                    {
+                        this.Harvest();
+                    }
                 }
             }
         }
@@ -573,9 +642,15 @@ namespace Assets.Scripts
             {
                 if (this.Resourcecount <= 0)
                 {
+                    this.Resourcecount = 0;
+                    this.alreadystockedcount = 0;
+
                     for (int i = 0; i < this.transform.childCount; i++)
                     {
-                        Destroy(this.transform.GetChild(i).gameObject);
+                        if (this.transform.GetChild(i).name == "Minerals")
+                        {
+                            Destroy(this.transform.GetChild(i).gameObject);
+                        }
                     }
 
                     if (this.TargetResource != null && this.TargetResource.Count > 0)
@@ -597,6 +672,7 @@ namespace Assets.Scripts
                     {
                         Debug.Log("Dropping off the goods");
                         this.Resourcecount--;
+                        this.alreadystockedcount++;
                         Debug.Log("My resource count " + this.Resourcecount);
                         User.MineralsCount++;
                         Debug.Log("I have now stocked " + User.MineralsCount + " minerals");
@@ -619,28 +695,26 @@ namespace Assets.Scripts
 
                 if (mineral == null && mineraltainted == null)
                 {
-                    Debug.Log("Im gonna pick this up because i dont have it and their are no decontaminates");
                     this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                     this.objecttopickup.transform.SetParent(this.transform);
-                    this.Resourcecount += 5;
-                    Debug.Log(this.Resourcecount);
                 }
                 else if (this.objecttopickup.name == "Minerals")
                 {
                     if (mineral != null && mineraltainted == null)
                     {
-                        this.Resourcecount += 5;
-                        Debug.Log(this.Resourcecount);
-                        Destroy(this.objecttopickup);
+                        this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+                        this.objecttopickup.transform.SetParent(this.transform);
+                        this.objecttopickup.gameObject.SetActive(false);
                     }
                 }
                 else if (this.objecttopickup.name == "MineralsTainted")
                 {
                     if (mineraltainted != null && mineral == null)
                     {
-                        this.Resourcecount += 5;
-                        Debug.Log(this.Resourcecount);
-                        Destroy(this.objecttopickup);
+                        this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+                        this.objecttopickup.transform.SetParent(this.transform);
+                        this.objecttopickup.gameObject.SetActive(false);
+                        this.Resourcecount = 5;
                     }
                 }
 
@@ -671,7 +745,7 @@ namespace Assets.Scripts
             this.idleHandler = this.ResetStoppingDistance;
             this.battleHandler = this.ResetStoppingDistance;
             this.harvestHandler = this.ResetStoppingDistance;
-            this.stockHandler = this.ResetStoppingDistance;
+            this.stockHandler = this.TallyResources;
             this.decontaminationHandler = this.ResetStoppingDistance;
             this.pickupHandler = this.ResetStoppingDistance;
 
