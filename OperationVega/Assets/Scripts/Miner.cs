@@ -123,7 +123,6 @@ namespace Assets.Scripts
         /// <summary>
         /// The reference the physical item dropped.
         /// </summary>
-        [SerializeField]
         private GameObject theitemdropped;
 
         /// <summary>
@@ -697,6 +696,10 @@ namespace Assets.Scripts
                 {
                     this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                     this.objecttopickup.transform.SetParent(this.transform);
+                    if (this.objecttopickup.name == "MineralsTainted")
+                    {
+                        this.Resourcecount = 5;
+                    }
                 }
                 else if (this.objecttopickup.name == "Minerals")
                 {

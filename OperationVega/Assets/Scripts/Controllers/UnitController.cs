@@ -54,7 +54,7 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The list of units selected by drag screen.
         /// </summary>
-        [HideInInspector]
+        //[HideInInspector]
         public List<GameObject> Units = new List<GameObject>();
 
         /// <summary>
@@ -133,6 +133,9 @@ namespace Assets.Scripts.Controllers
 
                 if (DragScreen.Contains(camPos) & !this.Units.Contains(theunit))
                 {
+                    GameObject selectionsquare = theunit.transform.FindChild("SelectionHighlight").gameObject;
+                    selectionsquare.GetComponent<MeshRenderer>().enabled = true;
+                    selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                     Debug.DrawLine(theunit.transform.position, new Vector3(theunit.transform.position.x, 5.0f, theunit.transform.position.z), Color.black);
                     this.Units.Add(theunit);
                 }
@@ -179,6 +182,9 @@ namespace Assets.Scripts.Controllers
                     {
                         this.theUnit = (IUnit)hit.transform.GetComponent(typeof(IUnit));
                         this.theselectedobject = hit.transform.gameObject;
+                        GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
+                        selectionsquare.GetComponent<MeshRenderer>().enabled = true;
+                        selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                         Debug.DrawLine(this.theselectedobject.transform.position, new Vector3(this.theselectedobject.transform.position.x, 5.0f, this.theselectedobject.transform.position.z), Color.black);
                     }
                 }
@@ -194,7 +200,6 @@ namespace Assets.Scripts.Controllers
             if (Input.GetMouseButtonDown(0))
             {
                 this.theUnit = null;
-                this.Units.Clear();
                 this.startclick = Input.mousePosition;
             }
             else if (Input.GetMouseButtonUp(0))
@@ -229,9 +234,25 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ClearSelectedUnits()
         {
+            Debug.Log("clear");
+
+            if (this.Units.Count > 0)
+            { Debug.Log("boop");
+                foreach (GameObject go in this.Units)
+                {
+                    GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
+                    selectionsquare.GetComponent<MeshRenderer>().enabled = false;
+                }
+            }
+
             this.Units.Clear();
             this.theUnit = null;
             this.theclickedactionobject = null;
+            if (this.theselectedobject != null)
+            {
+                GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
+                selectionsquare.GetComponent<MeshRenderer>().enabled = false;
+            }
         }
 
         /// <summary>
