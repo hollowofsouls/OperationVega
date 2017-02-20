@@ -1,10 +1,10 @@
 ﻿
 namespace Assets.Scripts
 {
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 
+	using Assets.Scripts.BaseClasses;
 	using Assets.Scripts.Interfaces;
 
 	using UnityEngine;
@@ -84,15 +84,10 @@ namespace Assets.Scripts
 		/// </returns>
 		public bool ShipBuild()
 		{
-			if (this.allParts.OfType<Cockpit>().Any() &&
-				this.allParts.OfType<Chassis>().Any() &&
-				this.allParts.OfType<Thrusters>().Any() &&
-				this.allParts.OfType<Wings>().Any())
-			{
-				return true;
-			}
-
-			return false;
+			return this.allParts.OfType<BaseCockpit>().Any() &&
+			       this.allParts.OfType<BaseChassis>().Any() &&
+			       this.allParts.OfType<BaseThrusters>().Any() &&
+			       this.allParts.OfType<BaseWings>().Any();
 		}
 
 		/// <summary>
@@ -107,12 +102,12 @@ namespace Assets.Scripts
 		/// </param>
 		public void AddParts(List<IRocketParts> secondaryList, IRocketParts selectedParts)
 		{
-			if (this.allParts.Contains(selectedParts))
+			if (secondaryList.Contains(selectedParts))
 			{
 				this.allParts.Remove(selectedParts);
 				this.totalQuality -= selectedParts.Quality;
 			}
-			else if (!this.allParts.Contains(selectedParts))
+			else if (!secondaryList.Contains(selectedParts))
 			{
 				if (User.SteelCount >= selectedParts.SteelCost && User.FuelCount >= selectedParts.FuelCost)
 				{
@@ -140,10 +135,16 @@ namespace Assets.Scripts
 		private void Start()
 		{
 			this.allParts = new List<IRocketParts>();
+
 			this.selectableCockpit = FindObjectOfType<Cockpit>();
 			this.selectableChassis = FindObjectOfType<Chassis>();
 			this.selectableWings = FindObjectOfType<Wings>();
 			this.selectableThrusters = FindObjectOfType<Thrusters>();
+
+			this.selectableCockpit.Accessed = new BaseCockpit(20, 200, 0, 20);
+			this.selectableChassis.Accessed = new BaseChassis(200, 0, 20);
+			this.selectableWings.Accessed = new BaseWings(200, 0, 20);
+			this.selectableThrusters.Accessed = new BaseThrusters(200, 50, 20);
 		}
 
 		/// <summary>
@@ -155,22 +156,22 @@ namespace Assets.Scripts
 
 			if (Input.GetMouseButtonDown(0))
 			{
-				this.AddParts(spareList, this.selectableCockpit);
+				this.AddParts(spareList, this.selectableCockpit.Accessed);
 			}
 
 			if (Input.GetMouseButtonDown(1))
 			{
-				this.AddParts(spareList, this.selectableChassis);
+				this.AddParts(spareList, this.selectableChassis.Accessed);
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad1))
 			{
-				this.AddParts(spareList, this.selectableWings);
+				this.AddParts(spareList, this.selectableWings.Accessed);
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad2))
 			{
-				this.AddParts(spareList, this.selectableThrusters);
+				this.AddParts(spareList, this.selectableThrusters.Accessed);
 			}
 
 			if (Input.GetKeyDown(KeyCode.A))
@@ -182,7 +183,7 @@ namespace Assets.Scripts
 			{
 				User.FuelCount += 100;
 			}
-
+			
 			Debug.Log(this.allParts.Count);
 			Debug.Log("Total: " + this.totalQuality);
 		}
