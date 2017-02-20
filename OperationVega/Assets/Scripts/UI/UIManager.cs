@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using Assets.Scripts.Managers;
 
 
+
 namespace UI
 {
     using Assets.Scripts;
@@ -46,6 +47,14 @@ namespace UI
         private Button m_Fuel;
         [SerializeField]
         private Canvas m_BackgroundUI;
+        [SerializeField]
+        private RectTransform m_ActionsTAB;
+        [SerializeField]
+        private RectTransform m_CraftingTAB;
+        [SerializeField]
+        private RectTransform m_WorkshopUI;
+        [SerializeField]
+        private RectTransform m_OptionsUI;
 
         [SerializeField]
         private Text m_MineralsT;
@@ -82,11 +91,12 @@ namespace UI
             EventManager.Subscribe("Clear", this.OnClear);
             EventManager.Subscribe("Mine", this.OnMine);
             EventManager.Subscribe("Extract", this.OnExtract);
+            EventManager.Subscribe("Crafting", this.OnCrafting);
             #endregion
 
             #region -- Main Menu Subscribers --
             EventManager.Subscribe("NewGame", this.NewGameClick);
-            EventManager.Subscribe("Options", this.OnOptions);
+            EventManager.Subscribe("Options", this.OnOptionsClick);
             EventManager.Subscribe("Instructions", this.OnInstructions);
             EventManager.Subscribe("QuitGame", this.OnQuitGame);
             #endregion
@@ -113,6 +123,7 @@ namespace UI
             EventManager.UnSubscribe("Clear", this.OnClear);
             EventManager.UnSubscribe("Mine", this.OnMine);
             EventManager.UnSubscribe("Extract", this.OnExtract);
+            EventManager.UnSubscribe("Crafting", this.OnCrafting);
             #endregion
 
             #region -- Main Menu Unsubscribers --
@@ -143,6 +154,33 @@ namespace UI
 
 
             
+        }
+
+
+        public void OnActionsClick()
+        {
+            EventManager.Publish("Actions");
+        }
+
+        public void OnActions()
+        {
+            m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
+            m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+            Debug.Log("Move Actions Tab down");
+        }
+
+        public void OnCraftingClick()
+        {
+           
+            EventManager.Publish("Crafting");
+        }
+
+        public void OnCrafting()
+        {     
+            m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
+            m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+
+            Debug.Log("Move Crafting Tab down");
         }
         public void OnRallyClick()
         {
@@ -207,7 +245,8 @@ namespace UI
             EventManager.Publish("Workshop");
         }
         public void OnWorkShop()
-        {          
+        {
+            m_WorkshopUI.gameObject.SetActive(true);
             //This function will bring up the workshop within the game.
             Debug.Log("Workshop");
         }
@@ -229,7 +268,37 @@ namespace UI
             Debug.Log("Begin Extracting");
         }
         #region -- Main Menu Functions --
+        public void OnOptionsClick()
+        {
+            EventManager.Publish("Options Menu");
+        }
+        public void OnOptions()
+        {
+            m_OptionsUI.gameObject.SetActive(true);
+            Debug.Log("Options Menu");
+        }
+        public void CloseOptionsClick()
+        {
+            EventManager.Publish("Close Options");
+        }
 
+        public void CloseOptions()
+        {
+            m_OptionsUI.gameObject.SetActive(false);
+            Debug.Log("Close Options");
+        }
+
+        public void CloseWorkShopClick()
+        {
+            EventManager.Publish("Close WorkShop");
+        }
+        public void CloseWorkShop()
+        {
+           //This function will close work shop menu
+            m_WorkshopUI.gameObject.SetActive(false);
+            Debug.Log("Close Workshop Menu");
+
+        }
         public void NewGameClick()
         {
             EventManager.Publish("NewGame");
@@ -239,16 +308,6 @@ namespace UI
             SceneManager.LoadScene(1);
             //Function will begin game from main menu
             Debug.Log("New Game");
-        }
-
-        public void OnOptionsClick()
-        {
-            EventManager.Publish("Options");
-        }
-        public void OnOptions()
-        {         
-            //Function will acess the options menu
-            Debug.Log("Options");
         }
 
         public void OnInstructionsClick()
@@ -272,6 +331,7 @@ namespace UI
             //Function will quit game upon click.
             Debug.Log("Quit Game");
         }
+        #endregion
 
         #region -- Crafting -- 
         public void Minerals()
@@ -337,8 +397,17 @@ namespace UI
             Debug.Log("Fuel");
         }
 
+        public void OnThrustersClick()
+        {
+            EventManager.Publish("Thursters");
+        }
+        public void OnThrusters()
+        {
+
+        }
+
         #endregion
         #endregion
-        #endregion
+     
     }
 }
