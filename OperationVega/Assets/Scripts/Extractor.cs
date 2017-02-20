@@ -12,7 +12,7 @@ namespace Assets.Scripts
     public class Extractor : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
-        /// Reference to the clean gas pefab
+        /// Reference to the clean gas prefab.
         /// </summary>
         public GameObject cleangas;
 
@@ -34,7 +34,7 @@ namespace Assets.Scripts
         public GameObject theRecentGeyser;
 
         /// <summary>
-        /// The resource to taint.
+        /// The resource to harvest from.
         /// </summary>
         public IResources TargetResource;
 
@@ -43,12 +43,6 @@ namespace Assets.Scripts
         /// </summary>
         [HideInInspector]
         public Vector3 TargetClickPosition;
-
-        /// <summary>
-        /// The target direction to move at.
-        /// </summary>
-        [HideInInspector]
-        public Vector3 TargetDirection;
 
         /// <summary>
         /// The health of the extractor.
@@ -112,7 +106,7 @@ namespace Assets.Scripts
 
         /// <summary>
         /// The time between attacks reference.
-        /// Stores the reference to the timer between attacks
+        /// Stores the reference to the timer between attacks.
         /// </summary>
         private float timebetweenattacks;
 
@@ -134,7 +128,7 @@ namespace Assets.Scripts
         private NavMeshAgent navagent;
 
         /// <summary>
-        /// The reference the physical item dropped.
+        /// The reference to the physical item dropped.
         /// </summary>
         private GameObject theitemdropped;
 
@@ -182,9 +176,9 @@ namespace Assets.Scripts
 
         /// <summary>
         /// The range handler delegate.
-        /// The delegate handles setting the attack range upon changing state.
+        /// The delegate handles setting the stopping distance upon changing state.
         /// <para></para>
-        /// <remarks><paramref name="number"></paramref> -The number to set the attack range to.</remarks>
+        /// <remarks><paramref name="number"></paramref> -The number to set the stopping distance to.</remarks>
         /// </summary>
         private delegate void RangeHandler(float number);
 
@@ -244,11 +238,10 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The take damage function allows an extractor to take damage.
+        /// The take damage function allows a miner to take damage.
+        /// <para></para>
+        /// <remarks><paramref name="damage"></paramref> -The amount to be calculated when the object takes damage.</remarks>
         /// </summary>
-        /// <param name="damage">
-        /// The amount of damage.
-        /// </param>
         public void TakeDamage(uint damage)
         {
             throw new System.NotImplementedException();
@@ -263,11 +256,11 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The set the target position function.
+        /// The set move position function.
+        /// Sets the destination for the unit.
+        /// <para></para>
+        /// <remarks><paramref name="theClickPosition"></paramref> -The object that will be set as the position to move to.</remarks>
         /// </summary>
-        /// <param name="targetPos">
-        /// The target position to go to when clicked.
-        /// </param>
         public void SetTheMovePosition(Vector3 targetPos)
         {
             this.navagent.SetDestination(targetPos);
@@ -276,10 +269,9 @@ namespace Assets.Scripts
         /// <summary>
         /// The go to pickup function.
         /// Parses and sends the unit to pickup a dropped resource.
+        /// <para></para>
+        /// <remarks><paramref name="thepickup"></paramref> -The object that will be set as the item to pick up.</remarks>
         /// </summary>
-        /// <param name="thepickup">
-        /// The item to pickup.
-        /// </param>
         public void GoToPickup(GameObject thepickup)
         {
             if (thepickup.name == "GasTank")
@@ -325,10 +317,9 @@ namespace Assets.Scripts
         /// <summary>
         /// The set target function.
         /// Sets the object as the target for the unit.
+        /// <para></para>
+        /// <remarks><paramref name="theTarget"></paramref> -The object that will be set as the target for attacking.</remarks>
         /// </summary>
-        /// <param name="theTarget">
-        /// The target to set.
-        /// </param>
         public void SetTarget(GameObject theTarget)
         {
             this.theEnemy = theTarget;
@@ -341,10 +332,9 @@ namespace Assets.Scripts
         /// <summary>
         /// The set target resource function.
         /// The function sets the unit with the resource.
+        /// <para></para>
+        /// <remarks><paramref name="theResource"></paramref> -The object that will be set as the target resource.</remarks>
         /// </summary>
-        /// <param name="theResource">
-        /// The resource to set the unit to go to.
-        /// </param>
         public void SetTargetResource(GameObject theResource)
         {
             if (theResource.GetComponent<Gas>())
@@ -407,10 +397,9 @@ namespace Assets.Scripts
         /// <summary>
         /// The reset range function.
         /// This resets the range of distance the unit stands from the clicked position.
+        /// <para></para>
+        /// <remarks><paramref name="num"></paramref> -The amount to set the stopping distance to.</remarks>
         /// </summary>
-        /// <param name="num">
-        /// The number to set the attack range to.
-        /// </param>
         private void ResetStoppingDistance(float num)
         {
             this.navagent.stoppingDistance = num;
@@ -419,10 +408,9 @@ namespace Assets.Scripts
         /// <summary>
         /// The tally resources function.
         /// This function tallies up the resources in hand.
+        /// <para></para>
+        /// <remarks><paramref name="num"></paramref> -The number to set the stopping distance to.</remarks>
         /// </summary>
-        /// <param name="num">
-        /// The number in this case will not be used.
-        /// </param>
         private void TallyResources(float num)
         {
             this.navagent.stoppingDistance = num;

@@ -9,7 +9,7 @@ namespace Assets.Scripts.Controllers
 
     /// <summary>
     /// The unit controller class.
-    /// This class handles functionality of the units click movement
+    /// This class handles functionality of the units click movement and actions.
     /// </summary>
     public class UnitController : MonoBehaviour
     {
@@ -35,13 +35,15 @@ namespace Assets.Scripts.Controllers
         private Vector3 startclick = -Vector3.one;
 
         /// <summary>
-        /// The the selected object reference.
+        /// The selected object reference.
+        /// This is the object that is left clicked on.
         /// </summary>
         [HideInInspector]
         public GameObject theselectedobject;
 
         /// <summary>
-        /// The the clicked object reference.
+        /// The clicked object reference.
+        /// This is the object that was right clicked on to perform an action.
         /// </summary>
         [HideInInspector]
         public GameObject theclickedactionobject;
@@ -52,9 +54,9 @@ namespace Assets.Scripts.Controllers
         public IUnit theUnit;
 
         /// <summary>
-        /// The list of units selected by drag screen.
+        /// The list of units selected by the drag screen.
         /// </summary>
-        //[HideInInspector]
+        [HideInInspector]
         public List<GameObject> Units = new List<GameObject>();
 
         /// <summary>
@@ -92,38 +94,21 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The invert y function.
-        /// Inverts the y.
+        /// Inverts the y so the drag screen will drag accordingly.
+        /// <para></para>
+        /// <remarks><paramref name="y"></paramref> -The number to subtract from the screen height.</remarks>
         /// </summary>
-        /// <param name="y">
-        /// The y value to pass in.
-        /// </param>
-        /// <returns>
-        /// The <see cref="float"/>.
-        /// </returns>
         public static float InvertY(float y)
         {
             return Screen.height - y;
         }
 
-        ///// <summary>
-        ///// The spawn unit function.
-        ///// This function spawns the passed in unit
-        ///// </summary>
-        ///// <param name="theUnit">
-        ///// The Unit to spawn.
-        ///// </param>
-        //public void SpawnUnit(IUnit theUnit)
-        //{
-        //    GameObject player = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity);
-        //}
-
         /// <summary>
         /// The check if selected function.
-        /// Checks if the current game object is under the drag screen
+        /// Checks if the current game object is under the drag screen.
+        /// <para></para>
+        /// <remarks><paramref name="theunit"></paramref> -The object to check if it is under the drag screen.</remarks>
         /// </summary>
-        /// <param name="theunit">
-        /// The unit to check if its under the drag screen.
-        /// </param>
         public void CheckIfSelected(GameObject theunit)
         {
             if (theunit.GetComponent<Renderer>().isVisible && Input.GetMouseButtonUp(0))
@@ -164,7 +149,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The select units function.
-        /// This function is used for unit selection
+        /// This function is used for unit selection.
         /// </summary>
         private void SelectUnits()
         {
@@ -193,7 +178,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The activate drag screen function.
-        /// This controls the drag screen
+        /// This controls the drag screen.
         /// </summary>
         private void ActivateDragScreen()
         {
@@ -230,14 +215,12 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The clear selected units function.
-        /// This clears the list of selected units and the current selected unit
+        /// This clears the list of selected units and the current selected unit.
         /// </summary>
         private void ClearSelectedUnits()
         {
-            Debug.Log("clear");
-
             if (this.Units.Count > 0)
-            { Debug.Log("boop");
+            { 
                 foreach (GameObject go in this.Units)
                 {
                     GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
@@ -302,11 +285,10 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to attack function.
-        /// Sends units to attack.
+        /// Sends unit(s) to attack.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
-        /// <param name="hit">
-        /// The hit object.
-        /// </param>
         private void CommandToAttack(RaycastHit hit)
         {
             // single check only one clicked
@@ -338,11 +320,11 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// The command to harvest.
+        /// The command to harvest function.
+        /// Sends unit(s) to harvest a resource.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
-        /// <param name="hit">
-        /// The hit.
-        /// </param>
         private void CommandToHarvest(RaycastHit hit)
         {
             if (this.theUnit != null)
@@ -368,7 +350,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to idle function.
-        /// Send units to idle.
+        /// Send unit(s) to idle.
         /// </summary>
         private void CommandToIdle()
         {
@@ -413,11 +395,10 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to pick up function.
-        /// This function sends units to the pickup item.
+        /// This function sends unit(s) to the pickup item.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
-        /// <param name="hit">
-        /// The hit.
-        /// </param>
         private void CommandToPickUp(RaycastHit hit)
         {
             if (this.theUnit != null)
@@ -428,11 +409,10 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to stock function.
-        /// Sends units to stock.
+        /// Sends unit(s) to stock.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
-        /// <param name="hit">
-        /// The hit.
-        /// </param>
         private void CommandToStock(RaycastHit hit)
         {
             if (this.theUnit != null)
@@ -461,11 +441,10 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to decontaminate function.
-        /// Send units to decontaminate.
+        /// Send unit(s) to decontaminate.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
-        /// <param name="hit">
-        /// The hit.
-        /// </param>
         private void CommandToDecontaminate(RaycastHit hit)
         {
             if (this.theUnit != null)
@@ -506,7 +485,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The On GUI function.
-        /// This draws the drag screen to the screen
+        /// This draws the drag screen to the screen.
         /// </summary>
         private void OnGUI()
         {

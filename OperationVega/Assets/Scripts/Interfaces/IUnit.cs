@@ -16,37 +16,33 @@ namespace Assets.Scripts.Interfaces
         /// <summary>
         /// The set target function.
         /// Sets the object as the target for the unit.
+        /// <para></para>
+        /// <remarks><paramref name="theTarget"></paramref> -The object that will be set as the target for attacking.</remarks>
         /// </summary>
-        /// <param name="theTarget">
-        /// The target to set.
-        /// </param>
         void SetTarget(GameObject theTarget);
 
         /// <summary>
         /// The set target resource function.
         /// The function sets the unit with the resource.
+        /// <para></para>
+        /// <remarks><paramref name="theResource"></paramref> -The object that will be set as the target resource.</remarks>
         /// </summary>
-        /// <param name="theResource">
-        /// The resource to set the unit to go to.
-        /// </param>
         void SetTargetResource(GameObject theResource);
 
         /// <summary>
         /// The set move position function.
         /// Sets the destination for the unit.
+        /// <para></para>
+        /// <remarks><paramref name="theClickPosition"></paramref> -The object that will be set as the position to move to.</remarks>
         /// </summary>
-        /// <param name="theClickPosition">
-        /// The click position to move to.
-        /// </param>
         void SetTheMovePosition(Vector3 theClickPosition);
 
         /// <summary>
         /// The go to pickup function.
         /// Parses and sends the unit to pickup a dropped resource.
+        /// <para></para>
+        /// <remarks><paramref name="thepickup"></paramref> -The object that will be set as the item to pick up.</remarks>
         /// </summary>
-        /// <param name="thepickup">
-        /// The item to pickup.
-        /// </param>
         void GoToPickup(GameObject thepickup);
 
         /// <summary>

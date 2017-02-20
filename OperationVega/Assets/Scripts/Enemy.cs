@@ -20,13 +20,11 @@ namespace Assets.Scripts
         /// <summary>
         /// The target to attack.
         /// </summary>
-        [HideInInspector]
         public ICombat Target;
 
         /// <summary>
         /// The resource to taint.
         /// </summary>
-        [HideInInspector]
         public IResources TargetResource;
 
         /// <summary>
@@ -87,24 +85,13 @@ namespace Assets.Scripts
 
         /// <summary>
         /// The take damage function allows an enemy to take damage.
+        /// <para></para>
+        /// <remarks><paramref name="damage"></paramref> -The amount to be calculated when the object takes damage.</remarks>
         /// </summary>
-        /// <param name="damage">
-        /// The amount of damage.
-        /// </param>
         public void TakeDamage(uint damage)
         {
             Debug.Log("Enemy took damage");
             this.Health -= damage;
-        }
-
-        /// <summary>
-        /// The change states function.
-        /// This function changes the state to the passed in state.
-        /// <para></para>
-        /// <remarks><paramref name="destinationState"></paramref> -The state to transition to.</remarks>
-        /// </summary>
-        public void ChangeStates(string destinationState)
-        {
         }
 
         /// <summary>
