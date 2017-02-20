@@ -232,11 +232,6 @@ namespace Assets.Scripts
             }
         }
 
-        public void Decontaminate()
-        {
-            throw new System.NotImplementedException();
-        }
-
         /// <summary>
         /// The take damage function allows an extractor to take damage.
         /// </summary>
@@ -343,6 +338,11 @@ namespace Assets.Scripts
                     this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                     this.droppeditem = false;
                     this.theitemdropped = null;
+
+                    this.ChangeStates("Stock");
+                    GameObject thesilo = GameObject.Find("Silo");
+                    Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+                    this.navagent.SetDestination(destination);
                 }
             }
         }

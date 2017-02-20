@@ -14,11 +14,6 @@ namespace Assets.Scripts.Interfaces
         void Harvest();
 
         /// <summary>
-        /// The decontaminate function allows decontamination of a resource.
-        /// </summary>
-        void Decontaminate();
-
-        /// <summary>
         /// The set the target position.
         /// </summary>
         /// <param name="targetPos">

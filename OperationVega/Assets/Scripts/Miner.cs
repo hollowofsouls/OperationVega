@@ -436,6 +436,21 @@ namespace Assets.Scripts
                     this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                     this.droppeditem = false;
                     this.theitemdropped = null;
+
+                    if (this.ismineraltainted)
+                    {
+                        this.ChangeStates("Decontaminate");
+                        GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
+                        Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                        this.navagent.SetDestination(thedoor.position);
+                    }
+                    else
+                    {
+                        this.ChangeStates("Stock");
+                        GameObject thesilo = GameObject.Find("Silo");
+                        Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+                        this.navagent.SetDestination(destination);
+                    }
                 }
             }
         }
@@ -527,9 +542,12 @@ namespace Assets.Scripts
         /// </summary>
         private void DecontaminationState()
         {
-            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            if (this.ismineraltainted)
             {
-                this.Decontaminate();
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+                {
+                    this.Decontaminate();
+                }
             }
         }
 
@@ -565,6 +583,7 @@ namespace Assets.Scripts
             this.TheMinerFsm.AddTransition("Stock", "Battle", "StockToBattle");
             this.TheMinerFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
             this.TheMinerFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
+            this.TheMinerFsm.AddTransition("Stock", "Decontaminate", "StockToDecontaminate");
             this.TheMinerFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
             this.TheMinerFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
             this.TheMinerFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
