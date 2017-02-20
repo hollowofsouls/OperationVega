@@ -10,13 +10,19 @@ namespace Assets.Scripts
     /// It requires a rigidbody to perform collision detection.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(BoxCollider))]
+    [RequireComponent(typeof(SphereCollider))]
     public class Spawnpoint : MonoBehaviour
     {
         /// <summary>
-        /// The the enemy to spawn.
+        /// The spawn count reference.
+        /// The number of enemies to spawn at a time.
         /// </summary>
-        public GameObject TheEnemyToSpawn;
+        private int spawncount;
+
+        /// <summary>
+        /// The enemy prefab reference.
+        /// </summary>
+        public GameObject EnemyPrefab;
 
         /// <summary>
         /// The start function.
@@ -24,6 +30,8 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
+            this.spawncount = 3;
+
             Rigidbody theRigidbody = this.GetComponent<Rigidbody>();
 
             theRigidbody = this.GetComponent<Rigidbody>();
@@ -31,8 +39,9 @@ namespace Assets.Scripts
             theRigidbody.isKinematic = true;
             theRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-            BoxCollider theBoxCollider = this.GetComponent<BoxCollider>();
-            theBoxCollider.isTrigger = true;
+            SphereCollider thesphereCollider = this.GetComponent<SphereCollider>();
+            thesphereCollider.radius = 1.5f;
+            thesphereCollider.isTrigger = true;
         }
 
         /// <summary>
@@ -45,7 +54,16 @@ namespace Assets.Scripts
         {
             if (other.GetComponent(typeof(IUnit)))
             {
-                // Spawn
+                for (int i = 0; i < this.spawncount; i++)
+                {
+                    float angle = i * (2 * 3.14159f / this.spawncount);
+                    float x = Mathf.Cos(angle) * 1.5f;
+                    float z = Mathf.Sin(angle) * 1.5f;
+
+                    Vector3 spawnposition = new Vector3(this.transform.position.x + x, 0, this.transform.position.z + z);
+                    // Spawn
+                    Instantiate(this.EnemyPrefab, spawnposition, Quaternion.LookRotation(-other.transform.forward));
+                }
             }
         }
     }

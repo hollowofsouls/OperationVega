@@ -2,6 +2,9 @@
 namespace Assets.Scripts.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
+
+    using Managers;
 
     using UnityEngine;
 
@@ -13,7 +16,7 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The spawnpoints reference.
         /// </summary>
-        public List<Transform> Spawnpoints;
+        public List<GameObject> Spawnpoints;
 
         /// <summary>
         /// The enemy prefab reference.
@@ -42,17 +45,15 @@ namespace Assets.Scripts.Controllers
             }
         }
 
-        /// <summary>
-        /// The spawn function.
-        /// This will spawn enemies
-        /// </summary>
-        private void Spawn()
+        private void Start()
         {
+            Spawnpoints = GameObject.FindGameObjectsWithTag("Spawnpoint").ToList();
+            this.enemies = new List<Enemy>();
         }
-       
+
         /// <summary>
         /// The find closest target function.
-        /// Finds the closest target to the enemy
+        /// Finds the closest target to the enemy.
         /// </summary>
         private void FindClosestTarget()
         {
