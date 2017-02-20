@@ -134,6 +134,8 @@ namespace Assets.Scripts
         /// </summary>
         private GameObject theitemdropped;
 
+        private bool ismineraltainted;
+
         /// <summary>
         /// The time between attacks reference.
         /// Stores the reference to the timer between attacks
@@ -211,7 +213,9 @@ namespace Assets.Scripts
 
                 this.harvesttime = 0;
                 if (this.Resourcecount >= 5 && !this.TargetResource.Taint)
-                { // Create the clean food object and parent it to the front of the harvester
+                {
+                    this.ismineraltainted = false;
+                    // Create the clean food object and parent it to the front of the harvester
                     var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
                     clone.name = "PickupFood";
@@ -222,6 +226,7 @@ namespace Assets.Scripts
                 }
                 else if (this.Resourcecount >= 5 && this.TargetResource.Taint)
                 {
+                    this.ismineraltainted = true;
                     // The resource is tainted go to decontamination center
                     // Create the dirty food object and parent it to the front of the harvester
                     var clone = Instantiate(this.dirtyfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
@@ -261,6 +266,7 @@ namespace Assets.Scripts
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
                     this.navagent.SetDestination(destination);
+                    this.ismineraltainted = false;
                 }
             }
         }
@@ -390,6 +396,7 @@ namespace Assets.Scripts
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
             this.droppeditem = false;
+            this.ismineraltainted = false;
 
             this.timebetweenattacks = this.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -426,6 +433,21 @@ namespace Assets.Scripts
                     this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                     this.droppeditem = false;
                     this.theitemdropped = null;
+
+                    if (this.ismineraltainted)
+                    {
+                        this.ChangeStates("Decontaminate");
+                        GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
+                        Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                        this.navagent.SetDestination(thedoor.position);
+                    }
+                    else
+                    {
+                        this.ChangeStates("Stock");
+                        GameObject thesilo = GameObject.Find("Silo");
+                        Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+                        this.navagent.SetDestination(destination);
+                    }
                 }
             }
         }
@@ -445,8 +467,6 @@ namespace Assets.Scripts
                     this.transform.DetachChildren();
                     this.droppeditem = true;
                 }
-
-                this.transform.DetachChildren();
 
                 if (this.navagent.remainingDistance <= this.Healrange && !this.navagent.pathPending)
                 {
@@ -476,37 +496,41 @@ namespace Assets.Scripts
         /// </summary>
         private void StockState()
         {
-            if (this.Resourcecount <= 0)
+            if (!this.ismineraltainted)
             {
-                for (int i = 0; i < this.transform.childCount; i++)
+                if (this.Resourcecount <= 0)
                 {
-                    Destroy(this.transform.GetChild(i).gameObject);
+                    for (int i = 0; i < this.transform.childCount; i++)
+                    {
+                        Destroy(this.transform.GetChild(i).gameObject);
+                    }
+
+                    if (this.TargetResource != null && this.TargetResource.Count > 0)
+                    {
+                        this.navagent.SetDestination(this.theRecentTree.transform.position);
+                        this.ChangeStates("Harvest");
+                    }
+                    else
+                    {
+                        this.ChangeStates("Idle");
+                    }
                 }
 
-                if (this.TargetResource != null && this.TargetResource.Count > 0)
-                {
-                    this.navagent.SetDestination(this.theRecentTree.transform.position);
-                    this.ChangeStates("Harvest");
-                }
-                else
-                {
-                    this.ChangeStates("Idle");
-                }
-            }
+                dropofftime += 1 * Time.deltaTime;
 
-            dropofftime += 1 * Time.deltaTime;
-
-            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
-            {
-                if (this.dropofftime >= 1.0f)
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
                 {
-                    Debug.Log("Dropping off the goods");
-                    this.Resourcecount--;
-                    Debug.Log("My resource count " + this.Resourcecount);
-                    User.FoodCount++;
-                    Debug.Log("I have now stocked " + User.FoodCount + " food");
-                    this.dropofftime = 0;
+                    if (this.dropofftime >= 1.0f)
+                    {
+                        Debug.Log("Dropping off the goods");
+                        this.Resourcecount--;
+                        Debug.Log("My resource count " + this.Resourcecount);
+                        User.FoodCount++;
+                        Debug.Log("I have now stocked " + User.FoodCount + " food");
+                        this.dropofftime = 0;
+                    }
                 }
+
             }
         }
 
@@ -516,9 +540,12 @@ namespace Assets.Scripts
         /// </summary>
         private void DecontaminationState()
         {
-            if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            if (this.ismineraltainted)
             {
-                this.Decontaminate();
+                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+                {
+                    this.Decontaminate();
+                }
             }
         }
 
@@ -554,6 +581,7 @@ namespace Assets.Scripts
             this.TheHarvesterFsm.AddTransition("Stock", "Battle", "StockToBattle");
             this.TheHarvesterFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
             this.TheHarvesterFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
+            this.TheHarvesterFsm.AddTransition("Stock", "Decontaminate", "StockToDecontaminate");
             this.TheHarvesterFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
             this.TheHarvesterFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
             this.TheHarvesterFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
