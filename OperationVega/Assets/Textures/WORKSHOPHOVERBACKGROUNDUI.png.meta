@@ -1,15 +1,13 @@
 fileFormatVersion: 2
-guid: 5438fabbd6d079d4096ad1ed8b02c3b4
-timeCreated: 1487177568
+guid: d9cf6e0b960684544bbea8196b521ac7
+timeCreated: 1487180642
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: BUILDBUTTON
-    21300002: THRUSTERSBUTTON
-    21300004: CHASSISBUTTON
-    21300006: COCKPITBUTTON
-    21300008: WINGSBUTTON
-    21300010: XBUTTON
+    21300000: COCKPITCHOICES
+    21300002: THRUSTERCHOICES
+    21300004: CHASSISCHOICES
+    21300006: WINGCHOICES
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -92,78 +90,52 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: XBUTTON
+      name: COCKPITCHOICES
       rect:
         serializedVersion: 2
-        x: 1424
-        y: 952
-        width: 80
-        height: 62
+        x: 825
+        y: 324
+        width: 387
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: BUILDBUTTON
+      name: THRUSTERCHOICES
       rect:
         serializedVersion: 2
-        x: 767
-        y: 378
-        width: 222
-        height: 68
+        x: 340
+        y: 189
+        width: 292
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: THRUSTERSBUTTON
+      name: CHASSISCHOICES
       rect:
         serializedVersion: 2
-        x: 371
-        y: 118
-        width: 222
-        height: 68
+        x: 649
+        y: 190
+        width: 203
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: CHASSISBUTTON
+      name: WINGCHOICES
       rect:
         serializedVersion: 2
-        x: 641
-        y: 118
-        width: 222
-        height: 68
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: COCKPITBUTTON
-      rect:
-        serializedVersion: 2
-        x: 906
-        y: 118
-        width: 222
-        height: 68
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: WINGSBUTTON
-      rect:
-        serializedVersion: 2
-        x: 1170
-        y: 118
-        width: 222
-        height: 68
+        x: 1139
+        y: 189
+        width: 292
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
