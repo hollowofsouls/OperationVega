@@ -67,6 +67,14 @@ namespace UI
         [SerializeField]
         private Text m_FuelT;
         [SerializeField]
+        private Text m_SteelT;
+
+        [SerializeField]
+        private Image m_Input1;
+        [SerializeField]
+        private Image m_Input2;
+
+        bool revert;
        
 
 
@@ -81,6 +89,8 @@ namespace UI
 
         protected void Awake()
         {
+
+            revert = true;
             #region -- Ingame Subscribers --
             EventManager.Subscribe("Rally", this.OnRally);
             EventManager.Subscribe("Harvest", this.OnHarvest);
@@ -92,6 +102,11 @@ namespace UI
             EventManager.Subscribe("Mine", this.OnMine);
             EventManager.Subscribe("Extract", this.OnExtract);
             EventManager.Subscribe("Crafting", this.OnCrafting);
+            EventManager.Subscribe("Build Rocket", this.OnBuild);
+            EventManager.Subscribe("Apply Thrusters", this.OnThrusters);
+            EventManager.Subscribe("Apply Chassis", this.OnChassis);
+            EventManager.Subscribe("Apply Cockpit", this.OnCockpit);
+            EventManager.Subscribe("Apply Wings", this.OnWings);
             #endregion
 
             #region -- Main Menu Subscribers --
@@ -124,6 +139,11 @@ namespace UI
             EventManager.UnSubscribe("Mine", this.OnMine);
             EventManager.UnSubscribe("Extract", this.OnExtract);
             EventManager.UnSubscribe("Crafting", this.OnCrafting);
+            EventManager.UnSubscribe("Build Rocket", this.OnBuild);
+            EventManager.UnSubscribe("Apply Thrusters", this.OnThrusters);
+            EventManager.UnSubscribe("Apply Chassis", this.OnChassis);
+            EventManager.UnSubscribe("Apply Cockpit", this.OnCockpit);
+            EventManager.UnSubscribe("Apply Wings", this.OnWings);
             #endregion
 
             #region -- Main Menu Unsubscribers --
@@ -151,8 +171,7 @@ namespace UI
             m_CookedFoodT.text = "" + User.CookedFoodCount;
             m_GasT.text = " " + User.GasCount;
             m_FuelT.text = "" + User.FuelCount;
-
-
+            m_SteelT.text = "" + User.SteelCount;
             
         }
 
@@ -164,8 +183,22 @@ namespace UI
 
         public void OnActions()
         {
-            m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
-            m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+            //If true set values to zero
+            if (revert)
+            {
+                m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
+                m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+
+                revert = false;
+            }
+            //If not true set to this position
+            else if(!revert)
+            {
+                revert = true;
+
+                m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, -115);
+                m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
+            }
             Debug.Log("Move Actions Tab down");
         }
 
@@ -176,9 +209,26 @@ namespace UI
         }
 
         public void OnCrafting()
-        {     
-            m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
-            m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+        {
+
+            if (revert)
+            {
+                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
+                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+                //m_CraftingTAB.localPosition = new Vector3(m_CraftingTAB.localPosition.x, , m_CraftingTAB.localPosition.z);
+       
+                revert = false;
+                                       
+            }
+            else if(!revert)
+            {
+                //m_CraftingTAB.position = new Vector3(m_CraftingTAB.position.x, 115, m_CraftingTAB.position.z);
+                revert = true;
+
+                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, -115);
+                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
+            }
+
 
             Debug.Log("Move Crafting Tab down");
         }
@@ -397,17 +447,52 @@ namespace UI
             Debug.Log("Fuel");
         }
 
+        #endregion
+        #endregion
+
+
+        #region -- WorkShop --
+        public void OnBuildClick()
+        {
+            EventManager.Publish("Build Rocket");
+        }
+        public void  OnBuild()
+        {
+            Debug.Log("Build Rocket");
+        }
         public void OnThrustersClick()
         {
             EventManager.Publish("Thursters");
         }
         public void OnThrusters()
         {
-
+            Debug.Log("Apply Thrusters");
         }
+        public void OnChassisClick()
+        {
+            EventManager.Publish("Chassis");
+        }
+        public void OnChassis()
+        {
+            Debug.Log("Apply Chassis");
+        }
+        public void OnCockpitClick()
+        {
+            EventManager.Publish("Cockpit");
+        }
+        public void OnCockpit()
+        {
+            Debug.Log("Apply Cockpit");
+        }
+        public void OnWingsClick()
+        {
+            EventManager.Publish("Apply Wings");
+        }
+        public void OnWings()
+        {
+            Debug.Log("Apply Wings");
+        }
+        #endregion
 
-        #endregion
-        #endregion
-     
     }
 }
