@@ -47,6 +47,7 @@ namespace UI
         private Button m_Fuel;
         [SerializeField]
         private Canvas m_BackgroundUI;
+
         [SerializeField]
         private RectTransform m_ActionsTAB;
         [SerializeField]
@@ -55,6 +56,12 @@ namespace UI
         private RectTransform m_WorkshopUI;
         [SerializeField]
         private RectTransform m_OptionsUI;
+        [SerializeField]
+        private RectTransform m_ThrusterChoice;
+        [SerializeField]
+        private RectTransform m_CockpitChoice;
+        [SerializeField]
+        private RectTransform m_WingChoice;
 
         [SerializeField]
         private Text m_MineralsT;
@@ -75,6 +82,7 @@ namespace UI
         private Image m_Input2;
 
         bool revert;
+        bool undo;
        
 
 
@@ -91,6 +99,7 @@ namespace UI
         {
             //Bool use to manage crafting / action tab
             revert = true;
+            undo = true;
             #region -- Ingame Subscribers --
             EventManager.Subscribe("Rally", this.OnRally);
             EventManager.Subscribe("Harvest", this.OnHarvest);
@@ -140,7 +149,7 @@ namespace UI
             EventManager.UnSubscribe("Extract", this.OnExtract);
             EventManager.UnSubscribe("Crafting", this.OnCrafting);
             EventManager.UnSubscribe("Build Rocket", this.OnBuild);
-            EventManager.UnSubscribe("Apply Thrusters", this.OnThrusters);
+            EventManager.UnSubscribe("Apply Thrusters", this.OnThrustersClick);
             EventManager.UnSubscribe("Apply Chassis", this.OnChassis);
             EventManager.UnSubscribe("Apply Cockpit", this.OnCockpit);
             EventManager.UnSubscribe("Apply Wings", this.OnWings);
@@ -468,6 +477,18 @@ namespace UI
         }
         public void OnThrusters()
         {
+            if (undo)
+            {
+                m_ThrusterChoice.gameObject.SetActive(true);
+
+                undo = false;
+            }
+            else if(!undo)
+            {
+                m_ThrusterChoice.gameObject.SetActive(false);
+                undo = true;
+            }
+
             //Function that will apply the selected thruster on the ship
             Debug.Log("Apply Thrusters");
         }
@@ -477,6 +498,7 @@ namespace UI
         }
         public void OnChassis()
         {
+            
             //Function that will apply the selected chassis on the ship
             Debug.Log("Apply Chassis");
         }
@@ -486,6 +508,18 @@ namespace UI
         }
         public void OnCockpit()
         {
+            if(undo)
+            {
+                m_CockpitChoice.gameObject.SetActive(true);
+
+                undo = false;
+            }
+            else if(!undo)
+            {
+                m_CockpitChoice.gameObject.SetActive(false);
+
+                undo = true;
+            }
             //Function that will apply the selected cockpit on the ship
             Debug.Log("Apply Cockpit");
         }
@@ -496,9 +530,97 @@ namespace UI
         }
         public void OnWings()
         {
+            if (undo)
+            {
+                m_WingChoice.gameObject.SetActive(true);
+
+                undo = false;
+            }
+            else if(!undo)
+            {
+                m_WingChoice.gameObject.SetActive(false);
+
+                undo = true;
+            }
             //Function that will apply the selected wing on the ship
             Debug.Log("Apply Wings");
         }
+        public void OnWC1Click()
+        {
+            EventManager.Publish("WingChoice1");
+        }
+        public void OnWC1()
+        {
+            Debug.Log("Player chose WingChoice1");
+        }
+        public void OnWC2Click()
+        {
+            EventManager.Publish("WingChoice2");
+
+        }
+        public void OnWC2()
+        {
+            Debug.Log("Player chose WingChoice2");
+        }
+        public void OnWC3Click()
+        {
+            EventManager.Publish("WingChoice3");
+        }
+        public void OnWC3()
+        {
+            Debug.Log("Player chose WingChoice3");
+        }
+        public void OnCP1Click()
+        {
+            EventManager.Publish("Player chose CP1");
+        }
+        public void OnCP1()
+        {
+            Debug.Log("Player chose Cockpit1");
+        }
+        public void OnCP2Click()
+        {
+            EventManager.Publish("Player chose CP2");
+        }
+        public void OnCP2()
+        {
+            Debug.Log("Player chose Cockpit2");
+        }
+        public void OnCP3Click()
+        {
+            EventManager.Publish("Player chose CP3");
+        }
+        public void OnCP3()
+        {
+            Debug.Log("Player chose Cockpit3");
+        }
+        public void OnTC1Click()
+        {
+            EventManager.Publish("Player chose TC1");
+        }
+        public void OnTC1()
+        {
+            Debug.Log("Player chose Thrust1");
+        }
+        public void OnTC2Click()
+        {
+            EventManager.Publish("Player chose TC2");
+        }
+        public void OnTC2()
+        {
+            Debug.Log("Player chose Thrust2");
+        }
+        public void OnTC3Click()
+        {
+            EventManager.Publish("Player chose TC3");
+        }
+        public void OnTC3()
+        {
+            Debug.Log("Player chose Thrust3");
+        }
+
+        
+
         #endregion
 
     }
