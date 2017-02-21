@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d01722165f22d304bb077b88be8a9df3
-timeCreated: 1487608073
+guid: 1eaa7ad2c3979a94890ee1d261881d5d
+timeCreated: 1487702193
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Rocket_Chassis_2
+    4300000: Cockpit4
     9500000: //RootNode
   materials:
     importMaterials: 1
