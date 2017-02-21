@@ -85,6 +85,11 @@ namespace Assets.Scripts.Controllers
                 this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
             }
 
+            if (Input.GetKey(KeyCode.Space))
+            {
+                this.transform.position = Vector3.zero;
+            }
+
             if (Panwithmouse)
             {
                 if (Input.mousePosition.x >= Screen.width - 7 && Input.mousePosition.x < Screen.width)
