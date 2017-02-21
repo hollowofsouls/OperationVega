@@ -89,7 +89,7 @@ namespace UI
 
         protected void Awake()
         {
-
+            //Bool use to manage crafting / action tab
             revert = true;
             #region -- Ingame Subscribers --
             EventManager.Subscribe("Rally", this.OnRally);
@@ -175,7 +175,7 @@ namespace UI
             
         }
 
-
+       
         public void OnActionsClick()
         {
             EventManager.Publish("Actions");
@@ -334,6 +334,7 @@ namespace UI
 
         public void CloseOptions()
         {
+            //Sets the options panel to false when the back button is clicked.
             m_OptionsUI.gameObject.SetActive(false);
             Debug.Log("Close Options");
         }
@@ -458,6 +459,7 @@ namespace UI
         }
         public void  OnBuild()
         {
+            //Function that will craft the ship when all parts are obtained.
             Debug.Log("Build Rocket");
         }
         public void OnThrustersClick()
@@ -466,6 +468,7 @@ namespace UI
         }
         public void OnThrusters()
         {
+            //Function that will apply the selected thruster on the ship
             Debug.Log("Apply Thrusters");
         }
         public void OnChassisClick()
@@ -474,6 +477,7 @@ namespace UI
         }
         public void OnChassis()
         {
+            //Function that will apply the selected chassis on the ship
             Debug.Log("Apply Chassis");
         }
         public void OnCockpitClick()
@@ -482,14 +486,17 @@ namespace UI
         }
         public void OnCockpit()
         {
+            //Function that will apply the selected cockpit on the ship
             Debug.Log("Apply Cockpit");
         }
         public void OnWingsClick()
         {
+
             EventManager.Publish("Apply Wings");
         }
         public void OnWings()
         {
+            //Function that will apply the selected wing on the ship
             Debug.Log("Apply Wings");
         }
         #endregion
