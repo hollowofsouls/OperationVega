@@ -325,7 +325,7 @@ namespace Assets.Scripts
         /// </summary>
         public void TakeDamage(uint damage)
         {
-            throw new System.NotImplementedException();
+            this.Health -= damage;
         }
 
         /// <summary>
