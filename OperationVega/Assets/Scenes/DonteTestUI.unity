@@ -177,6 +177,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &274665876 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224092049792341490, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1403955404}
+--- !u!224 &367189292 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224972849982181726, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1403955404}
 --- !u!1 &381470709
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,6 +233,9 @@ MonoBehaviour:
   m_CraftingTAB: {fileID: 46052321}
   m_WorkshopUI: {fileID: 1770231007}
   m_OptionsUI: {fileID: 1547767575}
+  m_ThrusterChoice: {fileID: 274665876}
+  m_CockpitChoice: {fileID: 367189292}
+  m_WingChoice: {fileID: 1295408310}
   m_MineralsT: {fileID: 1236031188}
   m_FoodT: {fileID: 1012123363}
   m_CookedFoodT: {fileID: 1301153781}
@@ -492,6 +505,11 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1403955404}
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+--- !u!224 &1295408310 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224909333910043798, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1403955404}
 --- !u!114 &1301153781 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114399845991419490, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
@@ -1411,7 +1429,7 @@ Prefab:
     - target: {fileID: 114394417107724402, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnThrustersClick
+      value: OnThrusters
       objectReference: {fileID: 0}
     - target: {fileID: 114394417107724402, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
@@ -1461,7 +1479,7 @@ Prefab:
     - target: {fileID: 114709260844781176, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnCockpitClick
+      value: OnCockpit
       objectReference: {fileID: 0}
     - target: {fileID: 114709260844781176, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
@@ -1492,6 +1510,18 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1848341577024652, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1906834830441934, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1858132008654784, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}
