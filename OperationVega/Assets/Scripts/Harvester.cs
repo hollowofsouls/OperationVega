@@ -260,7 +260,7 @@ namespace Assets.Scripts
                     clone.name = "FoodTainted";
                     this.ChangeStates("Decontaminate");
                     GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                    Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                    Transform thedoor = thedecontaminationbuilding.transform.GetChild(0);
                     Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
                     this.navagent.SetDestination(destination);
                 }
@@ -343,7 +343,7 @@ namespace Assets.Scripts
         /// </summary>
         public void TakeDamage(uint damage)
         {
-            throw new System.NotImplementedException();
+            this.Health -= damage;
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace Assets.Scripts
         {
             this.Healrange = 5.0f;
             this.Attackspeed = 3;
-            this.Speed = 2;
+            this.Speed = 3;
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
 

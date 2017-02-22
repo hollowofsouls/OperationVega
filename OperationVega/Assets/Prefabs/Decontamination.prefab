@@ -11,6 +11,21 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1905071593228876}
   m_IsPrefabParent: 1
+--- !u!1 &1244788566116040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4586375292565442}
+  m_Layer: 0
+  m_Name: FrontDoor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1905071593228876
 GameObject:
   m_ObjectHideFlags: 0
@@ -22,7 +37,7 @@ GameObject:
   - component: {fileID: 33637541705642410}
   - component: {fileID: 23245136697822630}
   - component: {fileID: 95310087302775506}
-  - component: {fileID: 65171530092037860}
+  - component: {fileID: 65030195071822254}
   m_Layer: 0
   m_Name: Decontamination
   m_TagString: Untagged
@@ -37,10 +52,24 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1905071593228876}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.38, y: 1.5704271, z: 0}
+  m_LocalPosition: {x: -9, y: 1.5, z: -9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4586375292565442}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4586375292565442
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1244788566116040}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 4441605780468854}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23245136697822630
@@ -81,7 +110,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1905071593228876}
   m_Mesh: {fileID: 4300002, guid: 4b431e7bba12f8d41a3d052190ac7379, type: 3}
---- !u!65 &65171530092037860
+--- !u!65 &65030195071822254
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -91,8 +120,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6.9731627, y: 3.1061907, z: 6.768159}
-  m_Center: {x: 0, y: 0.00000011920929, z: -0.29111576}
+  m_Size: {x: 6.8, y: 3.2, z: 7}
+  m_Center: {x: 0, y: 0, z: -0.2}
 --- !u!95 &95310087302775506
 Animator:
   serializedVersion: 3

@@ -160,7 +160,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &283572116
 Prefab:
@@ -390,7 +390,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -557,7 +557,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 9c1db5111ef00a844803009d902a7b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -613,7 +613,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -748,7 +748,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4403418899075116, guid: 880b562ae52baba43b8e03af72d46788, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1508443638553570, guid: 880b562ae52baba43b8e03af72d46788, type: 2}
       propertyPath: m_StaticEditorFlags
@@ -764,7 +764,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1173360095007948, guid: 880b562ae52baba43b8e03af72d46788, type: 2}
       propertyPath: m_TagString
-      value: Targetable
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 880b562ae52baba43b8e03af72d46788, type: 2}
@@ -806,7 +806,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4500614641082240, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1753390111381368, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
       propertyPath: m_StaticEditorFlags
@@ -937,7 +937,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4974015115509842, guid: 950e29e17586c3540ad4d77a2c3c8a4b, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1824110301913780, guid: 950e29e17586c3540ad4d77a2c3c8a4b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 950e29e17586c3540ad4d77a2c3c8a4b, type: 2}
@@ -1012,49 +1016,37 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1.9
+      value: -9
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 3.1
+      value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -16.93
+      value: -9
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
+    - target: {fileID: 4441605780468854, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1417661171808208, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 1999239013769844, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 1326361136459250, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
@@ -1090,9 +1082,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57f6897881f2a54ba7fd48539d5a1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cleanmineral: {fileID: 1127023133715584, guid: dfd0dd78875fb844693dd9870396d7cc,
+  cleanmineral: {fileID: 1767309961961268, guid: dfd0dd78875fb844693dd9870396d7cc,
     type: 2}
-  dirtymineral: {fileID: 1559445796991742, guid: 595c4d2662bfdd84dbcd23c0ade6c021,
+  dirtymineral: {fileID: 1684633156486842, guid: 595c4d2662bfdd84dbcd23c0ade6c021,
     type: 2}
   theEnemy: {fileID: 0}
   theRecentMineralDeposit: {fileID: 0}
@@ -1181,7 +1173,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1233,7 +1225,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 9c1db5111ef00a844803009d902a7b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1317,7 +1309,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 9c1db5111ef00a844803009d902a7b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

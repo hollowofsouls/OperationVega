@@ -1,6 +1,8 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
+    using System;
+
     using UnityEngine;
 
     /// <summary>
@@ -9,6 +11,11 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class CameraController : MonoBehaviour
     {
+        /// <summary>
+        /// The pan with mouse reference.
+        /// </summary>
+        public static bool Panwithmouse;
+
         /// <summary>
         /// The mouse position x.
         /// </summary>
@@ -27,6 +34,14 @@ namespace Assets.Scripts.Controllers
         public uint RotateSpeed;
 
         /// <summary>
+        /// The start function.
+        /// </summary>
+        private void Start()
+        {
+            Panwithmouse = false;
+        }
+
+        /// <summary>
         /// The update function.
         /// </summary>
         private void Update()
@@ -34,8 +49,8 @@ namespace Assets.Scripts.Controllers
             this.ZoomCamera();
             this.PanCamera();
 
-            this.MoveSpeed = (uint)Mathf.Clamp(this.MoveSpeed, 2, 5);
-            this.RotateSpeed = (uint)Mathf.Clamp(this.RotateSpeed, 2, 5);
+            this.MoveSpeed = (uint)Mathf.Clamp(this.MoveSpeed, 3, 5);
+            this.RotateSpeed = (uint)Mathf.Clamp(this.RotateSpeed, 3, 5);
         }
 
         /// <summary>
@@ -49,7 +64,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The pan camera function.
-        /// Moves the camera based on key presses
+        /// Moves the camera based on key presses or mouse position.
         /// </summary>
         private void PanCamera()
         {
@@ -68,6 +83,11 @@ namespace Assets.Scripts.Controllers
             if (Input.GetKey(KeyCode.D))
             {
                 this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                this.transform.position = Vector3.zero;
             }
 
             if (Panwithmouse)
@@ -102,10 +122,10 @@ namespace Assets.Scripts.Controllers
             }
             else if (Input.mouseScrollDelta.y > 0)
             {
-                 Camera.main.orthographicSize -= 0.25f;
+                Camera.main.orthographicSize -= 0.25f;
             }
 
-            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3, 10);
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 5, 10);
         }
 
         /// <summary>
