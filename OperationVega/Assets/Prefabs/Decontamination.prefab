@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 33637541705642410}
   - component: {fileID: 23245136697822630}
   - component: {fileID: 95310087302775506}
-  - component: {fileID: 65030195071822254}
+  - component: {fileID: 64907932051258714}
   m_Layer: 0
   m_Name: Decontamination
   m_TagString: Untagged
@@ -110,8 +110,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1905071593228876}
   m_Mesh: {fileID: 4300002, guid: 4b431e7bba12f8d41a3d052190ac7379, type: 3}
---- !u!65 &65030195071822254
-BoxCollider:
+--- !u!64 &64907932051258714
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -120,8 +120,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6.8, y: 3.2, z: 7}
-  m_Center: {x: 0, y: 0, z: -0.2}
+  m_Convex: 0
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300002, guid: 4b431e7bba12f8d41a3d052190ac7379, type: 3}
 --- !u!95 &95310087302775506
 Animator:
   serializedVersion: 3

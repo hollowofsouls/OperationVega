@@ -260,7 +260,7 @@ namespace Assets.Scripts
                     clone.name = "FoodTainted";
                     this.ChangeStates("Decontaminate");
                     GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                    Transform thedoor = thedecontaminationbuilding.transform.GetChild(0);
+                    Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
                     Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
                     this.navagent.SetDestination(destination);
                 }
@@ -547,7 +547,7 @@ namespace Assets.Scripts
                     {
                         this.ChangeStates("Decontaminate");
                         GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                        Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                        Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
                         this.navagent.SetDestination(thedoor.position);
                     }
                     else

@@ -234,7 +234,7 @@ namespace Assets.Scripts
                     clone.name = "MineralsTainted";
                     this.ChangeStates("Decontaminate");
                     GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                    Transform thedoor = thedecontaminationbuilding.transform.GetChild(0);
+                    Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
                     this.navagent.SetDestination(thedoor.position);
                 }
             }
@@ -549,7 +549,7 @@ namespace Assets.Scripts
                     {
                         this.ChangeStates("Decontaminate");
                         GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                        Transform thedoor = thedecontaminationbuilding.transform.GetChild(1);
+                        Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
                         this.navagent.SetDestination(thedoor.position);
                     }
                     else

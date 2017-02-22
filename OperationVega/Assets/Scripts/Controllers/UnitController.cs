@@ -453,7 +453,7 @@ namespace Assets.Scripts.Controllers
                 if (this.theselectedobject.transform.Find("MineralsTainted") || this.theselectedobject.transform.Find("FoodTainted"))
                 {
                     this.theUnit.ChangeStates("Decontaminate");
-                    Transform thedoor = hit.transform.GetChild(1);
+                    Transform thedoor = hit.transform.Find("FrontDoor");
                     Debug.Log(thedoor.name);
                     Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
                     this.theUnit.SetTheMovePosition(destination);
@@ -474,7 +474,7 @@ namespace Assets.Scripts.Controllers
                         if (go.transform.Find("MineralsTainted") || go.transform.Find("FoodTainted"))
                         {
                             unit.ChangeStates("Decontaminate");
-                            Transform thedoor = hit.transform.GetChild(1);
+                            Transform thedoor = hit.transform.Find("FrontDoor");
                             Debug.Log(thedoor.name);
                             Vector3 destination = new Vector3(thedoor.position.x, 0.5f, thedoor.position.z);
                             unit.SetTheMovePosition(destination);
