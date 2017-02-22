@@ -89,7 +89,7 @@ namespace UI
 
         protected void Awake()
         {
-
+            //Bool use to manage crafting / action tab
             revert = true;
             #region -- Ingame Subscribers --
             EventManager.Subscribe("Rally", this.OnRally);
@@ -198,6 +198,9 @@ namespace UI
 
                 m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, -115);
                 m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
+
+                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, -115);
+                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, -115);
             }
             Debug.Log("Move Actions Tab down");
         }

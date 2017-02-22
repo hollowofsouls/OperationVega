@@ -69,6 +69,26 @@ namespace Assets.Scripts.Controllers
             {
                 this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
             }
+
+            if (Panwithmouse)
+            {
+                if (Input.mousePosition.x >= Screen.width - 7 && Input.mousePosition.x < Screen.width)
+                {
+                    this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
+                }
+                if (Input.mousePosition.x <= 7 && Input.mousePosition.x > 0)
+                {
+                    this.transform.position -= this.transform.right * this.MoveSpeed * Time.deltaTime;
+                }
+                if (Input.mousePosition.y >= Screen.height - 7 && Input.mousePosition.y < Screen.height)
+                {
+                    this.transform.position += this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                }
+                if (Input.mousePosition.y <= 7 && Input.mousePosition.y > 0)
+                {
+                    this.transform.position -= this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                }
+            }
         }
 
         /// <summary>
