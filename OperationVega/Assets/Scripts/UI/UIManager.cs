@@ -47,6 +47,7 @@ namespace UI
         private Button m_Fuel;
         [SerializeField]
         private Canvas m_BackgroundUI;
+
         [SerializeField]
         private RectTransform m_ActionsTAB;
         [SerializeField]
@@ -55,6 +56,20 @@ namespace UI
         private RectTransform m_WorkshopUI;
         [SerializeField]
         private RectTransform m_OptionsUI;
+        [SerializeField]
+        private RectTransform m_ThrusterChoice;
+        [SerializeField]
+        private RectTransform m_CockpitChoice;
+        [SerializeField]
+        private RectTransform m_WingChoice;
+        [SerializeField]
+        private RectTransform m_SettingsUI;
+        [SerializeField]
+        private RectTransform m_CustomizeUI;
+        [SerializeField]
+        private RectTransform m_ObjectiveUI;
+        [SerializeField]
+        private RectTransform m_MainUI;
 
         [SerializeField]
         private Text m_MineralsT;
@@ -75,6 +90,7 @@ namespace UI
         private Image m_Input2;
 
         bool revert;
+        bool undo;
        
 
 
@@ -91,29 +107,37 @@ namespace UI
         {
             //Bool use to manage crafting / action tab
             revert = true;
+            undo = true;
             #region -- Ingame Subscribers --
             EventManager.Subscribe("Rally", this.OnRally);
             EventManager.Subscribe("Harvest", this.OnHarvest);
             EventManager.Subscribe("Recall", this.OnRecall);
             EventManager.Subscribe("CancelAction", this.OnCancelAction);
+            EventManager.Subscribe("Close WorkShop", this.CloseWorkShop);
             EventManager.Subscribe("Workshop", this.OnWorkShop);
             EventManager.Subscribe("Craft", this.OnCraft);
             EventManager.Subscribe("Clear", this.OnClear);
             EventManager.Subscribe("Mine", this.OnMine);
             EventManager.Subscribe("Extract", this.OnExtract);
+            EventManager.Subscribe("Actions", this.OnActions);
             EventManager.Subscribe("Crafting", this.OnCrafting);
             EventManager.Subscribe("Build Rocket", this.OnBuild);
-            EventManager.Subscribe("Apply Thrusters", this.OnThrusters);
+            EventManager.Subscribe("Thrusters", this.OnThrusters);
             EventManager.Subscribe("Apply Chassis", this.OnChassis);
-            EventManager.Subscribe("Apply Cockpit", this.OnCockpit);
+            EventManager.Subscribe("Cockpit", this.OnCockpit);
             EventManager.Subscribe("Apply Wings", this.OnWings);
             #endregion
 
             #region -- Main Menu Subscribers --
             EventManager.Subscribe("NewGame", this.NewGameClick);
-            EventManager.Subscribe("Options", this.OnOptionsClick);
+            EventManager.Subscribe("Options Menu", this.OnOptions);
             EventManager.Subscribe("Instructions", this.OnInstructions);
             EventManager.Subscribe("QuitGame", this.OnQuitGame);
+            EventManager.Subscribe("Close Options", this.CloseOptions);
+            EventManager.Subscribe("Settings", this.OnSettings);
+            EventManager.Subscribe("SettingsClose", this.OnSettingsClose);
+            EventManager.Subscribe("Customize", this.OnCustomize);
+            EventManager.Subscribe("CustomizeClose", this.OnCustomizeClose);
             #endregion
 
             #region -- Crafting Subscribers --
@@ -134,23 +158,30 @@ namespace UI
             EventManager.UnSubscribe("Recall", this.OnRecall);
             EventManager.UnSubscribe("CancelAction", this.OnCancelAction);
             EventManager.UnSubscribe("Workshop", this.OnWorkShop);
+            EventManager.UnSubscribe("Close WorkShop", this.CloseWorkShop);
             EventManager.UnSubscribe("Craft", this.OnCraft);
             EventManager.UnSubscribe("Clear", this.OnClear);
             EventManager.UnSubscribe("Mine", this.OnMine);
             EventManager.UnSubscribe("Extract", this.OnExtract);
+            EventManager.UnSubscribe("Actions", this.OnActions);
             EventManager.UnSubscribe("Crafting", this.OnCrafting);
             EventManager.UnSubscribe("Build Rocket", this.OnBuild);
-            EventManager.UnSubscribe("Apply Thrusters", this.OnThrusters);
+            EventManager.UnSubscribe("Thrusters", this.OnThrusters);
             EventManager.UnSubscribe("Apply Chassis", this.OnChassis);
-            EventManager.UnSubscribe("Apply Cockpit", this.OnCockpit);
+            EventManager.UnSubscribe("Cockpit", this.OnCockpit);
             EventManager.UnSubscribe("Apply Wings", this.OnWings);
             #endregion
 
             #region -- Main Menu Unsubscribers --
             EventManager.UnSubscribe("NewGame", this.NewGame);
-            EventManager.UnSubscribe("Options", this.OnOptions);
+            EventManager.UnSubscribe("Options Menu", this.OnOptions);
             EventManager.UnSubscribe("Instructions", this.OnInstructions);
             EventManager.UnSubscribe("QuitGame", this.OnQuitGame);
+            EventManager.UnSubscribe("Close Options", this.CloseOptions);
+            EventManager.UnSubscribe("Settings", this.OnSettings);
+            EventManager.UnSubscribe("SettingsClose", this.OnSettingsClose);
+            EventManager.UnSubscribe("Customize", this.OnCustomize);
+            EventManager.UnSubscribe("CustomizeClose", this.OnCustomizeClose);
             #endregion
 
             #region -- Crafting Unsubscribers --
@@ -175,7 +206,7 @@ namespace UI
             
         }
 
-
+       
         public void OnActionsClick()
         {
             EventManager.Publish("Actions");
@@ -186,8 +217,8 @@ namespace UI
             //If true set values to zero
             if (revert)
             {
-                m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
-                m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
+                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, 0);
+                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, 0);
 
                 revert = false;
             }
@@ -195,9 +226,6 @@ namespace UI
             else if(!revert)
             {
                 revert = true;
-
-                m_ActionsTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, -115);
-                m_ActionsTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
 
                 m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, -115);
                 m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, -115);
@@ -328,6 +356,7 @@ namespace UI
         public void OnOptions()
         {
             m_OptionsUI.gameObject.SetActive(true);
+            m_SettingsUI.gameObject.SetActive(false);
             Debug.Log("Options Menu");
         }
         public void CloseOptionsClick()
@@ -337,7 +366,9 @@ namespace UI
 
         public void CloseOptions()
         {
+            //Sets the options panel to false when the back button is clicked.
             m_OptionsUI.gameObject.SetActive(false);
+            m_SettingsUI.gameObject.SetActive(true);
             Debug.Log("Close Options");
         }
 
@@ -373,7 +404,54 @@ namespace UI
             //Function will bring up the instructions.
             Debug.Log("Instructions");
         }
-
+        public void OnSettingsClick()
+        {
+            EventManager.Publish("Settings");
+        }
+        public void OnSettings()
+        {
+            m_SettingsUI.gameObject.SetActive(true);
+            Debug.Log("Settings Menu");
+        }
+        public void OnSettingsCloseClick()
+        {
+            EventManager.Publish("SettingsClose");
+        }
+        public void OnSettingsClose()
+        {
+            m_SettingsUI.gameObject.SetActive(false);
+            Debug.Log("Settings Close");
+        }
+        public void OnCustomizeClick()
+        {
+            EventManager.Publish("Customize");
+        }
+        public void OnCustomize()
+        {
+            m_CustomizeUI.gameObject.SetActive(true);
+            m_OptionsUI.gameObject.SetActive(false);
+            m_MainUI.gameObject.SetActive(false);
+            m_ActionsTAB.gameObject.SetActive(false);
+            m_CraftingTAB.gameObject.SetActive(false);
+            m_Workshop.gameObject.SetActive(false);
+            m_ObjectiveUI.gameObject.SetActive(false);
+            Debug.Log("Customize Menu");
+        }
+        public void OnCustomizeCloseClick()
+        {
+            EventManager.Publish("CustomizeClose");
+        }
+        public void OnCustomizeClose()
+        {
+            m_CustomizeUI.gameObject.SetActive(false);
+            m_OptionsUI.gameObject.SetActive(true);
+            m_MainUI.gameObject.SetActive(true);
+            m_ActionsTAB.gameObject.SetActive(true);
+            m_CraftingTAB.gameObject.SetActive(true);
+            m_Workshop.gameObject.SetActive(true);
+            m_ObjectiveUI.gameObject.SetActive(true);
+            Debug.Log("Customize closed");
+        }
         public void OnQuitGameClick()
         {
             EventManager.Publish("QuitGame");
@@ -461,14 +539,28 @@ namespace UI
         }
         public void  OnBuild()
         {
+            //Function that will craft the ship when all parts are obtained.
             Debug.Log("Build Rocket");
         }
         public void OnThrustersClick()
         {
-            EventManager.Publish("Thursters");
+            EventManager.Publish("Thrusters");
         }
         public void OnThrusters()
         {
+            if (undo)
+            {
+                m_ThrusterChoice.gameObject.SetActive(true);
+
+                undo = false;
+            }
+            else if(!undo)
+            {
+                m_ThrusterChoice.gameObject.SetActive(false);
+                undo = true;
+            }
+
+            //Function that will apply the selected thruster on the ship
             Debug.Log("Apply Thrusters");
         }
         public void OnChassisClick()
@@ -477,6 +569,8 @@ namespace UI
         }
         public void OnChassis()
         {
+            
+            //Function that will apply the selected chassis on the ship
             Debug.Log("Apply Chassis");
         }
         public void OnCockpitClick()
@@ -485,16 +579,119 @@ namespace UI
         }
         public void OnCockpit()
         {
+            if(undo)
+            {
+                m_CockpitChoice.gameObject.SetActive(true);
+
+                undo = false;
+            }
+            else if(!undo)
+            {
+                m_CockpitChoice.gameObject.SetActive(false);
+
+                undo = true;
+            }
+            //Function that will apply the selected cockpit on the ship
             Debug.Log("Apply Cockpit");
         }
         public void OnWingsClick()
         {
+
             EventManager.Publish("Apply Wings");
         }
         public void OnWings()
         {
+            if (undo)
+            {
+                m_WingChoice.gameObject.SetActive(true);
+
+                undo = false;
+            }
+            else if(!undo)
+            {
+                m_WingChoice.gameObject.SetActive(false);
+
+                undo = true;
+            }
+            //Function that will apply the selected wing on the ship
             Debug.Log("Apply Wings");
         }
+        public void OnWC1Click()
+        {
+            EventManager.Publish("WingChoice1");
+        }
+        public void OnWC1()
+        {
+            Debug.Log("Player chose WingChoice1");
+        }
+        public void OnWC2Click()
+        {
+            EventManager.Publish("WingChoice2");
+
+        }
+        public void OnWC2()
+        {
+            Debug.Log("Player chose WingChoice2");
+        }
+        public void OnWC3Click()
+        {
+            EventManager.Publish("WingChoice3");
+        }
+        public void OnWC3()
+        {
+            Debug.Log("Player chose WingChoice3");
+        }
+        public void OnCP1Click()
+        {
+            EventManager.Publish("Player chose CP1");
+        }
+        public void OnCP1()
+        {
+            Debug.Log("Player chose Cockpit1");
+        }
+        public void OnCP2Click()
+        {
+            EventManager.Publish("Player chose CP2");
+        }
+        public void OnCP2()
+        {
+            Debug.Log("Player chose Cockpit2");
+        }
+        public void OnCP3Click()
+        {
+            EventManager.Publish("Player chose CP3");
+        }
+        public void OnCP3()
+        {
+            Debug.Log("Player chose Cockpit3");
+        }
+        public void OnTC1Click()
+        {
+            EventManager.Publish("Player chose TC1");
+        }
+        public void OnTC1()
+        {
+            Debug.Log("Player chose Thrust1");
+        }
+        public void OnTC2Click()
+        {
+            EventManager.Publish("Player chose TC2");
+        }
+        public void OnTC2()
+        {
+            Debug.Log("Player chose Thrust2");
+        }
+        public void OnTC3Click()
+        {
+            EventManager.Publish("Player chose TC3");
+        }
+        public void OnTC3()
+        {
+            Debug.Log("Player chose Thrust3");
+        }
+
+        
+
         #endregion
 
     }
