@@ -244,7 +244,7 @@ namespace Assets.Scripts
         /// </summary>
         public void TakeDamage(uint damage)
         {
-            throw new System.NotImplementedException();
+            this.Health -= damage;
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Assets.Scripts
         {
             this.Attackrange = 5.0f;
             this.Attackspeed = 3;
-            this.Speed = 2;
+            this.Speed = 3;
             this.harvesttime = 1.0f;
 
             this.timebetweenattacks = this.Attackspeed;

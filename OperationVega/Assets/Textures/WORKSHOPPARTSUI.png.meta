@@ -1,15 +1,18 @@
 fileFormatVersion: 2
-guid: 5438fabbd6d079d4096ad1ed8b02c3b4
-timeCreated: 1487608226
+guid: a704bfb5b79e2bb478103f791fd7a11c
+timeCreated: 1487608933
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: BUILDBUTTON
-    21300002: THRUSTERSBUTTON
-    21300004: CHASSISBUTTON
-    21300006: COCKPITBUTTON
-    21300008: WINGSBUTTON
-    21300010: XBUTTON
+    21300000: THRUSTER1
+    21300002: THRUSTER2
+    21300004: THRUSTER3
+    21300006: COCKPIT1
+    21300008: COCKPIT2
+    21300010: COCKPIT3
+    21300012: WING1
+    21300014: WING2
+    21300016: WING3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -72,85 +75,121 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: XBUTTON
+      name: THRUSTER1
       rect:
         serializedVersion: 2
-        x: 1424
-        y: 952
-        width: 80
-        height: 62
+        x: 348
+        y: 196
+        width: 91
+        height: 93
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: BUILDBUTTON
+      name: THRUSTER2
       rect:
         serializedVersion: 2
-        x: 767
-        y: 378
-        width: 222
-        height: 68
+        x: 443
+        y: 198
+        width: 89
+        height: 91
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: THRUSTERSBUTTON
+      name: THRUSTER3
       rect:
         serializedVersion: 2
-        x: 371
-        y: 118
-        width: 222
-        height: 68
+        x: 536
+        y: 196
+        width: 90
+        height: 93
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: COCKPITBUTTON
+      name: COCKPIT1
       rect:
         serializedVersion: 2
-        x: 778
-        y: 118
-        width: 222
-        height: 68
+        x: 748
+        y: 198
+        width: 89
+        height: 91
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: WINGSBUTTON
+      name: COCKPIT2
       rect:
         serializedVersion: 2
-        x: 1170
-        y: 118
-        width: 222
-        height: 68
+        x: 842
+        y: 198
+        width: 89
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: COCKPIT3
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 198
+        width: 89
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: WING1
+      rect:
+        serializedVersion: 2
+        x: 1148
+        y: 198
+        width: 89
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: WING2
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 198
+        width: 89
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: WING3
+      rect:
+        serializedVersion: 2
+        x: 1335
+        y: 198
+        width: 89
+        height: 91
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

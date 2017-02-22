@@ -160,7 +160,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &283572116
 Prefab:
@@ -390,7 +390,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -557,7 +557,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 9c1db5111ef00a844803009d902a7b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -613,7 +613,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -764,7 +764,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1173360095007948, guid: 880b562ae52baba43b8e03af72d46788, type: 2}
       propertyPath: m_TagString
-      value: Targetable
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 880b562ae52baba43b8e03af72d46788, type: 2}
@@ -1018,11 +1018,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 3.1
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -16.93
+      value: -17.26
       objectReference: {fileID: 0}
     - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1043,18 +1043,6 @@ Prefab:
     - target: {fileID: 4215952924668898, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
       propertyPath: m_RootOrder
       value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1417661171808208, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 1999239013769844, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 1326361136459250, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dfd74bd5682d4c24d8c6d3cb4091b110, type: 2}
@@ -1092,7 +1080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cleanmineral: {fileID: 1127023133715584, guid: dfd0dd78875fb844693dd9870396d7cc,
     type: 2}
-  dirtymineral: {fileID: 1559445796991742, guid: 595c4d2662bfdd84dbcd23c0ade6c021,
+  dirtymineral: {fileID: 1684633156486842, guid: 595c4d2662bfdd84dbcd23c0ade6c021,
     type: 2}
   theEnemy: {fileID: 0}
   theRecentMineralDeposit: {fileID: 0}
@@ -1181,7 +1169,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1233,7 +1221,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 9c1db5111ef00a844803009d902a7b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1317,7 +1305,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 9c1db5111ef00a844803009d902a7b4c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
