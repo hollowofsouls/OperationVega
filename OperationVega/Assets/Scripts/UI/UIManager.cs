@@ -7,15 +7,16 @@ using Text = UnityEngine.UI.Text;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Assets.Scripts.Managers;
+using Assets.Scripts;
 
 
 
 namespace UI
 {
-    using Assets.Scripts;
-    
+
+
     public class UIManager : MonoBehaviour
-    {     
+    {
         #region -- VARIABLES --
         [SerializeField]
         private Button m_NewGame;
@@ -70,6 +71,8 @@ namespace UI
         private RectTransform m_ObjectiveUI;
         [SerializeField]
         private RectTransform m_MainUI;
+        [SerializeField]
+        private RectTransform m_AreyousureUI;
 
         [SerializeField]
         private Text m_MineralsT;
@@ -90,8 +93,11 @@ namespace UI
         private Image m_Input2;
 
         bool revert;
-        bool undo;
-       
+        bool undo1;
+        bool undo2;
+        bool undo3;
+        private float Scalefactor;
+
 
 
         #endregion
@@ -107,7 +113,11 @@ namespace UI
         {
             //Bool use to manage crafting / action tab
             revert = true;
-            undo = true;
+            undo1 = true;
+            undo2 = true;
+            undo3 = true;
+            ScaleFactor();
+
             #region -- Ingame Subscribers --
             EventManager.Subscribe("Rally", this.OnRally);
             EventManager.Subscribe("Harvest", this.OnHarvest);
@@ -126,6 +136,11 @@ namespace UI
             EventManager.Subscribe("Apply Chassis", this.OnChassis);
             EventManager.Subscribe("Cockpit", this.OnCockpit);
             EventManager.Subscribe("Apply Wings", this.OnWings);
+            EventManager.Subscribe("OnMChoice", this.OnMChoice);
+            EventManager.Subscribe("OnHChoice", this.OnHChoice);
+            EventManager.Subscribe("OnEChoice", this.OnEChoice);
+            EventManager.Subscribe("Player choose yes", this.OnYes);
+            EventManager.Subscribe("Player choose no", this.OnNo);
             #endregion
 
             #region -- Main Menu Subscribers --
@@ -147,6 +162,8 @@ namespace UI
             EventManager.Subscribe("Gas", this.Gas);
             EventManager.Subscribe("Fuel", this.Fuel);
             #endregion
+
+
 
         }
 
@@ -170,6 +187,9 @@ namespace UI
             EventManager.UnSubscribe("Apply Chassis", this.OnChassis);
             EventManager.UnSubscribe("Cockpit", this.OnCockpit);
             EventManager.UnSubscribe("Apply Wings", this.OnWings);
+            EventManager.UnSubscribe("OnMChoice", this.OnMChoice);
+            EventManager.UnSubscribe("OnHChoice", this.OnHChoice);
+            EventManager.UnSubscribe("OnEChoice", this.OnEChoice);
             #endregion
 
             #region -- Main Menu Unsubscribers --
@@ -203,16 +223,49 @@ namespace UI
             m_GasT.text = " " + User.GasCount;
             m_FuelT.text = "" + User.FuelCount;
             m_SteelT.text = "" + User.SteelCount;
-            
+
         }
 
-       
+        void ScaleFactor()
+        {
+
+            this.Scalefactor = 0;
+
+            if (Screen.width == 1280 && Screen.height == 720)
+            {
+                Scalefactor = -165;
+            }
+            else if (Screen.width == 1360 && Screen.height == 768)
+            {
+                Scalefactor = -180;
+            }
+            else if (Screen.width == 1366 && Screen.height == 768)
+            {
+                Scalefactor = -180;
+            }
+            else if (Screen.width == 1600 && Screen.height == 900)
+            {
+                Scalefactor = -215;
+            }
+            else
+            {
+                Scalefactor = -120;
+            }
+
+            if (Scalefactor < 0)
+            {
+                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, Scalefactor);
+                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, Scalefactor);
+            }
+        }
+
+
         public void OnActionsClick()
         {
             EventManager.Publish("Actions");
         }
 
-        public void OnActions()
+        private void OnActions()
         {
             //If true set values to zero
             if (revert)
@@ -223,23 +276,23 @@ namespace UI
                 revert = false;
             }
             //If not true set to this position
-            else if(!revert)
+            else if (!revert)
             {
                 revert = true;
 
-                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, -115);
-                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, -115);
+                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, Scalefactor);
+                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, Scalefactor);
             }
             Debug.Log("Move Actions Tab down");
         }
 
         public void OnCraftingClick()
         {
-           
+
             EventManager.Publish("Crafting");
         }
 
-        public void OnCrafting()
+        private void OnCrafting()
         {
 
             if (revert)
@@ -247,17 +300,17 @@ namespace UI
                 m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
                 m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
                 //m_CraftingTAB.localPosition = new Vector3(m_CraftingTAB.localPosition.x, , m_CraftingTAB.localPosition.z);
-       
+
                 revert = false;
-                                       
+
             }
-            else if(!revert)
+            else if (!revert)
             {
                 //m_CraftingTAB.position = new Vector3(m_CraftingTAB.position.x, 115, m_CraftingTAB.position.z);
                 revert = true;
 
-                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, -115);
-                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
+                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, Scalefactor);
+                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, Scalefactor);
             }
 
 
@@ -267,8 +320,8 @@ namespace UI
         {
             EventManager.Publish("Rally");
         }
-        public void OnRally()
-        {    
+        private void OnRally()
+        {
             //Function will be use to rally upon click.
             Debug.Log("Begin Rallying ");
         }
@@ -276,8 +329,8 @@ namespace UI
         {
             EventManager.Publish("Harvest");
         }
-        public void OnHarvest()
-        {           
+        private void OnHarvest()
+        {
             //Function will be use to harvest upon click.
             Debug.Log("Begin Harvesting");
         }
@@ -286,8 +339,8 @@ namespace UI
             EventManager.Publish("Recall");
         }
 
-        public void OnRecall()
-        {            
+        private void OnRecall()
+        {
             //Function will be use to recall upon click.
             Debug.Log("Recall to barracks.");
         }
@@ -295,8 +348,8 @@ namespace UI
         {
             EventManager.Publish("CancelAction");
         }
-        public void OnCancelAction()
-        {          
+        private void OnCancelAction()
+        {
             //Function will cancel previous action upon click.
             Debug.Log("Cancel Previous Action");
         }
@@ -307,16 +360,16 @@ namespace UI
             //This function will run the craft function
             EventManager.Publish("Craft");
         }
-        void OnCraft()
+        private void OnCraft()
         {
-           
+
             Debug.Log("Craft");
         }
         public void OnClearClick()
         {
             EventManager.Publish("Clear");
         }
-        public void OnClear()
+        private void OnClear()
         {
             //This function will clear items in the craft.
             Debug.Log("Clear");
@@ -325,7 +378,7 @@ namespace UI
         {
             EventManager.Publish("Workshop");
         }
-        public void OnWorkShop()
+        private void OnWorkShop()
         {
             m_WorkshopUI.gameObject.SetActive(true);
             //This function will bring up the workshop within the game.
@@ -335,7 +388,7 @@ namespace UI
         {
             EventManager.Publish("Mine");
         }
-        public void OnMine()
+        private void OnMine()
         {
             //This function will prompt the mining function
             Debug.Log("Begin Mining");
@@ -344,7 +397,7 @@ namespace UI
         {
             EventManager.Publish("Extract");
         }
-        public void OnExtract()
+        private void OnExtract()
         {
             Debug.Log("Begin Extracting");
         }
@@ -353,7 +406,7 @@ namespace UI
         {
             EventManager.Publish("Options Menu");
         }
-        public void OnOptions()
+        private void OnOptions()
         {
             m_OptionsUI.gameObject.SetActive(true);
             m_SettingsUI.gameObject.SetActive(false);
@@ -364,7 +417,7 @@ namespace UI
             EventManager.Publish("Close Options");
         }
 
-        public void CloseOptions()
+        private void CloseOptions()
         {
             //Sets the options panel to false when the back button is clicked.
             m_OptionsUI.gameObject.SetActive(false);
@@ -376,9 +429,9 @@ namespace UI
         {
             EventManager.Publish("Close WorkShop");
         }
-        public void CloseWorkShop()
+        private void CloseWorkShop()
         {
-           //This function will close work shop menu
+            //This function will close work shop menu
             m_WorkshopUI.gameObject.SetActive(false);
             Debug.Log("Close Workshop Menu");
 
@@ -387,7 +440,7 @@ namespace UI
         {
             EventManager.Publish("NewGame");
         }
-        public void NewGame()
+        private void NewGame()
         {
             SceneManager.LoadScene(1);
             //Function will begin game from main menu
@@ -399,8 +452,8 @@ namespace UI
             EventManager.Publish("Instructions");
         }
 
-        public void OnInstructions()
-        {          
+        private void OnInstructions()
+        {
             //Function will bring up the instructions.
             Debug.Log("Instructions");
         }
@@ -408,7 +461,7 @@ namespace UI
         {
             EventManager.Publish("Settings");
         }
-        public void OnSettings()
+        private void OnSettings()
         {
             m_SettingsUI.gameObject.SetActive(true);
             Debug.Log("Settings Menu");
@@ -417,7 +470,7 @@ namespace UI
         {
             EventManager.Publish("SettingsClose");
         }
-        public void OnSettingsClose()
+        private void OnSettingsClose()
         {
             m_SettingsUI.gameObject.SetActive(false);
             Debug.Log("Settings Close");
@@ -426,8 +479,9 @@ namespace UI
         {
             EventManager.Publish("Customize");
         }
-        public void OnCustomize()
+        private void OnCustomize()
         {
+            //Used to set all the UI to inactive when the customize menu is open.
             m_CustomizeUI.gameObject.SetActive(true);
             m_OptionsUI.gameObject.SetActive(false);
             m_MainUI.gameObject.SetActive(false);
@@ -441,8 +495,9 @@ namespace UI
         {
             EventManager.Publish("CustomizeClose");
         }
-        public void OnCustomizeClose()
+        private void OnCustomizeClose()
         {
+            //Used to set all UI to active when the customize menu is open.
             m_CustomizeUI.gameObject.SetActive(false);
             m_OptionsUI.gameObject.SetActive(true);
             m_MainUI.gameObject.SetActive(true);
@@ -452,11 +507,57 @@ namespace UI
             m_ObjectiveUI.gameObject.SetActive(true);
             Debug.Log("Customize closed");
         }
+        public void OnMChoiceClick()
+        {
+            EventManager.Publish("OnMChoice");
+        }
+        private void OnMChoice()
+        {
+            m_AreyousureUI.gameObject.SetActive(true);
+            Debug.Log("Miners Choice");
+        }
+        public void OnHChoiceClick()
+        {
+            EventManager.Publish("OnHChoice");
+        }
+        private void OnHChoice()
+        {
+            m_AreyousureUI.gameObject.SetActive(true);
+            Debug.Log("Harvester Choice");
+        }
+        public void OnEChoiceClick()
+        {
+            EventManager.Publish("OnEChoice");
+        }
+        private void OnEChoice()
+        {
+            
+            m_AreyousureUI.gameObject.SetActive(true);
+            Debug.Log("Extractor Choice");
+        }
+        public void OnYesClick()
+        {
+            EventManager.Publish("Player choose yes");
+        }
+        private void OnYes()
+        {
+            Debug.Log("User choose Yes");
+            m_AreyousureUI.gameObject.SetActive(false);
+        }
+        public void OnNoClick()
+        {
+            EventManager.Publish("Player choose no");
+        }
+        private void OnNo()
+        {
+            Debug.Log("User choose No");
+            m_AreyousureUI.gameObject.SetActive(false);
+        }
         public void OnQuitGameClick()
         {
             EventManager.Publish("QuitGame");
         }
-        public void OnQuitGame()
+        private void OnQuitGame()
         {
             Application.Quit();
             //Function will quit game upon click.
@@ -469,32 +570,32 @@ namespace UI
         {
             EventManager.Publish("Minerals");
         }
-        public void OnMinerals()
+        private void OnMinerals()
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
             Debug.Log("Minerals");
         }
-        
+
         public void Food()
         {
 
             EventManager.Publish("Food");
         }
-        public void OnFood()
+        private void OnFood()
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
             User.FoodCount++;
             Debug.Log("Food");
         }
-        
+
         public void CookedFood()
         {
             EventManager.Publish("CookedFood");
         }
 
-        public void OnCookedFood()
+        private void OnCookedFood()
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
@@ -506,7 +607,7 @@ namespace UI
             EventManager.Publish("Gas");
         }
 
-        public void OnGas()
+        private void OnGas()
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
@@ -519,12 +620,12 @@ namespace UI
             EventManager.Publish("Fuel");
         }
 
-        public void OnFuel()
+        private void OnFuel()
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
             User.FuelCount++;
-            
+
             Debug.Log("Fuel");
         }
 
@@ -537,7 +638,7 @@ namespace UI
         {
             EventManager.Publish("Build Rocket");
         }
-        public void  OnBuild()
+        private void OnBuild()
         {
             //Function that will craft the ship when all parts are obtained.
             Debug.Log("Build Rocket");
@@ -546,18 +647,18 @@ namespace UI
         {
             EventManager.Publish("Thrusters");
         }
-        public void OnThrusters()
+        private void OnThrusters()
         {
-            if (undo)
+            if (undo1)
             {
                 m_ThrusterChoice.gameObject.SetActive(true);
 
-                undo = false;
+                undo1 = false;
             }
-            else if(!undo)
+            else if (!undo1)
             {
                 m_ThrusterChoice.gameObject.SetActive(false);
-                undo = true;
+                undo1 = true;
             }
 
             //Function that will apply the selected thruster on the ship
@@ -567,9 +668,9 @@ namespace UI
         {
             EventManager.Publish("Chassis");
         }
-        public void OnChassis()
+        private void OnChassis()
         {
-            
+
             //Function that will apply the selected chassis on the ship
             Debug.Log("Apply Chassis");
         }
@@ -577,19 +678,19 @@ namespace UI
         {
             EventManager.Publish("Cockpit");
         }
-        public void OnCockpit()
+        private void OnCockpit()
         {
-            if(undo)
+            if (undo2)
             {
                 m_CockpitChoice.gameObject.SetActive(true);
 
-                undo = false;
+                undo2 = false;
             }
-            else if(!undo)
+            else if (!undo2)
             {
                 m_CockpitChoice.gameObject.SetActive(false);
 
-                undo = true;
+                undo2 = true;
             }
             //Function that will apply the selected cockpit on the ship
             Debug.Log("Apply Cockpit");
@@ -599,19 +700,19 @@ namespace UI
 
             EventManager.Publish("Apply Wings");
         }
-        public void OnWings()
+        private void OnWings()
         {
-            if (undo)
+            if (undo3)
             {
                 m_WingChoice.gameObject.SetActive(true);
 
-                undo = false;
+                undo3 = false;
             }
-            else if(!undo)
+            else if (!undo3)
             {
                 m_WingChoice.gameObject.SetActive(false);
 
-                undo = true;
+                undo3 = true;
             }
             //Function that will apply the selected wing on the ship
             Debug.Log("Apply Wings");
@@ -620,7 +721,7 @@ namespace UI
         {
             EventManager.Publish("WingChoice1");
         }
-        public void OnWC1()
+        private void OnWC1()
         {
             Debug.Log("Player chose WingChoice1");
         }
@@ -629,7 +730,7 @@ namespace UI
             EventManager.Publish("WingChoice2");
 
         }
-        public void OnWC2()
+        private void OnWC2()
         {
             Debug.Log("Player chose WingChoice2");
         }
@@ -637,7 +738,7 @@ namespace UI
         {
             EventManager.Publish("WingChoice3");
         }
-        public void OnWC3()
+        private void OnWC3()
         {
             Debug.Log("Player chose WingChoice3");
         }
@@ -645,7 +746,7 @@ namespace UI
         {
             EventManager.Publish("Player chose CP1");
         }
-        public void OnCP1()
+        private void OnCP1()
         {
             Debug.Log("Player chose Cockpit1");
         }
@@ -653,7 +754,7 @@ namespace UI
         {
             EventManager.Publish("Player chose CP2");
         }
-        public void OnCP2()
+        private void OnCP2()
         {
             Debug.Log("Player chose Cockpit2");
         }
@@ -661,7 +762,7 @@ namespace UI
         {
             EventManager.Publish("Player chose CP3");
         }
-        public void OnCP3()
+        private void OnCP3()
         {
             Debug.Log("Player chose Cockpit3");
         }
@@ -669,7 +770,7 @@ namespace UI
         {
             EventManager.Publish("Player chose TC1");
         }
-        public void OnTC1()
+        private void OnTC1()
         {
             Debug.Log("Player chose Thrust1");
         }
@@ -677,7 +778,7 @@ namespace UI
         {
             EventManager.Publish("Player chose TC2");
         }
-        public void OnTC2()
+        private void OnTC2()
         {
             Debug.Log("Player chose Thrust2");
         }
@@ -685,12 +786,12 @@ namespace UI
         {
             EventManager.Publish("Player chose TC3");
         }
-        public void OnTC3()
+        private void OnTC3()
         {
             Debug.Log("Player chose Thrust3");
         }
 
-        
+
 
         #endregion
 
