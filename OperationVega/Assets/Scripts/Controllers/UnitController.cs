@@ -1,6 +1,7 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
+    using System.Collections;
     using System.Collections.Generic;
 
     using Interfaces;
@@ -121,6 +122,7 @@ namespace Assets.Scripts.Controllers
                     GameObject selectionsquare = theunit.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                    Debug.DrawLine(theunit.transform.position, new Vector3(theunit.transform.position.x, 5.0f, theunit.transform.position.z), Color.black);
                     this.Units.Add(theunit);
                 }
 
@@ -133,7 +135,7 @@ namespace Assets.Scripts.Controllers
         private void Start()
         {
             instance = this;
-         }
+        }
 
         /// <summary>
         /// The update function.
@@ -169,7 +171,8 @@ namespace Assets.Scripts.Controllers
                         GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                         selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                     }
+                        Debug.DrawLine(this.theselectedobject.transform.position, new Vector3(this.theselectedobject.transform.position.x, 5.0f, this.theselectedobject.transform.position.z), Color.black);
+                    }
                 }
             }
         }

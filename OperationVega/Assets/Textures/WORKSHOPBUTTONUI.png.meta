@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5438fabbd6d079d4096ad1ed8b02c3b4
-timeCreated: 1487608226
+timeCreated: 1487177568
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -131,10 +131,23 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
+      name: CHASSISBUTTON
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 118
+        width: 222
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
       name: COCKPITBUTTON
       rect:
         serializedVersion: 2
-        x: 778
+        x: 906
         y: 118
         width: 222
         height: 68

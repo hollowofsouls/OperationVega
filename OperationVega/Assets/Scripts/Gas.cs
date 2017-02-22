@@ -129,7 +129,7 @@ namespace Assets.Scripts
 		{
 			if (this.state)
 			{
-				//Debug.Log(this.state);
+				Debug.Log(this.state);
 				this.resetTimer += Time.fixedDeltaTime * 2;
 				if (this.resetTimer >= 60.0f)
 				{

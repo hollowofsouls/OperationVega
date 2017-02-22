@@ -1,12 +1,12 @@
 fileFormatVersion: 2
 guid: d9cf6e0b960684544bbea8196b521ac7
-timeCreated: 1487607943
+timeCreated: 1487180642
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: COCKPITCHOICES
     21300002: THRUSTERCHOICES
-    21300004: COCKPITCHOICES
+    21300004: CHASSISCHOICES
     21300006: WINGCHOICES
   serializedVersion: 4
   mipmaps:
@@ -90,6 +90,19 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+      name: COCKPITCHOICES
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 324
+        width: 387
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
       name: THRUSTERCHOICES
       rect:
         serializedVersion: 2
@@ -103,13 +116,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: COCKPITCHOICES
+      name: CHASSISCHOICES
       rect:
         serializedVersion: 2
-        x: 738
-        y: 187
-        width: 292
-        height: 111
+        x: 649
+        y: 190
+        width: 203
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

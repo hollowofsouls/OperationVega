@@ -7,7 +7,7 @@ namespace Assets.Scripts
 
     /// <summary>
     /// The spawn point class.
-    /// It requires a rigid body to perform collision detection.
+    /// It requires a rigidbody to perform collision detection.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SphereCollider))]
@@ -20,24 +20,17 @@ namespace Assets.Scripts
         private int spawncount;
 
         /// <summary>
-        /// The spawn timer reference.
-        /// How long before the spawn point becomes active again.
-        /// </summary>
-        private float spawntimer;
-
-        /// <summary>
         /// The enemy prefab reference.
         /// </summary>
         public GameObject EnemyPrefab;
 
         /// <summary>
         /// The start function.
-        /// It sets up the rigid body characteristics.
+        /// It sets up the rigidbody characteristics.
         /// </summary>
         private void Start()
         {
             this.spawncount = 3;
-            this.spawntimer = 15;
 
             Rigidbody theRigidbody = this.GetComponent<Rigidbody>();
 
@@ -52,14 +45,6 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The update function.
-        /// </summary>
-        private void Update()
-        {
-            this.spawntimer += 1 * Time.deltaTime;
-        }
-
-        /// <summary>
         /// The on collision enter.
         /// </summary>
         /// <param name="other">
@@ -67,7 +52,7 @@ namespace Assets.Scripts
         /// </param>
         private void OnTriggerEnter(Collider other)
         {
-            if (this.spawntimer >= 15 && other.GetComponent(typeof(IUnit)))
+            if (other.GetComponent(typeof(IUnit)))
             {
                 for (int i = 0; i < this.spawncount; i++)
                 {
@@ -79,8 +64,6 @@ namespace Assets.Scripts
                     // Spawn
                     Instantiate(this.EnemyPrefab, spawnposition, Quaternion.LookRotation(-other.transform.forward));
                 }
-
-                this.spawntimer = 0;
             }
         }
     }
