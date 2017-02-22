@@ -1,7 +1,6 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     using Interfaces;
@@ -134,7 +133,7 @@ namespace Assets.Scripts.Controllers
         private void Start()
         {
             instance = this;
-        }
+         }
 
         /// <summary>
         /// The update function.

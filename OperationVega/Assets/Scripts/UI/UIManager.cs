@@ -15,8 +15,10 @@ namespace UI
     using Assets.Scripts;
     
     public class UIManager : MonoBehaviour
-    {     
+    {
         #region -- VARIABLES --
+
+        private float Scalefactor;
         [SerializeField]
         private Button m_NewGame;
         [SerializeField]
@@ -105,6 +107,8 @@ namespace UI
 
         protected void Awake()
         {
+            this.ScaleUI();
+
             //Bool use to manage crafting / action tab
             revert = true;
             undo = true;
@@ -192,7 +196,76 @@ namespace UI
             EventManager.UnSubscribe("Fuel", this.OnFuel);
             #endregion
         }
+
         #region -- VOID FUNCTIONS --
+
+        private void ScaleUI()
+        {
+            this.Scalefactor = 0;
+
+            if (Screen.width == 1024 && Screen.height == 768)
+            {
+                Scalefactor = -180;
+            }
+            else if (Screen.width == 1152 && Screen.height == 864)
+            {
+                Scalefactor = -200;
+            }
+            else if (Screen.width == 1280 && Screen.height == 720)
+            {
+                Scalefactor = -165;
+            }
+            else if (Screen.width == 1280 && Screen.height == 768)
+            {
+                Scalefactor = -180;
+            }
+            else if (Screen.width == 1280 && Screen.height == 800)
+            {
+                Scalefactor = -185;
+            }
+            if (Screen.width == 1280 && Screen.height == 960)
+            {
+                Scalefactor = -230;
+            }
+            else if (Screen.width == 1280 && Screen.height == 1024)
+            {
+                Scalefactor = -245;
+            }
+            else if (Screen.width == 1360 && Screen.height == 768)
+            {
+                Scalefactor = -180;
+            }
+            else if (Screen.width == 1366 && Screen.height == 768)
+            {
+                Scalefactor = -180;
+            }
+            else if (Screen.width == 1440 && Screen.height == 900)
+            {
+                Scalefactor = -215;
+            }
+            else if (Screen.width == 1600 && Screen.height == 900)
+            {
+                Scalefactor = -215;
+            }
+            else if (Screen.width == 1600 && Screen.height == 1024)
+            {
+                Scalefactor = -245;
+            }
+            else if (Screen.width == 1680 && Screen.height == 1050)
+            {
+                Scalefactor = -255;
+            }
+            else
+            {
+                this.Scalefactor = -140;
+            }
+
+            if (Scalefactor < 0)
+            {
+                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, Scalefactor);
+                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, Scalefactor);
+            }
+        }
 
         void Update()
         {
@@ -203,7 +276,7 @@ namespace UI
             m_GasT.text = " " + User.GasCount;
             m_FuelT.text = "" + User.FuelCount;
             m_SteelT.text = "" + User.SteelCount;
-            
+
         }
 
        
@@ -227,7 +300,7 @@ namespace UI
             {
                 revert = true;
 
-                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, -115);
+                m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, this.Scalefactor);
                 m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, -115);
             }
             Debug.Log("Move Actions Tab down");
@@ -246,17 +319,15 @@ namespace UI
             {
                 m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
                 m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
-                //m_CraftingTAB.localPosition = new Vector3(m_CraftingTAB.localPosition.x, , m_CraftingTAB.localPosition.z);
-       
+                
                 revert = false;
                                        
             }
             else if(!revert)
             {
-                //m_CraftingTAB.position = new Vector3(m_CraftingTAB.position.x, 115, m_CraftingTAB.position.z);
                 revert = true;
 
-                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, -115);
+                m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, this.Scalefactor);
                 m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
             }
 
