@@ -144,7 +144,7 @@ namespace UI
             #endregion
 
             #region -- Main Menu Subscribers --
-            EventManager.Subscribe("NewGame", this.NewGameClick);
+            EventManager.Subscribe("NewGame", this.NewGame);
             EventManager.Subscribe("Options Menu", this.OnOptions);
             EventManager.Subscribe("Instructions", this.OnInstructions);
             EventManager.Subscribe("QuitGame", this.OnQuitGame);
