@@ -232,7 +232,6 @@ namespace UI
 
         void ScaleFactor()
         {
-
             this.Scalefactor = 0;
 
             if (Screen.width == 1280 && Screen.height == 720)
@@ -250,6 +249,10 @@ namespace UI
             else if (Screen.width == 1600 && Screen.height == 900)
             {
                 Scalefactor = -115;
+            }
+            else if (Screen.width == 1920 && Screen.height == 1080)
+            {
+                Scalefactor = -145;
             }
             else
             {
