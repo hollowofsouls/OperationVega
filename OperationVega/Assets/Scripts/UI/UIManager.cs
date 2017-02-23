@@ -92,7 +92,8 @@ namespace UI
         [SerializeField]
         private Image m_Input2;
 
-        bool revert;
+        bool revertactionstab;
+        bool revertcraftingtab;
         bool undo1;
         bool undo2;
         bool undo3;
@@ -111,8 +112,11 @@ namespace UI
 
         protected void Awake()
         {
-            //Bool use to manage crafting / action tab
-            revert = true;
+            //Bool use to manage action tab
+            revertactionstab = true;
+            //Bool use to manage crafting tab
+            revertcraftingtab = true;
+
             undo1 = true;
             undo2 = true;
             undo3 = true;
@@ -233,19 +237,19 @@ namespace UI
 
             if (Screen.width == 1280 && Screen.height == 720)
             {
-                Scalefactor = -165;
+                Scalefactor = -90;
             }
             else if (Screen.width == 1360 && Screen.height == 768)
             {
-                Scalefactor = -180;
+                Scalefactor = -95;
             }
             else if (Screen.width == 1366 && Screen.height == 768)
             {
-                Scalefactor = -180;
+                Scalefactor = -95;
             }
             else if (Screen.width == 1600 && Screen.height == 900)
             {
-                Scalefactor = -215;
+                Scalefactor = -115;
             }
             else
             {
@@ -255,7 +259,10 @@ namespace UI
             if (Scalefactor < 0)
             {
                 m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, Scalefactor);
+                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, -115);
+
                 m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, Scalefactor);
+                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
             }
         }
 
@@ -268,20 +275,20 @@ namespace UI
         private void OnActions()
         {
             //If true set values to zero
-            if (revert)
+            if (revertactionstab)
             {
                 m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, 0);
                 m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, 0);
 
-                revert = false;
+                revertactionstab = false;
             }
             //If not true set to this position
-            else if (!revert)
+            else if (!revertactionstab)
             {
-                revert = true;
+                revertactionstab = true;
 
                 m_ActionsTAB.offsetMax = new Vector2(m_ActionsTAB.offsetMax.x, Scalefactor);
-                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, Scalefactor);
+                m_ActionsTAB.offsetMin = new Vector2(m_ActionsTAB.offsetMin.x, -115);
             }
             Debug.Log("Move Actions Tab down");
         }
@@ -295,22 +302,20 @@ namespace UI
         private void OnCrafting()
         {
 
-            if (revert)
+            if (revertcraftingtab)
             {
                 m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
                 m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, 0);
-                //m_CraftingTAB.localPosition = new Vector3(m_CraftingTAB.localPosition.x, , m_CraftingTAB.localPosition.z);
-
-                revert = false;
+              
+                revertcraftingtab = false;
 
             }
-            else if (!revert)
+            else if (!revertcraftingtab)
             {
-                //m_CraftingTAB.position = new Vector3(m_CraftingTAB.position.x, 115, m_CraftingTAB.position.z);
-                revert = true;
+                revertcraftingtab = true;
 
                 m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, Scalefactor);
-                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, Scalefactor);
+                m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
             }
 
 

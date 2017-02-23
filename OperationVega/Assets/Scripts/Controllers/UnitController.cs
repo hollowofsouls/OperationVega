@@ -1,12 +1,12 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     using Interfaces;
 
     using UnityEngine;
+    using UnityEngine.EventSystems;
 
     /// <summary>
     /// The unit controller class.
@@ -39,7 +39,6 @@ namespace Assets.Scripts.Controllers
         /// The selected object reference.
         /// This is the object that is left clicked on.
         /// </summary>
-        [HideInInspector]
         public GameObject theselectedobject;
 
         /// <summary>
@@ -157,7 +156,7 @@ namespace Assets.Scripts.Controllers
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 this.ClearSelectedUnits();
-
+                
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 RaycastHit hit = new RaycastHit();
@@ -185,7 +184,6 @@ namespace Assets.Scripts.Controllers
         {
             if (Input.GetMouseButtonDown(0))
             {
-                this.theUnit = null;
                 this.startclick = Input.mousePosition;
             }
             else if (Input.GetMouseButtonUp(0))
@@ -220,22 +218,28 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ClearSelectedUnits()
         {
-            if (this.Units.Count > 0)
-            { 
-                foreach (GameObject go in this.Units)
-                {
-                    GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
-                    selectionsquare.GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
-
-            this.Units.Clear();
-            this.theUnit = null;
-            this.theclickedactionobject = null;
-            if (this.theselectedobject != null)
+            if (!EventSystem.current.IsPointerOverGameObject())
             {
-                GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
-                selectionsquare.GetComponent<MeshRenderer>().enabled = false;
+                if (this.Units.Count > 0)
+                {
+                    foreach (GameObject go in this.Units)
+                    {
+                        GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
+                        selectionsquare.GetComponent<MeshRenderer>().enabled = false;
+                    }
+                }
+
+
+                this.Units.Clear();
+                this.theUnit = null;
+                this.theclickedactionobject = null;
+
+                if (this.theselectedobject != null)
+                {
+                    GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
+                    selectionsquare.GetComponent<MeshRenderer>().enabled = false;
+                    this.theselectedobject = null;
+                }
             }
         }
 

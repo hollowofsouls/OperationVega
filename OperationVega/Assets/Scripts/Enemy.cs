@@ -204,15 +204,11 @@ namespace Assets.Scripts
         /// <summary>
         /// The search function.
         /// This function is called upon switching to the idle state.
+        /// This function finds all the objects in the scene that can be targeted.
         /// </summary>
         private void Search()
         {
             this.theTargets = GameObject.FindGameObjectsWithTag("Targetable").ToList();
-            
-            //if (this.TargetResource == null && this.Target == null)
-            //{
-            //    this.FindClosestTarget();
-            //}
         }
 
         /// <summary>
@@ -291,6 +287,7 @@ namespace Assets.Scripts
         private void UpdateEnemy()
         {
             this.timebetweenattacks += 1 * Time.deltaTime;
+
             switch (this.TheEnemyFSM.CurrentState.Statename)
             {
                 case "Idle":
@@ -305,6 +302,18 @@ namespace Assets.Scripts
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// The update rotation function.
+        /// This function updates the enemy rotation accordingly.
+        /// </summary>
+        private void UpdateRotation()
+        {
+            Vector3 dir = this.currenttarget.transform.position - this.transform.position;
+            Quaternion lookrotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(this.transform.rotation, lookrotation, Time.deltaTime * 5).eulerAngles;
+            this.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
         }
 
         /// <summary>
@@ -350,7 +359,7 @@ namespace Assets.Scripts
         private void Update()
         {
             this.UpdateEnemy();
-            this.transform.LookAt(this.currenttarget.transform);
+            this.UpdateRotation();
         }
     }
 }

@@ -137,7 +137,7 @@ namespace Assets.Scripts.Controllers
                 Camera.main.orthographicSize -= 0.25f;
             }
 
-            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 6, 10);
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 7, 10);
         }
 
         /// <summary>
