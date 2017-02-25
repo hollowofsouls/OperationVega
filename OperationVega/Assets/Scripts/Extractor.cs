@@ -617,6 +617,7 @@ namespace Assets.Scripts
         {
             this.InitUnit();
             this.TheExtractorFsm.Feed("auto", 0.1f);
+            User.ExtractorCount++;
         }
 
         /// <summary>
@@ -626,6 +627,14 @@ namespace Assets.Scripts
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
             this.UpdateUnit();
+        }
+
+        /// <summary>
+        /// The on destroy function.
+        /// </summary>
+        private void OnDestroy()
+        {
+            User.ExtractorCount--;
         }
     }
 }

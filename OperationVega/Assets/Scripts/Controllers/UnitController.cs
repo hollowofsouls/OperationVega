@@ -2,10 +2,12 @@
 namespace Assets.Scripts.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Interfaces;
 
     using UnityEngine;
+    using UnityEngine.AI;
     using UnityEngine.EventSystems;
 
     /// <summary>
@@ -129,6 +131,81 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
+        /// The select all harvesters function.
+        /// This function selects all harvesters on the map.
+        /// </summary>
+        public void SelectAllHarvesters()
+        {
+            this.Units.Clear();
+            List<Harvester> units = FindObjectsOfType<Harvester>().ToList();
+            foreach (Harvester h in units)
+            {
+                GameObject selectionsquare = h.gameObject.transform.FindChild("SelectionHighlight").gameObject;
+                selectionsquare.GetComponent<MeshRenderer>().enabled = true;
+                selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                this.Units.Add(h.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// The select all extractors function.
+        /// This function selects all extractors on the map.
+        /// </summary>
+        public void SelectAllExtractors()
+        {
+            this.Units.Clear();
+            List<Extractor> units = FindObjectsOfType<Extractor>().ToList();
+            foreach (Extractor e in units)
+            {
+                GameObject selectionsquare = e.gameObject.transform.FindChild("SelectionHighlight").gameObject;
+                selectionsquare.GetComponent<MeshRenderer>().enabled = true;
+                selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                this.Units.Add(e.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// The select all miners function.
+        /// This function selects all miners on the map.
+        /// </summary>
+        public void SelectAllMiners()
+        {
+            this.Units.Clear();
+            List<Miner> units = FindObjectsOfType<Miner>().ToList();
+            foreach (Miner e in units)
+            {
+                GameObject selectionsquare = e.gameObject.transform.FindChild("SelectionHighlight").gameObject;
+                selectionsquare.GetComponent<MeshRenderer>().enabled = true;
+                selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                this.Units.Add(e.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// The cancel action function.
+        /// Cancels the current action of the selected unit(s).
+        /// </summary>
+        public void CancelAction()
+        {
+            if (this.theselectedobject != null)
+            {
+                this.theUnit.SetTheMovePosition(this.theselectedobject.transform.position);
+
+            }
+
+            if (this.Units.Count > 0)
+            {
+                foreach (GameObject go in this.Units)
+                {
+                    if (go.GetComponent<NavMeshAgent>())
+                    {
+                        go.GetComponent<NavMeshAgent>().SetDestination(go.transform.position);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// The start function.
         /// </summary>
         private void Start()
@@ -144,7 +221,6 @@ namespace Assets.Scripts.Controllers
             this.ActivateDragScreen();
             this.SelectUnits();
             this.CommandUnits();
-
         }
 
         /// <summary>

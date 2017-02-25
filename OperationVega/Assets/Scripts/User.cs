@@ -7,6 +7,12 @@ namespace Assets.Scripts
     public class User
     {
         /// <summary>
+        /// The max count of units.
+        /// This references the max amount of each given unit the user is allowed on the field.
+        /// </summary>
+        public static readonly int MaxCountOfUnits = 30;
+
+        /// <summary>
         /// The food count. This represents the total number of food
         /// in users inventory
         /// </summary>
@@ -42,5 +48,22 @@ namespace Assets.Scripts
         /// </summary>
         public static uint GasCount;
 
+        /// <summary>
+        /// The harvester count.
+        /// Reference to the number of harvesters on the field.
+        /// </summary>
+        public static int HarvesterCount;
+
+        /// <summary>
+        /// The miner count.
+        /// Reference to the number of miners on the field.
+        /// </summary>
+        public static int MinerCount;
+
+        /// <summary>
+        /// The extractor count.
+        /// Reference to the number of extractors on the field.
+        /// </summary>
+        public static int ExtractorCount;
     }
 }

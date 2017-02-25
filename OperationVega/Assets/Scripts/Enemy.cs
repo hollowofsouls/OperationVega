@@ -86,6 +86,10 @@ namespace Assets.Scripts
         /// </summary>
         private float timetotaint;
 
+        /// <summary>
+        /// The targets list.
+        /// All the possible targets on the map.
+        /// </summary>
         private List<GameObject> theTargets = new List<GameObject>();
 
         /// <summary>

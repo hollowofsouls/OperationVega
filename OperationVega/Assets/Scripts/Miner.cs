@@ -787,6 +787,7 @@ namespace Assets.Scripts
         {
             this.InitUnit();
             this.TheMinerFsm.Feed("auto", 0.1f);
+            User.MinerCount++;
         }
 
         /// <summary>
@@ -796,6 +797,14 @@ namespace Assets.Scripts
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
             this.UpdateUnit();
+        }
+
+        /// <summary>
+        /// The on destroy function.
+        /// </summary>
+        private void OnDestroy()
+        {
+            User.MinerCount--;
         }
     }
 }

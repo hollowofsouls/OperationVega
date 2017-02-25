@@ -1,6 +1,8 @@
 ﻿
 namespace Assets.Scripts
 {
+    using Assets.Scripts.Managers;
+
     using Controllers;
     using Interfaces;
     using UnityEngine;
@@ -785,6 +787,8 @@ namespace Assets.Scripts
         {
             this.InitUnit();
             this.TheHarvesterFsm.Feed("auto", 0.1f);
+            GameManager.Instance.TheHarvesters.Add(this);
+            User.HarvesterCount++;
         }
 
         /// <summary>
@@ -794,6 +798,16 @@ namespace Assets.Scripts
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
             this.UpdateUnit();
+        }
+
+        /// <summary>
+        /// The on destroy function.
+        /// </summary>
+        private void OnDestroy()
+        {
+            User.HarvesterCount--;
+            GameManager.Instance.TheHarvesters.Remove(this);
+            GameManager.Instance.CheckForLoss();
         }
     }
 }
