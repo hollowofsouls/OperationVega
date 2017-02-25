@@ -136,7 +136,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public void SelectAllHarvesters()
         {
-            this.Units.Clear();
+            this.ClearSelectedUnits();
             List<Harvester> units = FindObjectsOfType<Harvester>().ToList();
             foreach (Harvester h in units)
             {
@@ -153,7 +153,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public void SelectAllExtractors()
         {
-            this.Units.Clear();
+            this.ClearSelectedUnits();
             List<Extractor> units = FindObjectsOfType<Extractor>().ToList();
             foreach (Extractor e in units)
             {
@@ -170,7 +170,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public void SelectAllMiners()
         {
-            this.Units.Clear();
+            this.ClearSelectedUnits();
             List<Miner> units = FindObjectsOfType<Miner>().ToList();
             foreach (Miner e in units)
             {
@@ -182,6 +182,28 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
+        /// The select all units function.
+        /// This function selects all units on the map.
+        /// </summary>
+        public void SelectAllUnits()
+        {
+            this.ClearSelectedUnits();
+            List<GameObject> units = GameObject.FindGameObjectsWithTag("Targetable").ToList();
+
+            foreach (GameObject go in units)
+            {
+                if (go.GetComponent(typeof(IUnit)))
+                {
+                    GameObject selectionsquare = go.gameObject.transform.FindChild("SelectionHighlight").gameObject;
+                    selectionsquare.GetComponent<MeshRenderer>().enabled = true;
+                    selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                    this.Units.Add(go.gameObject);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// The cancel action function.
         /// Cancels the current action of the selected unit(s).
         /// </summary>
@@ -190,7 +212,7 @@ namespace Assets.Scripts.Controllers
             if (this.theselectedobject != null)
             {
                 this.theUnit.SetTheMovePosition(this.theselectedobject.transform.position);
-
+                this.theUnit.ChangeStates("Idle");
             }
 
             if (this.Units.Count > 0)
@@ -200,6 +222,8 @@ namespace Assets.Scripts.Controllers
                     if (go.GetComponent<NavMeshAgent>())
                     {
                         go.GetComponent<NavMeshAgent>().SetDestination(go.transform.position);
+                        IUnit u = (IUnit)go.GetComponent(typeof(IUnit));
+                        u.ChangeStates("Idle");
                     }
                 }
             }

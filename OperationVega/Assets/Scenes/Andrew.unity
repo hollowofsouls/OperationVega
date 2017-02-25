@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 442365869}
   - component: {fileID: 442365873}
   - component: {fileID: 442365872}
+  - component: {fileID: 442365874}
   - component: {fileID: 442365870}
   - component: {fileID: 442365871}
   m_Layer: 0
@@ -645,6 +646,9 @@ MonoBehaviour:
   m_ObjectiveUI: {fileID: 1058482655}
   m_MainUI: {fileID: 409235662}
   m_AreyousureUI: {fileID: 145326122}
+  Main: {fileID: 0}
+  Kill: {fileID: 0}
+  Craft: {fileID: 0}
   m_MineralsT: {fileID: 825580066}
   m_FoodT: {fileID: 1213318837}
   m_CookedFoodT: {fileID: 2095781863}
@@ -677,6 +681,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TheHarvesters: []
   HasBuiltShip: 0
+--- !u!114 &442365874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 442365868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ccdb4366a31a33458fd593e24868b98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &465729416
 Prefab:
   m_ObjectHideFlags: 0

@@ -65,6 +65,7 @@ namespace Assets.Scripts.Managers
         {
             if (this.HasBuiltShip)
             {
+                ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].Currentvalue++;
                 Debug.Log("Ship has been built now press launch to end the game");
                 return true;
             }

@@ -4,6 +4,8 @@ namespace Assets.Scripts
     using System.Collections.Generic;
     using System.Linq;
 
+    using Assets.Scripts.Managers;
+
     using Controllers;
     using Interfaces;
     using UnityEngine;
@@ -353,7 +355,8 @@ namespace Assets.Scripts
                 }
             }
             this.currenttarget = this.theTargets[0];
-            //Return true if its a unit or an untainted resource
+            
+            // Return true if its a unit or an untainted resource
             return true;
         }
 
@@ -364,6 +367,14 @@ namespace Assets.Scripts
         {
             this.UpdateEnemy();
             this.UpdateRotation();
+        }
+
+        /// <summary>
+        /// The on destroy function.
+        /// </summary>
+        private void OnDestroy()
+        {
+           ObjectiveManager.Instance.TheObjectives[ObjectiveType.Kill].Currentvalue++;
         }
     }
 }
