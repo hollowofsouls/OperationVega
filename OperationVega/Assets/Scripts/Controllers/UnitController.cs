@@ -9,6 +9,7 @@ namespace Assets.Scripts.Controllers
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
+    using UnityEngine.UI;
 
     /// <summary>
     /// The unit controller class.
@@ -16,6 +17,8 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
+        public Transform contentfield;
+
         /// <summary>
         /// The instance of the class.
         /// </summary>
@@ -282,7 +285,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ActivateDragScreen()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 this.startclick = Input.mousePosition;
             }
@@ -349,7 +352,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void CommandUnits()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
