@@ -19,6 +19,10 @@ namespace Assets.Scripts.Controllers
     {
         public Transform contentfield;
 
+        public GameObject unitbutton;
+
+        private List<GameObject> theUnitButtonsList = new List<GameObject>();
+
         /// <summary>
         /// The instance of the class.
         /// </summary>
@@ -116,7 +120,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public void CheckIfSelected(GameObject theunit)
         {
-            if (theunit.GetComponent<Renderer>().isVisible && Input.GetMouseButtonUp(0))
+            if (theunit.GetComponent<Renderer>().isVisible && Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Vector3 camPos = Camera.main.WorldToScreenPoint(theunit.transform.position);
                 camPos.y = InvertY(camPos.y);
@@ -126,8 +130,8 @@ namespace Assets.Scripts.Controllers
                     GameObject selectionsquare = theunit.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                    Debug.DrawLine(theunit.transform.position, new Vector3(theunit.transform.position.x, 5.0f, theunit.transform.position.z), Color.black);
                     this.Units.Add(theunit);
+                    this.CreateUnitButton(theunit);
                 }
 
             }
@@ -147,6 +151,7 @@ namespace Assets.Scripts.Controllers
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                 this.Units.Add(h.gameObject);
+                this.CreateUnitButton(h.gameObject);
             }
         }
 
@@ -164,6 +169,7 @@ namespace Assets.Scripts.Controllers
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                 this.Units.Add(e.gameObject);
+                this.CreateUnitButton(e.gameObject);
             }
         }
 
@@ -175,12 +181,13 @@ namespace Assets.Scripts.Controllers
         {
             this.ClearSelectedUnits();
             List<Miner> units = FindObjectsOfType<Miner>().ToList();
-            foreach (Miner e in units)
+            foreach (Miner m in units)
             {
-                GameObject selectionsquare = e.gameObject.transform.FindChild("SelectionHighlight").gameObject;
+                GameObject selectionsquare = m.gameObject.transform.FindChild("SelectionHighlight").gameObject;
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                this.Units.Add(e.gameObject);
+                this.Units.Add(m.gameObject);
+                this.CreateUnitButton(m.gameObject);
             }
         }
 
@@ -197,14 +204,14 @@ namespace Assets.Scripts.Controllers
             {
                 if (go.GetComponent(typeof(IUnit)))
                 {
-                    GameObject selectionsquare = go.gameObject.transform.FindChild("SelectionHighlight").gameObject;
+                    GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                    this.Units.Add(go.gameObject);
+                    this.Units.Add(go);
+                    this.CreateUnitButton(go);
                 }
             }
         }
-
 
         /// <summary>
         /// The cancel action function.
@@ -233,6 +240,83 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
+        /// The get unit info function.
+        /// </summary>
+        /// <param name="theunit">
+        /// The unit get the info from.
+        /// </param>
+        private void GetUnitInfo(IUnit theunit)
+        {
+            string unitdata;
+
+            if (theunit != null)
+            {
+                //Reference for now
+                //health
+                //maxhealth
+                //strength
+                //defense
+                //speed
+                //attackspeed
+                //skillcooldown
+                //attackrange
+                //resourcecount
+
+                int[] stats = theunit.GetAllStats();
+               
+                unitdata = "The unit stats: " + stats[0] + stats[1] + stats[2] + stats[3] + stats[4] + stats[5] + stats[6] + stats[7] + stats[8];
+                Debug.Log(unitdata);
+            }
+        }
+
+        /// <summary>
+        /// The create unit button function.
+        /// This function populates the panel with the a button for the unit that was
+        /// passed in.
+        /// </summary>
+        /// <param name="theunit">
+        /// The the unit.
+        /// </param>
+        private void CreateUnitButton(GameObject theunit)
+        {
+            GameObject button = Instantiate(this.unitbutton);
+            button.transform.SetParent(this.contentfield);
+
+            IUnit u = (IUnit)theunit.GetComponent(typeof(IUnit));
+
+            if (u is Harvester)
+            {
+                button.GetComponentInChildren<Text>().text = "H";
+            }
+            else if (u is Miner)
+            {
+                button.GetComponentInChildren<Text>().text = "M";
+            }
+            else if (u is Extractor)
+            {
+                button.GetComponentInChildren<Text>().text = "E";
+            }
+
+            button.AddComponent<UnitButton>().Unit = theunit;
+            button.GetComponent<Button>().onClick.AddListener(delegate {this.GetUnitInfo(u); });
+
+            this.theUnitButtonsList.Add(button);
+        }
+
+        /// <summary>
+        /// The clear unit buttons list function.
+        /// This function destroys the buttons populated for a unit and clears the list.
+        /// </summary>
+        private void ClearUnitButtonsList()
+        {
+            foreach (GameObject go in this.theUnitButtonsList)
+            {
+                Destroy(go);
+            }
+            this.theUnitButtonsList.Clear();
+        }
+
+        /// <summary>
         /// The start function.
         /// </summary>
         private void Start()
@@ -256,7 +340,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void SelectUnits()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 this.ClearSelectedUnits();
                 
@@ -273,7 +357,7 @@ namespace Assets.Scripts.Controllers
                         GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                         selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                        Debug.DrawLine(this.theselectedobject.transform.position, new Vector3(this.theselectedobject.transform.position.x, 5.0f, this.theselectedobject.transform.position.z), Color.black);
+                        this.CreateUnitButton(this.theselectedobject);
                     }
                 }
             }
@@ -285,7 +369,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ActivateDragScreen()
         {
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (Input.GetMouseButtonDown(0))
             {
                 this.startclick = Input.mousePosition;
             }
@@ -330,6 +414,8 @@ namespace Assets.Scripts.Controllers
                         GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = false;
                     }
+
+                    this.ClearUnitButtonsList();
                 }
 
 
@@ -342,6 +428,7 @@ namespace Assets.Scripts.Controllers
                     GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = false;
                     this.theselectedobject = null;
+                    this.ClearUnitButtonsList();
                 }
             }
         }

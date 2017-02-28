@@ -603,6 +603,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bde64b38a5813469311276bfeab967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  contentfield: {fileID: 0}
+  unitbutton: {fileID: 1954308782065930, guid: c5544d39d1e284749a7f8359889cb4e6, type: 2}
   selectionHighlight: {fileID: 2800000, guid: ddcfce0b72b55e845b2c7a5baa66bc79, type: 3}
   theselectedobject: {fileID: 0}
   theclickedactionobject: {fileID: 0}
@@ -646,9 +648,6 @@ MonoBehaviour:
   m_ObjectiveUI: {fileID: 1058482655}
   m_MainUI: {fileID: 409235662}
   m_AreyousureUI: {fileID: 145326122}
-  Main: {fileID: 0}
-  Kill: {fileID: 0}
-  Craft: {fileID: 0}
   m_MineralsT: {fileID: 825580066}
   m_FoodT: {fileID: 1213318837}
   m_CookedFoodT: {fileID: 2095781863}

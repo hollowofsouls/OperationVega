@@ -48,43 +48,43 @@ namespace Assets.Scripts
         /// The health of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Health;
+        public int Health;
 
         /// <summary>
         /// The max health of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Maxhealth;
+        public int Maxhealth;
 
         /// <summary>
         /// The strength of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Strength;
+        public int Strength;
 
         /// <summary>
         /// The defense of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Defense;
+        public int Defense;
 
         /// <summary>
         /// The speed of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Speed;
+        public int Speed;
 
         /// <summary>
         /// The attack speed of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Attackspeed;
+        public int Attackspeed;
 
         /// <summary>
         /// The skill cool down of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Skillcooldown;
+        public int Skillcooldown;
 
         /// <summary>
         /// The attack range of the extractor.
@@ -96,7 +96,7 @@ namespace Assets.Scripts
         /// The resource count of the extractor.
         /// </summary>
         [HideInInspector]
-        public uint Resourcecount;
+        public int Resourcecount;
 
         /// <summary>
         /// The extractor finite state machine.
@@ -172,7 +172,7 @@ namespace Assets.Scripts
         /// The already stocked count reference.
         /// This holds the count of a resource already stocked to keep track.
         /// </summary>
-        private uint alreadystockedcount;
+        private int alreadystockedcount;
 
         /// <summary>
         /// The range handler delegate.
@@ -242,7 +242,7 @@ namespace Assets.Scripts
         /// <para></para>
         /// <remarks><paramref name="damage"></paramref> -The amount to be calculated when the object takes damage.</remarks>
         /// </summary>
-        public void TakeDamage(uint damage)
+        public void TakeDamage(int damage)
         {
             this.Health -= damage;
         }
@@ -312,6 +312,22 @@ namespace Assets.Scripts
                 default:
                     break;
             }
+        }
+
+        public int[] GetAllStats()
+        {
+            int[] mystats = new int[9];
+            mystats[0] = this.Health;
+            mystats[1] = this.Maxhealth;
+            mystats[2] = this.Strength;
+            mystats[3] = this.Defense;
+            mystats[4] = this.Speed;
+            mystats[5] = this.Attackspeed;
+            mystats[6] = this.Skillcooldown;
+            mystats[7] = (int)this.Attackrange;
+            mystats[8] = this.Resourcecount;
+
+            return mystats;
         }
 
         /// <summary>

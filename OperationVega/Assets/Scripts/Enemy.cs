@@ -39,43 +39,43 @@ namespace Assets.Scripts
         /// The health of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Health;
+        public int Health;
 
         /// <summary>
         /// The max health of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Maxhealth;
+        public int Maxhealth;
 
         /// <summary>
         /// The strength of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Strength;
+        public int Strength;
 
         /// <summary>
         /// The defense of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Defense;
+        public int Defense;
 
         /// <summary>
         /// The speed of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Speed;
+        public int Speed;
 
         /// <summary>
         /// The attack speed of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Attackspeed;
+        public int Attackspeed;
 
         /// <summary>
         /// The skill cool down of the enemy.
         /// </summary>
         [HideInInspector]
-        public uint Skillcooldown;
+        public int Skillcooldown;
 
         /// <summary>
         /// The attack range of the enemy.
@@ -142,7 +142,7 @@ namespace Assets.Scripts
         /// <para></para>
         /// <remarks><paramref name="damage"></paramref> -The amount to be calculated when the object takes damage.</remarks>
         /// </summary>
-        public void TakeDamage(uint damage)
+        public void TakeDamage(int damage)
         {
             Debug.Log("Enemy took damage");
             this.Health -= damage;
