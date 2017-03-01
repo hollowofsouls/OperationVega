@@ -5,7 +5,6 @@ namespace Assets.Scripts.Managers
     using System.Collections.Generic;
 
     using UnityEngine;
-
     using Random = System.Random;
 
     /// <summary>
@@ -62,6 +61,14 @@ namespace Assets.Scripts.Managers
         }
 
         /// <summary>
+        /// The on destroy function.
+        /// </summary>
+        private void OnDestroy()
+        {
+            EventManager.UnSubscribe("UpdateObjective", this.OnUpdateObjective);
+        }
+
+        /// <summary>
         /// The on update objective function.
         /// Function called by the event manager to activate the UpdateObjective function.
         /// </summary>
@@ -80,8 +87,10 @@ namespace Assets.Scripts.Managers
         private IEnumerator UpdateObjective()
         {
             Debug.Log("Objective complete...");
+            Debug.Log(User.UpgradePoints++);
             yield return new WaitForSeconds(2);
             Debug.Log("Objective updated");
+            Debug.Log(User.UpgradePoints);
             Objective obj = this.ObjectiveQueue.Dequeue();
 
 

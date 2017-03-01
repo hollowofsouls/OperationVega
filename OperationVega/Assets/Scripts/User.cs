@@ -16,19 +16,19 @@ namespace Assets.Scripts
         /// The food count. This represents the total number of food
         /// in users inventory
         /// </summary>
-        public static uint FoodCount;
+        public static int FoodCount;
 
         /// <summary>
         /// The cooked food count. This represents the total number of cooked food
         /// in users inventory
         /// </summary>
-        public static uint CookedFoodCount;
+        public static int CookedFoodCount;
 
         /// <summary>
         /// The minerals count. This represents the total number of minerals
         /// in users inventory
         /// </summary>
-        public static uint MineralsCount;
+        public static int MineralsCount;
 
         /// <summary>
         /// The steel count. This represents the total number of steel
@@ -46,7 +46,7 @@ namespace Assets.Scripts
         /// The gas count. This represents the total number of gas
         /// in users inventory
         /// </summary>
-        public static uint GasCount;
+        public static int GasCount;
 
         /// <summary>
         /// The harvester count.
@@ -65,5 +65,11 @@ namespace Assets.Scripts
         /// Reference to the number of extractors on the field.
         /// </summary>
         public static int ExtractorCount;
+
+        /// <summary>
+        /// The upgrade points reference.
+        /// Reference to the number of points the user can use to upgrade a units stats.
+        /// </summary>
+        public static int UpgradePoints;
     }
 }

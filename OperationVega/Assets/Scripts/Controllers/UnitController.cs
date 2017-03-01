@@ -17,10 +17,21 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
-        public Transform contentfield;
+        [SerializeField]
+        private Transform contentfield;
 
-        public GameObject unitbutton;
+        [SerializeField]
+        private GameObject tooltippanel;
+        [SerializeField]
+        private GameObject upgradepanel;
 
+        [SerializeField]
+        private GameObject unitbutton;
+
+        /// <summary>
+        /// The unit buttons list.
+        /// This function holds references to each button created.
+        /// </summary>
         private List<GameObject> theUnitButtonsList = new List<GameObject>();
 
         /// <summary>
@@ -240,36 +251,6 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// The get unit info function.
-        /// </summary>
-        /// <param name="theunit">
-        /// The unit get the info from.
-        /// </param>
-        private void GetUnitInfo(IUnit theunit)
-        {
-            string unitdata;
-
-            if (theunit != null)
-            {
-                //Reference for now
-                //health
-                //maxhealth
-                //strength
-                //defense
-                //speed
-                //attackspeed
-                //skillcooldown
-                //attackrange
-                //resourcecount
-
-                int[] stats = theunit.GetAllStats();
-               
-                unitdata = "The unit stats: " + stats[0] + stats[1] + stats[2] + stats[3] + stats[4] + stats[5] + stats[6] + stats[7] + stats[8];
-                Debug.Log(unitdata);
-            }
-        }
-
-        /// <summary>
         /// The create unit button function.
         /// This function populates the panel with the a button for the unit that was
         /// passed in.
@@ -298,7 +279,8 @@ namespace Assets.Scripts.Controllers
             }
 
             button.AddComponent<UnitButton>().Unit = theunit;
-            button.GetComponent<Button>().onClick.AddListener(delegate {this.GetUnitInfo(u); });
+            button.GetComponent<UnitButton>().Tooltippanel = this.tooltippanel;
+            button.GetComponent<UnitButton>().Upgradepanel = this.upgradepanel;
 
             this.theUnitButtonsList.Add(button);
         }
