@@ -282,11 +282,100 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &72898476
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0.42261827
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.9063079
+      objectReference: {fileID: 0}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 33438358281471200, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300004, guid: 5e556b4f5c2cacd419d569c582f49021, type: 3}
+    - target: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 23828803934419610, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac, type: 2}
+  m_IsPrefabParent: 0
+--- !u!4 &72898477 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4335989745090074, guid: 8c8c1efc3bb14be47b3f2c85df5de0ac,
+    type: 2}
+  m_PrefabInternal: {fileID: 72898476}
 --- !u!224 &145326122 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224677581689287872, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
     type: 2}
   m_PrefabInternal: {fileID: 21860275}
+--- !u!1 &173921476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 173921477}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &173921477
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 173921476}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.5, z: 3.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 72898477}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &182261568 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1799731554717984, guid: 28d0dbf7d73f905448cb8fa5bb1910f2,
@@ -604,6 +693,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contentfield: {fileID: 0}
+  tooltippanel: {fileID: 0}
+  upgradepanel: {fileID: 0}
   unitbutton: {fileID: 1954308782065930, guid: c5544d39d1e284749a7f8359889cb4e6, type: 2}
   selectionHighlight: {fileID: 2800000, guid: ddcfce0b72b55e845b2c7a5baa66bc79, type: 3}
   theselectedobject: {fileID: 0}

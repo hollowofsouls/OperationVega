@@ -22,6 +22,7 @@ namespace Assets.Scripts.Controllers
 
         [SerializeField]
         private GameObject tooltippanel;
+
         [SerializeField]
         private GameObject upgradepanel;
 
@@ -67,6 +68,11 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         [HideInInspector]
         public GameObject theclickedactionobject;
+
+        /// <summary>
+        /// The barracks reference.
+        /// </summary>
+        private GameObject theBarracks;
 
         /// <summary>
         /// The unit that has been selected.
@@ -251,6 +257,48 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
+        /// The call home function.
+        /// This function sends the units back to the barracks.
+        /// </summary>
+        public void CallHome()
+        {
+            Vector3 doorposition = this.theBarracks.transform.FindChild("Door").position;
+            
+            this.SelectAllUnits();
+
+            if (this.Units.Count > 0)
+            {
+                // Make an offset to prevent units from pushing each other back and forth.
+                int x = -1;
+                int z = 0;
+                float theoffset = Mathf.Sqrt(this.Units.Count);
+
+                for (int i = 0; i < this.Units.Count; i++)
+                {
+                    // Increment x
+                    x++;
+                    // If the x is equal to the offset
+                    if (x == (int)theoffset)
+                    { // Increment z
+                        z += 1;
+                        // Set x back to 0
+                        x = 0;
+                    }
+
+                    // Multiply but 1.5f to give an offset from each unit, this prevents jittering.
+                    Vector3 thedestination = new Vector3(doorposition.x - (x * 1.5f), 0.5f, doorposition.z + (z * 1.5f));
+
+                    if (this.Units[i].GetComponent(typeof(IUnit)))
+                    {
+                        IUnit u = (IUnit)this.Units[i].GetComponent(typeof(IUnit));
+                        u.SetTheMovePosition(thedestination);
+                        u.ChangeStates("Idle");
+                    }
+                }
+              }
+        }
+
+        /// <summary>
         /// The create unit button function.
         /// This function populates the panel with the a button for the unit that was
         /// passed in.
@@ -304,6 +352,7 @@ namespace Assets.Scripts.Controllers
         private void Start()
         {
             instance = this;
+            this.theBarracks = GameObject.Find("Barracks");
         }
 
         /// <summary>

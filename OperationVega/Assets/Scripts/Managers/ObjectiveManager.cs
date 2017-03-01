@@ -58,9 +58,11 @@ namespace Assets.Scripts.Managers
             this.TheObjectives.Add(ObjectiveType.Main, mainObjective);
             this.TheObjectives.Add(ObjectiveType.Kill, killObjective);
             this.TheObjectives.Add(ObjectiveType.Craft, craftObjective);
+
+            User.UpgradePoints += 2;
         }
 
-        /// <summary>
+      /// <summary>
         /// The on destroy function.
         /// </summary>
         private void OnDestroy()
@@ -87,23 +89,51 @@ namespace Assets.Scripts.Managers
         private IEnumerator UpdateObjective()
         {
             Debug.Log("Objective complete...");
-            Debug.Log(User.UpgradePoints++);
             yield return new WaitForSeconds(2);
-            Debug.Log("Objective updated");
-            Debug.Log(User.UpgradePoints);
+            Debug.Log("Objective updating...");
             Objective obj = this.ObjectiveQueue.Dequeue();
 
+            this.UpgradePointDisbursement(obj);
+            Debug.Log(User.UpgradePoints);
 
             if (obj.Type != ObjectiveType.Main)
             {
-                int newvalue = obj.Currentvalue + obj.Maxvalue;
-
                 Random random = new Random();
                 int randomNumber = random.Next(1, 5);
+
                 obj.Maxvalue += randomNumber;
+
+                if (obj.Maxvalue > 50)
+                {
+                    int newnumber = random.Next(10, 20);
+                    obj.Maxvalue = newnumber;
+                }
 
                 obj.Currentvalue = 0;
                 obj.IsCompleted = false;
+            }
+        }
+
+        /// <summary>
+        /// The upgrade point disbursement function.
+        /// This function handles the distribution of the correct number of upgrade points to the user.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to check.
+        /// </param>
+        private void UpgradePointDisbursement(Objective obj)
+        {
+            switch (obj.Type)
+            {
+                case ObjectiveType.Main:
+                    User.UpgradePoints += 50;
+                    break;
+                case ObjectiveType.Kill:
+                    User.UpgradePoints += (obj.Maxvalue >= 30 && obj.Maxvalue % 5 == 0) ? 5 : 2;
+                    break;
+                case ObjectiveType.Craft:
+                     User.UpgradePoints += (obj.Maxvalue % 2 == 0) ? 2 : 1;
+                    break;
             }
         }
     }
