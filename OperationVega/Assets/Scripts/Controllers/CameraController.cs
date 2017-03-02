@@ -158,7 +158,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The Clamp angle function.
-        /// Clamps the angle to passed in arguements.
+        /// Clamps the angle to passed in arguments.
         /// <para></para>
         /// <remarks><paramref name="angle"></paramref> -The angle to rotate.</remarks>
         /// <para></para>

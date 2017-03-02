@@ -21,67 +21,28 @@ namespace Assets.Scripts
         /// The enemy finite state machine.
         /// Used to keep track of the enemy states.
         /// </summary>
-        public FiniteStateMachine<string> TheEnemyFSM = new FiniteStateMachine<string>();
+        private readonly FiniteStateMachine<string> theEnemyFSM = new FiniteStateMachine<string>();
 
-        public GameObject currenttarget;
+        /// <summary>
+        /// The current target reference.
+        /// </summary>
+        private GameObject currenttarget;
 
         /// <summary>
         /// The target to attack.
         /// </summary>
-        public ICombat Target;
+        private ICombat target;
 
         /// <summary>
         /// The resource to taint.
         /// </summary>
-        public IResources TargetResource;
+        private IResources targetResource;
 
         /// <summary>
-        /// The health of the enemy.
+        /// The my stats reference.
+        /// This reference will contain all of this enemy stats data.
         /// </summary>
-        [HideInInspector]
-        public int Health;
-
-        /// <summary>
-        /// The max health of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public int Maxhealth;
-
-        /// <summary>
-        /// The strength of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public int Strength;
-
-        /// <summary>
-        /// The defense of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public int Defense;
-
-        /// <summary>
-        /// The speed of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public int Speed;
-
-        /// <summary>
-        /// The attack speed of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public int Attackspeed;
-
-        /// <summary>
-        /// The skill cool down of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public int Skillcooldown;
-
-        /// <summary>
-        /// The attack range of the enemy.
-        /// </summary>
-        [HideInInspector]
-        public float Attackrange;
+        private Stats mystats;
 
         /// <summary>
         /// The time to taint reference.
@@ -122,18 +83,18 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
-            if (this.timebetweenattacks >= this.Attackspeed && Vector3.Distance(this.currenttarget.transform.position, this.transform.position) <= this.Attackrange)
+            if (this.timebetweenattacks >= this.mystats.Attackspeed && Vector3.Distance(this.currenttarget.transform.position, this.transform.position) <= this.mystats.Attackrange)
             {
                 Debug.Log("Enemy hit!");
-                this.Target.TakeDamage(5);
+                this.target.TakeDamage(5);
                 this.timebetweenattacks = 0;
             }
 
-            if (Vector3.Distance(this.currenttarget.transform.position, this.transform.position) > this.Attackrange)
+            if (Vector3.Distance(this.currenttarget.transform.position, this.transform.position) > this.mystats.Attackrange)
             {
                 Debug.Log("Unit out of range");
-                this.Target = null;
-                this.TheEnemyFSM.Feed(this.TheEnemyFSM.CurrentState.Statename + "ToIdle");
+                this.target = null;
+                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
             }
         }
 
@@ -145,7 +106,7 @@ namespace Assets.Scripts
         public void TakeDamage(int damage)
         {
             Debug.Log("Enemy took damage");
-            this.Health -= damage;
+            this.mystats.Health -= damage;
         }
 
         /// <summary>
@@ -158,9 +119,9 @@ namespace Assets.Scripts
             if (this.timetotaint >= 3)
             {
                 Debug.Log("I Tainted it");
-                this.TargetResource.Taint = true;
-                this.TargetResource = null;
-                this.TheEnemyFSM.Feed(this.TheEnemyFSM.CurrentState.Statename + "ToIdle");
+                this.targetResource.Taint = true;
+                this.targetResource = null;
+                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
                 this.timetotaint = 0;
             }
         }
@@ -171,18 +132,18 @@ namespace Assets.Scripts
         private void Awake()
         {
             this.idleHandler = this.Search;
-            this.TheEnemyFSM.CreateState("Init", null);
-            this.TheEnemyFSM.CreateState("Idle", this.idleHandler);
-            this.TheEnemyFSM.CreateState("Battle", null);
-            this.TheEnemyFSM.CreateState("TaintResource", null);
+            this.theEnemyFSM.CreateState("Init", null);
+            this.theEnemyFSM.CreateState("Idle", this.idleHandler);
+            this.theEnemyFSM.CreateState("Battle", null);
+            this.theEnemyFSM.CreateState("TaintResource", null);
 
-            this.TheEnemyFSM.AddTransition("Init", "Idle", "auto");
-            this.TheEnemyFSM.AddTransition("Idle", "Battle", "IdleToBattle");
-            this.TheEnemyFSM.AddTransition("Battle", "Idle", "BattleToIdle");
-            this.TheEnemyFSM.AddTransition("Idle", "TaintResource", "IdleToTaintResource");
-            this.TheEnemyFSM.AddTransition("TaintResource", "Idle", "TaintResourceToIdle");
-            this.TheEnemyFSM.AddTransition("Battle", "TaintResource", "BattleToTaintResource");
-            this.TheEnemyFSM.AddTransition("TaintResource", "Battle", "TaintResourceToBattle");
+            this.theEnemyFSM.AddTransition("Init", "Idle", "auto");
+            this.theEnemyFSM.AddTransition("Idle", "Battle", "IdleToBattle");
+            this.theEnemyFSM.AddTransition("Battle", "Idle", "BattleToIdle");
+            this.theEnemyFSM.AddTransition("Idle", "TaintResource", "IdleToTaintResource");
+            this.theEnemyFSM.AddTransition("TaintResource", "Idle", "TaintResourceToIdle");
+            this.theEnemyFSM.AddTransition("Battle", "TaintResource", "BattleToTaintResource");
+            this.theEnemyFSM.AddTransition("TaintResource", "Battle", "TaintResourceToBattle");
         }
 
         /// <summary>
@@ -190,21 +151,31 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            this.Health = 100;
-            this.Attackrange = 1.5f;
-            this.Attackspeed = 2;
-            this.Speed = 2;
+            if (!this.GetComponent<Stats>())
+            {
+                this.gameObject.AddComponent<Stats>();
+            }
+
+            this.mystats = this.GetComponent<Stats>();
+            this.mystats.Health = 100;
+            this.mystats.Maxhealth = 100;
+            this.mystats.Strength = 3;
+            this.mystats.Defense = 2;
+            this.mystats.Speed = 2;
+            this.mystats.Attackspeed = 2;
+            this.mystats.Skillcooldown = 20;
+            this.mystats.Attackrange = 1.5f;
+
             this.timetotaint = 0;
 
-            this.timebetweenattacks = this.Attackspeed;
+            this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.updateRotation = false;
-            this.navagent.speed = this.Speed;
-            Debug.Log(this.Health);
+            this.navagent.speed = this.mystats.Speed;
 
             MeshCollider mc = this.GetComponent<MeshCollider>();
             mc.sharedMesh = this.GetComponentsInChildren<MeshFilter>()[1].mesh;
-            this.TheEnemyFSM.Feed("auto");
+            this.theEnemyFSM.Feed("auto");
         }
 
         /// <summary>
@@ -235,9 +206,9 @@ namespace Assets.Scripts
         /// </summary>
         private void BattleState()
         {
-            if (this.Target != null)
+            if (this.target != null)
             {
-                if (this.navagent.remainingDistance <= this.Attackrange && !this.navagent.pathPending)
+                if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();
                 }
@@ -250,17 +221,17 @@ namespace Assets.Scripts
         /// </summary>
         private void TaintResourceState()
         {
-            if (this.TargetResource != null && !this.TargetResource.Taint)
+            if (this.targetResource != null && !this.targetResource.Taint)
             {
-                if (this.navagent.remainingDistance <= this.Attackrange && !this.navagent.pathPending)
+                if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
                 {
                     this.Taint();
                 }
             }
             else
             {
-                this.TargetResource = null;
-                this.TheEnemyFSM.Feed(this.TheEnemyFSM.CurrentState.Statename + "ToIdle");
+                this.targetResource = null;
+                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
             }
         }
 
@@ -272,17 +243,17 @@ namespace Assets.Scripts
         {
             if (this.currenttarget.GetComponent(typeof(IUnit)))
             {
-                this.Target = (ICombat)this.currenttarget.GetComponent(typeof(ICombat));
+                this.target = (ICombat)this.currenttarget.GetComponent(typeof(ICombat));
                 this.navagent.stoppingDistance = 1.5f;
                 this.navagent.SetDestination(this.currenttarget.transform.position);
-                this.TheEnemyFSM.Feed(this.TheEnemyFSM.CurrentState.Statename + "ToBattle");
+                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToBattle");
             }
             else if (this.currenttarget.GetComponent(typeof(IResources)))
             {
-                this.TargetResource = (IResources)this.currenttarget.GetComponent(typeof(IResources));
+                this.targetResource = (IResources)this.currenttarget.GetComponent(typeof(IResources));
                 this.navagent.stoppingDistance = 1.0f;
                 this.navagent.SetDestination(this.currenttarget.transform.position);
-                this.TheEnemyFSM.Feed(this.TheEnemyFSM.CurrentState.Statename + "ToTaintResource");
+                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToTaintResource");
             }
         }
 
@@ -294,7 +265,7 @@ namespace Assets.Scripts
         {
             this.timebetweenattacks += 1 * Time.deltaTime;
 
-            switch (this.TheEnemyFSM.CurrentState.Statename)
+            switch (this.theEnemyFSM.CurrentState.Statename)
             {
                 case "Idle":
                     this.IdleState();
@@ -346,9 +317,9 @@ namespace Assets.Scripts
 
             if (this.theTargets[0].GetComponent(typeof(IResources)))
             {
-                this.TargetResource = (IResources)this.theTargets[0].GetComponent(typeof(IResources));
+                this.targetResource = (IResources)this.theTargets[0].GetComponent(typeof(IResources));
                 
-                if (this.TargetResource.Taint)
+                if (this.targetResource.Taint)
                 {
                     this.theTargets.Remove(this.theTargets[0]);
                     return false;

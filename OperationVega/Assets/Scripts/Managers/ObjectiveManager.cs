@@ -59,7 +59,7 @@ namespace Assets.Scripts.Managers
             this.TheObjectives.Add(ObjectiveType.Kill, killObjective);
             this.TheObjectives.Add(ObjectiveType.Craft, craftObjective);
 
-            User.UpgradePoints += 2;
+            User.UpgradePoints = 7;
         }
 
       /// <summary>
@@ -117,10 +117,9 @@ namespace Assets.Scripts.Managers
         /// <summary>
         /// The upgrade point disbursement function.
         /// This function handles the distribution of the correct number of upgrade points to the user.
+        /// <para></para>
+        /// <remarks><paramref name="obj"></paramref> -The objective to check for point disbursement.</remarks>
         /// </summary>
-        /// <param name="obj">
-        /// The object to check.
-        /// </param>
         private void UpgradePointDisbursement(Objective obj)
         {
             switch (obj.Type)

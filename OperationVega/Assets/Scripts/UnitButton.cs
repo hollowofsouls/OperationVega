@@ -1,9 +1,8 @@
 ﻿
 namespace Assets.Scripts
 {
-    using Interfaces;
-
     using UnityEngine;
+    using UnityEngine.AI;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
 
@@ -33,6 +32,17 @@ namespace Assets.Scripts
         /// </summary>
         [HideInInspector]
         public GameObject Upgradepanel;
+
+        /// <summary>
+        /// The unit stats reference.
+        /// This will be a reference to the units stats.
+        /// </summary>
+        private Stats unitstats;
+
+        /// <summary>
+        /// The stats buttons reference.
+        /// </summary>
+        private Button[] statsbuttons;
 
         /// <summary>
         /// The on pointer enter function.
@@ -73,42 +83,46 @@ namespace Assets.Scripts
             // Pause the game - to be implemented here
             this.Upgradepanel.SetActive(true);
             this.UpdateStatsPanel(this.Upgradepanel);
+        }
 
-            Button[] buttons = this.Upgradepanel.GetComponentsInChildren<Button>();
-            buttons[0].onClick.AddListener(delegate { this.Upgradepanel.SetActive(false); });
-            buttons[1].onClick.AddListener(delegate { this.UpdateUnitStat(1); });
-            buttons[2].onClick.AddListener(delegate { this.UpdateUnitStat(2); });
-            buttons[3].onClick.AddListener(delegate { this.UpdateUnitStat(3); });
-            buttons[4].onClick.AddListener(delegate { this.UpdateUnitStat(4); });
-            buttons[5].onClick.AddListener(delegate { this.UpdateUnitStat(5); });
-            buttons[6].onClick.AddListener(delegate { this.UpdateUnitStat(6); });
-            buttons[7].onClick.AddListener(delegate { this.UpdateUnitStat(7); });
+        /// <summary>
+        /// The start function.
+        /// </summary>
+        private void Start()
+        {
+            this.unitstats = this.Unit.GetComponent<Stats>();
+            this.statsbuttons = this.Upgradepanel.GetComponentsInChildren<Button>();
+            this.statsbuttons[0].onClick.AddListener(delegate { this.Upgradepanel.SetActive(false); });
+            this.statsbuttons[1].onClick.AddListener(delegate { this.UpdateUnitStat(1); });
+            this.statsbuttons[2].onClick.AddListener(delegate { this.UpdateUnitStat(2); });
+            this.statsbuttons[3].onClick.AddListener(delegate { this.UpdateUnitStat(3); });
+            this.statsbuttons[4].onClick.AddListener(delegate { this.UpdateUnitStat(4); });
+            this.statsbuttons[5].onClick.AddListener(delegate { this.UpdateUnitStat(5); });
+            this.statsbuttons[6].onClick.AddListener(delegate { this.UpdateUnitStat(6); });
+            this.statsbuttons[7].onClick.AddListener(delegate { this.UpdateUnitStat(7); });
+
         }
 
         /// <summary>
         /// The update panel function.
         /// Updates the passed panel with the units information.
+        /// <para></para>
+        /// <remarks><paramref name="thepanel"></paramref> -The panel to update with the units information.</remarks>
         /// </summary>
-        /// <param name="thepanel">
-        /// The panel to update with the units information.
-        /// </param>
         private void UpdateStatsPanel(GameObject thepanel)
         {
-            IUnit u = (IUnit)this.Unit.GetComponent(typeof(IUnit));
-            int[] unitstats = u.GetAllStats();
-
             Text[] theUIStats = thepanel.transform.GetComponentsInChildren<Text>();
 
             // Skip assigning index 0 because it the "Stats" text.
-            theUIStats[1].text = "Health: " + unitstats[0];
-            theUIStats[2].text = "MaxHealth: " + unitstats[1];
-            theUIStats[3].text = "Strength: " + unitstats[2];
-            theUIStats[4].text = "Defense: " + unitstats[3];
-            theUIStats[5].text = "Speed: " + unitstats[4];
-            theUIStats[6].text = "AttackSpeed: " + unitstats[5];
-            theUIStats[7].text = "SkillCooldown: " + unitstats[6];
-            theUIStats[8].text = "AttackRange: " + unitstats[7];
-            theUIStats[9].text = "ResourceCount: " + unitstats[8];
+            theUIStats[1].text = "Health: " + this.unitstats.Health;
+            theUIStats[2].text = "MaxHealth: " + this.unitstats.Maxhealth;
+            theUIStats[3].text = "Strength: " + this.unitstats.Strength;
+            theUIStats[4].text = "Defense: " + this.unitstats.Defense;
+            theUIStats[5].text = "Speed: " + this.unitstats.Speed;
+            theUIStats[6].text = "AttackSpeed: " + this.unitstats.Attackspeed;
+            theUIStats[7].text = "SkillCooldown: " + this.unitstats.Skillcooldown;
+            theUIStats[8].text = "AttackRange: " + this.unitstats.Attackrange;
+            theUIStats[9].text = "ResourceCount: " + this.unitstats.Resourcecount;
 
             if (thepanel.name == this.Upgradepanel.name)
             {
@@ -116,6 +130,12 @@ namespace Assets.Scripts
             }
         }
 
+        /// <summary>
+        /// The update unit stat function.
+        /// Updates the units corresponding stat.
+        /// <para></para>
+        /// <remarks><paramref name="thebuttonindex"></paramref> -The button index of the clicked button to determine which stat to increase.</remarks>
+        /// </summary>
         private void UpdateUnitStat(int thebuttonindex)
         {
             // Just return if no points are available
@@ -124,201 +144,71 @@ namespace Assets.Scripts
                 return;
             }
 
-            if (this.Unit.GetComponent<Harvester>())
+            switch (thebuttonindex)
             {
-                Harvester h = this.Unit.GetComponent<Harvester>();
-
-                switch (thebuttonindex)
-                {
-                    case 1:
-                        // MaxHealth
-                        h.Maxhealth += 20;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated max health");
-                        break;
-                    case 2:
-                        // Strength
-                        h.Strength += 2;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated strength");
-                        break;
-                    case 3:
-                        // Defense
-                        h.Defense += 2;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated strength");
-                        break;
-                    case 4:
-                        if (User.UpgradePoints >= 2)
-                        {
-                            // Speed
-                            h.Speed++;
-                            User.UpgradePoints -= 2;
-                            // Update UIText here
-                            Debug.Log("Updated speed");
-                        }
-                        break;
-                    case 5:
-                        if (User.UpgradePoints >= 4)
-                        {
-                            // Attack Speed
-                            h.Attackspeed--;
-                            User.UpgradePoints -= 4;
-                            // Update UIText here
-                            Debug.Log("Updated attack speed");
-                        }
-                        break;
-                    case 6:
-                        // SkillCooldown
-                        h.Skillcooldown--;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated skill cooldown");
-                        break;
-                    case 7:
-                        if (User.UpgradePoints >= 4)
-                        {   // Attack Range
-                            h.Healrange++;
-                            User.UpgradePoints -= 4;
-                            // Update UIText here
-                            Debug.Log("Updated attack range");
-                        }
-                        break;
-                }
+                case 1:
+                    this.unitstats.Maxhealth += 20;
+                    User.UpgradePoints--;
+                    if (this.unitstats.Maxhealth >= 500)
+                    {
+                        this.statsbuttons[1].gameObject.SetActive(false);
+                    }
+                    break;
+                case 2:
+                    this.unitstats.Strength += 2;
+                    User.UpgradePoints--;
+                    if (this.unitstats.Strength >= 100)
+                    {
+                        this.statsbuttons[2].gameObject.SetActive(false);
+                    }
+                    break;
+                case 3:
+                    this.unitstats.Defense += 2;
+                    User.UpgradePoints--;
+                    if (this.unitstats.Defense >= 100)
+                    {
+                        this.statsbuttons[3].gameObject.SetActive(false);
+                    }
+                    break;
+                case 4:
+                    if (User.UpgradePoints < 2) return;
+                    this.unitstats.Speed++;
+                    this.Unit.GetComponent<NavMeshAgent>().speed = this.unitstats.Speed;
+                    User.UpgradePoints -= 2;
+                    if (this.unitstats.Speed >= 7)
+                    {
+                        this.statsbuttons[4].gameObject.SetActive(false);
+                    }
+                    break;
+                case 5:
+                    if (User.UpgradePoints < 4) return;
+                    this.unitstats.Attackspeed--;
+                    User.UpgradePoints -= 4;
+                    if (this.unitstats.Attackspeed <= 1)
+                    {
+                        this.statsbuttons[5].gameObject.SetActive(false);
+                    }
+                    break;
+                case 6:
+                    this.unitstats.Skillcooldown--;
+                    User.UpgradePoints--;
+                    if (this.unitstats.Skillcooldown <= 10)
+                    {
+                        this.statsbuttons[6].gameObject.SetActive(false);
+                    }
+                    break;
+                case 7:
+                    if (User.UpgradePoints < 4) return;
+                    this.unitstats.Attackrange++;
+                    User.UpgradePoints -= 4;
+                    if (this.unitstats.Attackrange >= 10.0f)
+                    {
+                        this.statsbuttons[7].gameObject.SetActive(false);
+                    }
+                    break;
             }
-            else if (this.Unit.GetComponent<Miner>())
-            {
-                Miner m = this.Unit.GetComponent<Miner>();
 
-                switch (thebuttonindex)
-                {
-                    case 1:
-                        // MaxHealth
-                        m.Maxhealth += 20;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated max health");
-                        break;
-                    case 2:
-                        // Strength
-                        m.Strength += 2;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated strength");
-                        break;
-                    case 3:
-                        // Defense
-                        m.Defense += 2;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated strength");
-                        break;
-                    case 4:
-                        if (User.UpgradePoints >= 2)
-                        {
-                            // Speed
-                            m.Speed++;
-                            User.UpgradePoints -= 2;
-                            // Update UIText here
-                            Debug.Log("Updated speed");
-                        }
-                        break;
-                    case 5:
-                        if (User.UpgradePoints >= 4)
-                        {
-                            // Attack Speed
-                            m.Attackspeed--;
-                            User.UpgradePoints -= 4;
-                            // Update UIText here
-                            Debug.Log("Updated attack speed");
-                        }
-                        break;
-                    case 6:
-                        // SkillCooldown
-                        m.Skillcooldown--;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated skill cooldown");
-                        break;
-                    case 7:
-                        if (User.UpgradePoints >= 4)
-                        {   // Attack Range
-                            m.Attackrange++;
-                            User.UpgradePoints -= 4;
-                            // Update UIText here
-                            Debug.Log("Updated attack range");
-                        }
-                        break;
-                }
-            }
-            else if (this.Unit.GetComponent<Extractor>())
-            {
-                Extractor e = this.Unit.GetComponent<Extractor>();
-
-                switch (thebuttonindex)
-                {
-                    case 1:
-                        // MaxHealth
-                        e.Maxhealth += 20;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated max health");
-                        break;
-                    case 2:
-                        // Strength
-                        e.Strength += 2;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated strength");
-                        break;
-                    case 3:
-                        // Defense
-                        e.Defense += 2;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated strength");
-                        break;
-                    case 4:
-                        if (User.UpgradePoints >= 2)
-                        {
-                            // Speed
-                            e.Speed++;
-                            User.UpgradePoints -= 2;
-                            // Update UIText here
-                            Debug.Log("Updated speed");
-                        }
-                        break;
-                    case 5:
-                        if (User.UpgradePoints >= 4)
-                        {
-                            // Attack Speed
-                            e.Attackspeed--;
-                            User.UpgradePoints -= 4;
-                            // Update UIText here
-                            Debug.Log("Updated attack speed");
-                        }
-                        break;
-                    case 6:
-                        // SkillCooldown
-                        e.Skillcooldown--;
-                        User.UpgradePoints--;
-                        // Update UIText here
-                        Debug.Log("Updated skill cooldown");
-                        break;
-                    case 7:
-                        if (User.UpgradePoints >= 4)
-                        {   // Attack Range
-                            e.Attackrange++;
-                            User.UpgradePoints -= 4;
-                            // Update UIText here
-                            Debug.Log("Updated attack range");
-                        }
-                        break;
-                }
-            }
+            this.UpdateStatsPanel(this.Upgradepanel);
         }
     }
 }

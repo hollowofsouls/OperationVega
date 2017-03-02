@@ -14,102 +14,53 @@ namespace Assets.Scripts
     public class Harvester : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
+        /// The harvester finite state machine.
+        /// Used to keep track of the harvesters states.
+        /// </summary>
+        private readonly FiniteStateMachine<string> theHarvesterFsm = new FiniteStateMachine<string>();
+
+        /// <summary>
         /// Reference to the clean food prefab.
         /// </summary>
-        public GameObject cleanfood;
+        [SerializeField]
+        private GameObject cleanfood;
 
         /// <summary>
         /// Reference to the dirty food prefab.
         /// </summary>
-        public GameObject dirtyfood;
+        [SerializeField]
+        private GameObject dirtyfood;
 
         /// <summary>
-        /// The harvester finite state machine.
-        /// Used to keep track of the harvesters states.
+        /// The object to look at reference.
         /// </summary>
-        public FiniteStateMachine<string> TheHarvesterFsm = new FiniteStateMachine<string>();
+        private GameObject theobjecttolookat;
 
         /// <summary>
         /// The target to heal/stun.
         /// </summary>
-        public ICombat Target;
+        private ICombat target;
 
         /// <summary>
-        /// The enemy gameobject reference.
+        /// The enemy game object reference.
         /// </summary>
-        [HideInInspector]
-        public GameObject theEnemy;
+        private GameObject theEnemy;
 
         /// <summary>
         /// The recent tree reference that we were farming from.
         /// </summary>
-        [HideInInspector]
-        public GameObject theRecentTree;
+        private GameObject theRecentTree;
 
         /// <summary>
         /// The resource to harvest from.
         /// </summary>
-        public IResources TargetResource;
+        private IResources targetResource;
 
         /// <summary>
-        /// The target click position to move to.
+        /// The my stats reference.
+        /// This reference will contain all this units stats data.
         /// </summary>
-        [HideInInspector]
-        public Vector3 TargetClickPosition;
-
-        /// <summary>
-        /// The health of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Health;
-
-        /// <summary>
-        /// The max health of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Maxhealth;
-
-        /// <summary>
-        /// The strength of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Strength;
-
-        /// <summary>
-        /// The defense of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Defense;
-
-        /// <summary>
-        /// The speed of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Speed;
-
-        /// <summary>
-        /// The attack speed of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Attackspeed;
-
-        /// <summary>
-        /// The skill cool down of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Skillcooldown;
-
-        /// <summary>
-        /// The heal range of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public float Healrange;
-
-        /// <summary>
-        /// The resource count of the harvester.
-        /// </summary>
-        [HideInInspector]
-        public int Resourcecount;
+        private Stats mystats;
 
         /// <summary>
         /// The navigation agent reference.
@@ -205,23 +156,19 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
-            if (this.timebetweenattacks >= this.Attackspeed)
+            if (this.timebetweenattacks >= this.mystats.Attackspeed)
             {
                 Vector3 thedisplacement = (this.transform.position - this.theEnemy.transform.position).normalized;
                 if (Vector3.Dot(thedisplacement, this.theEnemy.transform.forward) < 0)
                 {
                     Debug.Log("Harvester hit crit!");
-                    this.Target.TakeDamage(10);
-                    Enemy e = this.Target as Enemy;
-                    Debug.Log(e.Health);
+                    this.target.TakeDamage(10);
                     this.timebetweenattacks = 0;
                 }
                 else
                 {
                     Debug.Log("Harvester attacking normal damage");
-                    this.Target.TakeDamage(5);
-                    Enemy e = this.Target as Enemy;
-                    Debug.Log(e.Health);
+                    this.target.TakeDamage(5);
                     this.timebetweenattacks = 0;
                 }
             }
@@ -235,25 +182,25 @@ namespace Assets.Scripts
             if (this.harvesttime >= 1.0f)
             {
                 Debug.Log("I am harvesting");
-                this.TargetResource.Count--;
-                Debug.Log("Resource left: " + this.TargetResource.Count);
-                this.Resourcecount++;
-                Debug.Log("My Resource count " + this.Resourcecount);
+                this.targetResource.Count--;
+                Debug.Log("Resource left: " + this.targetResource.Count);
+                this.mystats.Resourcecount++;
+                Debug.Log("My Resource count " + this.mystats.Resourcecount);
 
                 this.harvesttime = 0;
-                if (this.Resourcecount == 5 && !this.TargetResource.Taint)
+                if (this.mystats.Resourcecount == 5 && !this.targetResource.Taint)
                 {
                     // Create the clean food object and parent it to the front of the harvester
                     var clone = Instantiate(this.cleanfood, this.transform.position + (this.transform.forward * 0.6f), this.transform.rotation);
                     clone.transform.SetParent(this.transform);
                     clone.name = "Food";
-                    this.Resourcecount = 0;
+                    this.mystats.Resourcecount = 0;
                     this.ChangeStates("Stock");
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
                     this.navagent.SetDestination(destination);
                 }
-                else if (this.Resourcecount == 5 && this.TargetResource.Taint)
+                else if (this.mystats.Resourcecount == 5 && this.targetResource.Taint)
                 {
                     // The resource is tainted go to decontamination center
                     // Create the dirty food object and parent it to the front of the harvester
@@ -277,12 +224,12 @@ namespace Assets.Scripts
             if (this.decontime >= 1.0f)
             {
                 Debug.Log("Decontaminating");
-                this.Resourcecount--;
+                this.mystats.Resourcecount--;
                 this.decontime = 0;
 
-                if (this.Resourcecount <= 0)
+                if (this.mystats.Resourcecount <= 0)
                 {
-                    this.Resourcecount = 0;
+                    this.mystats.Resourcecount = 0;
                     this.alreadystockedcount = 0;
                     int counter = 0;
 
@@ -345,7 +292,7 @@ namespace Assets.Scripts
         /// </summary>
         public void TakeDamage(int damage)
         {
-            this.Health -= damage;
+            this.mystats.Health -= damage;
         }
 
         /// <summary>
@@ -356,46 +303,38 @@ namespace Assets.Scripts
         /// </summary>
         public void ChangeStates(string destinationState)
         {
-            string thecurrentstate = this.TheHarvesterFsm.CurrentState.Statename;
+            string thecurrentstate = this.theHarvesterFsm.CurrentState.Statename;
             switch (destinationState)
             {
                 case "Battle":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 5.0f);
+                    this.navagent.updateRotation = false;
+                    this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, this.mystats.Attackrange);
                     break;
                 case "Idle":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    this.navagent.updateRotation = true;
+                    this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
                     break;
                 case "Harvest":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 2.0f);
+                    this.navagent.updateRotation = false;
+                    this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
                     break;
                 case "Stock":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
+                    this.theobjecttolookat = GameObject.Find("Silo");
+                    this.navagent.updateRotation = false;
+                    this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.5f);
                     break;
                 case "Decontaminate":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    this.theobjecttolookat = GameObject.Find("Decontamination");
+                    this.navagent.updateRotation = false;
+                    this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
                     break;
                 case "PickUp":
-                    this.TheHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
+                    this.navagent.updateRotation = false;
+                    this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, 1.0f);
                     break;
                 default:
                     break;
             }
-        }
-
-        public int[] GetAllStats()
-        {
-            int[] mystats = new int[9];
-            mystats[0] = this.Health;
-            mystats[1] = this.Maxhealth;
-            mystats[2] = this.Strength;
-            mystats[3] = this.Defense;
-            mystats[4] = this.Speed;
-            mystats[5] = this.Attackspeed;
-            mystats[6] = this.Skillcooldown;
-            mystats[7] = (int)this.Healrange;
-            mystats[8] = this.Resourcecount;
-
-            return mystats;
         }
 
         /// <summary>
@@ -409,7 +348,8 @@ namespace Assets.Scripts
             this.theEnemy = theTarget;
             if (this.theEnemy != null)
             {
-                this.Target = (ICombat)theTarget.GetComponent(typeof(ICombat));
+                this.theobjecttolookat = this.theEnemy;
+                this.target = (ICombat)theTarget.GetComponent(typeof(ICombat));
             }
         }
 
@@ -423,7 +363,8 @@ namespace Assets.Scripts
         {
             if (theResource.GetComponent<Food>())
             {
-                this.TargetResource = (IResources)theResource.GetComponent(typeof(IResources));
+                this.theobjecttolookat = theResource;
+                this.targetResource = (IResources)theResource.GetComponent(typeof(IResources));
                 this.navagent.SetDestination(theResource.transform.position);
                 this.theRecentTree = theResource;
                 this.ChangeStates("Harvest");
@@ -441,6 +382,7 @@ namespace Assets.Scripts
             if (thepickup.name == "Food" || thepickup.name == "FoodTainted")
             {
                 this.objecttopickup = thepickup;
+                this.theobjecttolookat = this.objecttopickup;
                 this.navagent.SetDestination(thepickup.transform.position);
                 this.ChangeStates("PickUp");
             }
@@ -456,7 +398,9 @@ namespace Assets.Scripts
             this.harvesttime += 1 * Time.deltaTime;
             this.decontime += 1 * Time.deltaTime;
 
-            switch (this.TheHarvesterFsm.CurrentState.Statename)
+            this.UpdateRotation();
+
+            switch (this.theHarvesterFsm.CurrentState.Statename)
             {
                 case "Idle":
                     this.IdleState();
@@ -487,15 +431,23 @@ namespace Assets.Scripts
         /// </summary>
         private void InitUnit()
         {
-            this.Healrange = 5.0f;
-            this.Attackspeed = 3;
-            this.Speed = 3;
+            this.mystats = this.GetComponent<Stats>();
+            this.mystats.Health = 100;
+            this.mystats.Maxhealth = 100;
+            this.mystats.Strength = 2;
+            this.mystats.Defense = 5;
+            this.mystats.Speed = 3;
+            this.mystats.Attackspeed = 3;
+            this.mystats.Skillcooldown = 15;
+            this.mystats.Attackrange = 5.0f;
+            this.mystats.Resourcecount = 0;
+
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
 
-            this.timebetweenattacks = this.Attackspeed;
+            this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
-            this.navagent.speed = this.Speed;
+            this.navagent.speed = this.mystats.Speed;
             Debug.Log("Harvester Initialized");
         }
 
@@ -520,24 +472,38 @@ namespace Assets.Scripts
         {
             this.navagent.stoppingDistance = num;
 
-            this.Resourcecount = 0;
+            this.mystats.Resourcecount = 0;
 
             foreach (Transform t in this.transform)
             {
                 if (t.name == "Food")
                 {
-                    this.Resourcecount += 5;
+                    this.mystats.Resourcecount += 5;
                 }
             }
 
-            this.Resourcecount -= this.alreadystockedcount;
+            this.mystats.Resourcecount -= this.alreadystockedcount;
 
-            Debug.Log("Total to stock" + this.Resourcecount);
+            Debug.Log("Total to stock" + this.mystats.Resourcecount);
+        }
+
+        /// <summary>
+        /// The update rotation.
+        /// </summary>
+        private void UpdateRotation()
+        {
+            if (!this.navagent.updateRotation)
+            {
+                Vector3 dir = this.theobjecttolookat.transform.position - this.transform.position;
+                Quaternion lookrotation = Quaternion.LookRotation(dir);
+                Vector3 rotation = Quaternion.Lerp(this.transform.rotation, lookrotation, Time.deltaTime * 5).eulerAngles;
+                this.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+            }
         }
 
         /// <summary>
         /// The idle state function.
-        /// Has the funtionality of checking for dropped items.
+        /// Has the functionality of checking for dropped items.
         /// </summary>
         private void IdleState()
         {
@@ -585,7 +551,7 @@ namespace Assets.Scripts
         /// </summary>
         private void BattleState()
         {
-            if (this.Target != null)
+            if (this.target != null)
             {
                 Transform cleanfood = this.transform.Find("Food");
                 Transform dirtyfood = this.transform.Find("FoodTainted");
@@ -597,7 +563,7 @@ namespace Assets.Scripts
                     this.theitemdropped.tag = "PickUp";
                     cleanfood.gameObject.SetActive(true);
                     cleanfood.transform.parent = null;
-                    this.Resourcecount = 0;
+                    this.mystats.Resourcecount = 0;
                 }
                 else if (dirtyfood != null)
                 {
@@ -606,10 +572,10 @@ namespace Assets.Scripts
                     this.theitemdropped.tag = "PickUp";
                     dirtyfood.gameObject.SetActive(true);
                     dirtyfood.transform.parent = null;
-                    this.Resourcecount = 0;
+                    this.mystats.Resourcecount = 0;
                 }
 
-                if (this.navagent.remainingDistance <= this.Healrange && !this.navagent.pathPending)
+                if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();
                 }
@@ -622,7 +588,7 @@ namespace Assets.Scripts
         /// </summary>
         private void HarvestState()
         {
-            if (this.TargetResource != null && this.TargetResource.Count > 0)
+            if (this.targetResource != null && this.targetResource.Count > 0)
             {
                 if (!this.transform.Find("Food") && !this.transform.Find("FoodTainted"))
                 {
@@ -642,9 +608,9 @@ namespace Assets.Scripts
         {
             if (this.transform.Find("Food"))
             {
-                if (this.Resourcecount <= 0)
+                if (this.mystats.Resourcecount <= 0)
                 {
-                    this.Resourcecount = 0;
+                    this.mystats.Resourcecount = 0;
                     this.alreadystockedcount = 0;
 
                     for (int i = 0; i < this.transform.childCount; i++)
@@ -655,8 +621,9 @@ namespace Assets.Scripts
                         }
                     }
 
-                    if (this.TargetResource != null && this.TargetResource.Count > 0)
+                    if (this.targetResource != null && this.targetResource.Count > 0)
                     {
+                        this.theobjecttolookat = this.theRecentTree;
                         this.navagent.SetDestination(this.theRecentTree.transform.position);
                         this.ChangeStates("Harvest");
                     }
@@ -673,9 +640,9 @@ namespace Assets.Scripts
                     if (this.dropofftime >= 1.0f)
                     {
                         Debug.Log("Dropping off the goods");
-                        this.Resourcecount--;
+                        this.mystats.Resourcecount--;
                         this.alreadystockedcount++;
-                        Debug.Log("My resource count " + this.Resourcecount);
+                        Debug.Log("My resource count " + this.mystats.Resourcecount);
                         User.FoodCount++;
                         Debug.Log("I have now stocked " + User.FoodCount + " food");
                         this.dropofftime = 0;
@@ -702,7 +669,7 @@ namespace Assets.Scripts
                     this.objecttopickup.transform.SetParent(this.transform);
                     if (this.objecttopickup.name == "FoodTainted")
                     {
-                        this.Resourcecount = 5;
+                        this.mystats.Resourcecount = 5;
                     }
                 }
                 else if (this.objecttopickup.name == "Food")
@@ -721,7 +688,7 @@ namespace Assets.Scripts
                         this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                         this.objecttopickup.transform.SetParent(this.transform);
                         this.objecttopickup.gameObject.SetActive(false);
-                        this.Resourcecount = 5;
+                        this.mystats.Resourcecount = 5;
                     }
                 }
 
@@ -756,44 +723,44 @@ namespace Assets.Scripts
             this.decontaminationHandler = this.ResetStoppingDistance;
             this.pickupHandler = this.ResetStoppingDistance;
 
-            this.TheHarvesterFsm.CreateState("Init", null);
-            this.TheHarvesterFsm.CreateState("Idle", this.idleHandler);
-            this.TheHarvesterFsm.CreateState("Battle", this.battleHandler);
-            this.TheHarvesterFsm.CreateState("Harvest", this.harvestHandler);
-            this.TheHarvesterFsm.CreateState("Stock", this.stockHandler);
-            this.TheHarvesterFsm.CreateState("Decontaminate", this.decontaminationHandler);
-            this.TheHarvesterFsm.CreateState("PickUp", this.pickupHandler);
+            this.theHarvesterFsm.CreateState("Init", null);
+            this.theHarvesterFsm.CreateState("Idle", this.idleHandler);
+            this.theHarvesterFsm.CreateState("Battle", this.battleHandler);
+            this.theHarvesterFsm.CreateState("Harvest", this.harvestHandler);
+            this.theHarvesterFsm.CreateState("Stock", this.stockHandler);
+            this.theHarvesterFsm.CreateState("Decontaminate", this.decontaminationHandler);
+            this.theHarvesterFsm.CreateState("PickUp", this.pickupHandler);
 
-            this.TheHarvesterFsm.AddTransition("Init", "Idle", "auto");
-            this.TheHarvesterFsm.AddTransition("Idle", "Battle", "IdleToBattle");
-            this.TheHarvesterFsm.AddTransition("Battle", "Idle", "BattleToIdle");
-            this.TheHarvesterFsm.AddTransition("Idle", "Harvest", "IdleToHarvest");
-            this.TheHarvesterFsm.AddTransition("Harvest", "Idle", "HarvestToIdle");
-            this.TheHarvesterFsm.AddTransition("Battle", "Harvest", "BattleToHarvest");
-            this.TheHarvesterFsm.AddTransition("Harvest", "Battle", "HarvestToBattle");
-            this.TheHarvesterFsm.AddTransition("Harvest", "Stock", "HarvestToStock");
-            this.TheHarvesterFsm.AddTransition("Battle", "Stock", "BattleToStock");
-            this.TheHarvesterFsm.AddTransition("Idle", "Stock", "IdleToStock");
-            this.TheHarvesterFsm.AddTransition("Stock", "Idle", "StockToIdle");
-            this.TheHarvesterFsm.AddTransition("Stock", "Battle", "StockToBattle");
-            this.TheHarvesterFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
-            this.TheHarvesterFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
-            this.TheHarvesterFsm.AddTransition("Stock", "Decontaminate", "StockToDecontaminate");
-            this.TheHarvesterFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
-            this.TheHarvesterFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
-            this.TheHarvesterFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
-            this.TheHarvesterFsm.AddTransition("Decontaminate", "Battle", "DecontaminateToBattle");
-            this.TheHarvesterFsm.AddTransition("Battle", "Decontaminate", "BattleToDecontaminate");
-            this.TheHarvesterFsm.AddTransition("PickUp", "Idle", "PickUpToIdle");
-            this.TheHarvesterFsm.AddTransition("PickUp", "Battle", "PickUpToBattle");
-            this.TheHarvesterFsm.AddTransition("PickUp", "Harvest", "PickUpToHarvest");
-            this.TheHarvesterFsm.AddTransition("PickUp", "Decontaminate", "PickUpToDecontaminate");
-            this.TheHarvesterFsm.AddTransition("PickUp", "Stock", "PickUpToStock");
-            this.TheHarvesterFsm.AddTransition("Idle", "PickUp", "IdleToPickUp");
-            this.TheHarvesterFsm.AddTransition("Battle", "PickUp", "BattleToPickUp");
-            this.TheHarvesterFsm.AddTransition("Harvest", "PickUp", "HarvestToPickUp");
-            this.TheHarvesterFsm.AddTransition("Stock", "PickUp", "StockToPickUp");
-            this.TheHarvesterFsm.AddTransition("Decontaminate", "PickUp", "DecontaminateToPickUp");
+            this.theHarvesterFsm.AddTransition("Init", "Idle", "auto");
+            this.theHarvesterFsm.AddTransition("Idle", "Battle", "IdleToBattle");
+            this.theHarvesterFsm.AddTransition("Battle", "Idle", "BattleToIdle");
+            this.theHarvesterFsm.AddTransition("Idle", "Harvest", "IdleToHarvest");
+            this.theHarvesterFsm.AddTransition("Harvest", "Idle", "HarvestToIdle");
+            this.theHarvesterFsm.AddTransition("Battle", "Harvest", "BattleToHarvest");
+            this.theHarvesterFsm.AddTransition("Harvest", "Battle", "HarvestToBattle");
+            this.theHarvesterFsm.AddTransition("Harvest", "Stock", "HarvestToStock");
+            this.theHarvesterFsm.AddTransition("Battle", "Stock", "BattleToStock");
+            this.theHarvesterFsm.AddTransition("Idle", "Stock", "IdleToStock");
+            this.theHarvesterFsm.AddTransition("Stock", "Idle", "StockToIdle");
+            this.theHarvesterFsm.AddTransition("Stock", "Battle", "StockToBattle");
+            this.theHarvesterFsm.AddTransition("Stock", "Harvest", "StockToHarvest");
+            this.theHarvesterFsm.AddTransition("Harvest", "Decontaminate", "HarvestToDecontaminate");
+            this.theHarvesterFsm.AddTransition("Stock", "Decontaminate", "StockToDecontaminate");
+            this.theHarvesterFsm.AddTransition("Decontaminate", "Stock", "DecontaminateToStock");
+            this.theHarvesterFsm.AddTransition("Decontaminate", "Idle", "DecontaminateToIdle");
+            this.theHarvesterFsm.AddTransition("Idle", "Decontaminate", "IdleToDecontaminate");
+            this.theHarvesterFsm.AddTransition("Decontaminate", "Battle", "DecontaminateToBattle");
+            this.theHarvesterFsm.AddTransition("Battle", "Decontaminate", "BattleToDecontaminate");
+            this.theHarvesterFsm.AddTransition("PickUp", "Idle", "PickUpToIdle");
+            this.theHarvesterFsm.AddTransition("PickUp", "Battle", "PickUpToBattle");
+            this.theHarvesterFsm.AddTransition("PickUp", "Harvest", "PickUpToHarvest");
+            this.theHarvesterFsm.AddTransition("PickUp", "Decontaminate", "PickUpToDecontaminate");
+            this.theHarvesterFsm.AddTransition("PickUp", "Stock", "PickUpToStock");
+            this.theHarvesterFsm.AddTransition("Idle", "PickUp", "IdleToPickUp");
+            this.theHarvesterFsm.AddTransition("Battle", "PickUp", "BattleToPickUp");
+            this.theHarvesterFsm.AddTransition("Harvest", "PickUp", "HarvestToPickUp");
+            this.theHarvesterFsm.AddTransition("Stock", "PickUp", "StockToPickUp");
+            this.theHarvesterFsm.AddTransition("Decontaminate", "PickUp", "DecontaminateToPickUp");
         }
 
         /// <summary>
@@ -801,8 +768,13 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
+            if (!this.GetComponent<Stats>())
+            {
+                this.gameObject.AddComponent<Stats>();
+            }
+
             this.InitUnit();
-            this.TheHarvesterFsm.Feed("auto", 0.1f);
+            this.theHarvesterFsm.Feed("auto", 0.1f);
             GameManager.Instance.TheHarvesters.Add(this);
             User.HarvesterCount++;
         }

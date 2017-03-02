@@ -17,24 +17,6 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
-        [SerializeField]
-        private Transform contentfield;
-
-        [SerializeField]
-        private GameObject tooltippanel;
-
-        [SerializeField]
-        private GameObject upgradepanel;
-
-        [SerializeField]
-        private GameObject unitbutton;
-
-        /// <summary>
-        /// The unit buttons list.
-        /// This function holds references to each button created.
-        /// </summary>
-        private List<GameObject> theUnitButtonsList = new List<GameObject>();
-
         /// <summary>
         /// The instance of the class.
         /// </summary>
@@ -44,6 +26,47 @@ namespace Assets.Scripts.Controllers
         /// The drag screen.
         /// </summary>
         private static Rect dragscreen = new Rect(0, 0, 0, 0);
+
+        /// <summary>
+        /// The unit buttons list.
+        /// This function holds references to each button created.
+        /// </summary>
+        private readonly List<GameObject> theUnitButtonsList = new List<GameObject>();
+
+        /// <summary>
+        /// The list of units selected by the drag screen.
+        /// </summary>
+        [HideInInspector]
+        private readonly List<GameObject> units = new List<GameObject>();
+
+        /// <summary>
+        /// The click destination of where to send the unit.
+        /// </summary>
+        private Vector3 clickdestination;
+
+        /// <summary>
+        /// The content field reference.
+        /// </summary>
+        [SerializeField]
+        private Transform contentfield;
+
+        /// <summary>
+        /// The tool tip panel reference.
+        /// </summary>
+        [SerializeField]
+        private GameObject tooltippanel;
+
+        /// <summary>
+        /// The upgrade panel reference.
+        /// </summary>
+        [SerializeField]
+        private GameObject upgradepanel;
+
+        /// <summary>
+        /// The unit button reference to the prefab.
+        /// </summary>
+        [SerializeField]
+        private GameObject unitbutton;
 
         /// <summary>
         /// The selection highlight is the texture.
@@ -60,14 +83,7 @@ namespace Assets.Scripts.Controllers
         /// The selected object reference.
         /// This is the object that is left clicked on.
         /// </summary>
-        public GameObject theselectedobject;
-
-        /// <summary>
-        /// The clicked object reference.
-        /// This is the object that was right clicked on to perform an action.
-        /// </summary>
-        [HideInInspector]
-        public GameObject theclickedactionobject;
+        private GameObject theselectedobject;
 
         /// <summary>
         /// The barracks reference.
@@ -77,19 +93,7 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The unit that has been selected.
         /// </summary>
-        public IUnit theUnit;
-
-        /// <summary>
-        /// The list of units selected by the drag screen.
-        /// </summary>
-        [HideInInspector]
-        public List<GameObject> Units = new List<GameObject>();
-
-        /// <summary>
-        /// The click destination of where to send the unit.
-        /// </summary>
-        [HideInInspector]
-        public Vector3 clickdestination;
+        private IUnit theUnit;
 
         /// <summary>
         /// Gets the instance of the UnitController.
@@ -121,9 +125,15 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The invert y function.
         /// Inverts the y so the drag screen will drag accordingly.
-        /// <para></para>
-        /// <remarks><paramref name="y"></paramref> -The number to subtract from the screen height.</remarks>
+        /// <para>
+        /// </para>
+        /// <remarks>
+        /// <paramref name="y"></paramref> -The number to subtract from the screen height.
+        /// </remarks>
         /// </summary>
+        /// <returns>
+        /// The <see cref="float"/>.
+        /// </returns>
         public static float InvertY(float y)
         {
             return Screen.height - y;
@@ -142,12 +152,12 @@ namespace Assets.Scripts.Controllers
                 Vector3 camPos = Camera.main.WorldToScreenPoint(theunit.transform.position);
                 camPos.y = InvertY(camPos.y);
 
-                if (DragScreen.Contains(camPos) & !this.Units.Contains(theunit))
+                if (DragScreen.Contains(camPos) & !this.units.Contains(theunit))
                 {
                     GameObject selectionsquare = theunit.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                    this.Units.Add(theunit);
+                    this.units.Add(theunit);
                     this.CreateUnitButton(theunit);
                 }
 
@@ -167,7 +177,7 @@ namespace Assets.Scripts.Controllers
                 GameObject selectionsquare = h.gameObject.transform.FindChild("SelectionHighlight").gameObject;
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                this.Units.Add(h.gameObject);
+                this.units.Add(h.gameObject);
                 this.CreateUnitButton(h.gameObject);
             }
         }
@@ -185,7 +195,7 @@ namespace Assets.Scripts.Controllers
                 GameObject selectionsquare = e.gameObject.transform.FindChild("SelectionHighlight").gameObject;
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                this.Units.Add(e.gameObject);
+                this.units.Add(e.gameObject);
                 this.CreateUnitButton(e.gameObject);
             }
         }
@@ -203,7 +213,7 @@ namespace Assets.Scripts.Controllers
                 GameObject selectionsquare = m.gameObject.transform.FindChild("SelectionHighlight").gameObject;
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                this.Units.Add(m.gameObject);
+                this.units.Add(m.gameObject);
                 this.CreateUnitButton(m.gameObject);
             }
         }
@@ -224,7 +234,7 @@ namespace Assets.Scripts.Controllers
                     GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                    this.Units.Add(go);
+                    this.units.Add(go);
                     this.CreateUnitButton(go);
                 }
             }
@@ -242,9 +252,9 @@ namespace Assets.Scripts.Controllers
                 this.theUnit.ChangeStates("Idle");
             }
 
-            if (this.Units.Count > 0)
+            if (this.units.Count > 0)
             {
-                foreach (GameObject go in this.Units)
+                foreach (GameObject go in this.units)
                 {
                     if (go.GetComponent<NavMeshAgent>())
                     {
@@ -266,14 +276,14 @@ namespace Assets.Scripts.Controllers
             
             this.SelectAllUnits();
 
-            if (this.Units.Count > 0)
+            if (this.units.Count > 0)
             {
                 // Make an offset to prevent units from pushing each other back and forth.
                 int x = -1;
                 int z = 0;
-                float theoffset = Mathf.Sqrt(this.Units.Count);
+                float theoffset = Mathf.Sqrt(this.units.Count);
 
-                for (int i = 0; i < this.Units.Count; i++)
+                for (int i = 0; i < this.units.Count; i++)
                 {
                     // Increment x
                     x++;
@@ -288,9 +298,9 @@ namespace Assets.Scripts.Controllers
                     // Multiply but 1.5f to give an offset from each unit, this prevents jittering.
                     Vector3 thedestination = new Vector3(doorposition.x - (x * 1.5f), 0.5f, doorposition.z + (z * 1.5f));
 
-                    if (this.Units[i].GetComponent(typeof(IUnit)))
+                    if (this.units[i].GetComponent(typeof(IUnit)))
                     {
-                        IUnit u = (IUnit)this.Units[i].GetComponent(typeof(IUnit));
+                        IUnit u = (IUnit)this.units[i].GetComponent(typeof(IUnit));
                         u.SetTheMovePosition(thedestination);
                         u.ChangeStates("Idle");
                     }
@@ -302,10 +312,9 @@ namespace Assets.Scripts.Controllers
         /// The create unit button function.
         /// This function populates the panel with the a button for the unit that was
         /// passed in.
+        /// <para></para>
+        /// <remarks><paramref name="theunit"></paramref> -The unit to pass in so the unit button will have reference to it.</remarks>
         /// </summary>
-        /// <param name="theunit">
-        /// The the unit.
-        /// </param>
         private void CreateUnitButton(GameObject theunit)
         {
             GameObject button = Instantiate(this.unitbutton);
@@ -438,9 +447,9 @@ namespace Assets.Scripts.Controllers
         {
             if (!EventSystem.current.IsPointerOverGameObject())
             {
-                if (this.Units.Count > 0)
+                if (this.units.Count > 0)
                 {
-                    foreach (GameObject go in this.Units)
+                    foreach (GameObject go in this.units)
                     {
                         GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = false;
@@ -450,9 +459,8 @@ namespace Assets.Scripts.Controllers
                 }
 
 
-                this.Units.Clear();
+                this.units.Clear();
                 this.theUnit = null;
-                this.theclickedactionobject = null;
 
                 if (this.theselectedobject != null)
                 {
@@ -478,7 +486,6 @@ namespace Assets.Scripts.Controllers
 
                 if (Physics.Raycast(ray.origin, ray.direction, out hit))
                 {
-                    this.theclickedactionobject = hit.transform.gameObject;
                     this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
 
                     if (hit.transform.GetComponent<Enemy>())
@@ -503,7 +510,7 @@ namespace Assets.Scripts.Controllers
                     }
                     else
                     {
-                        this.CommandToIdle();
+                        this.CommandToIdle(hit);
                     }
                 }
             }
@@ -525,9 +532,9 @@ namespace Assets.Scripts.Controllers
                 this.theUnit.ChangeStates("Battle");
             } 
             // multiple selected
-            else if (this.Units.Count > 0)
+            else if (this.units.Count > 0)
             {
-                foreach (GameObject go in this.Units)
+                foreach (GameObject go in this.units)
                 {
                     if (!go.GetComponent(typeof(IUnit)))
                     {
@@ -557,9 +564,9 @@ namespace Assets.Scripts.Controllers
             {
                this.theUnit.SetTargetResource(hit.transform.gameObject);
             }
-            else if (this.Units.Count > 0)
+            else if (this.units.Count > 0)
             {
-                foreach (GameObject go in this.Units)
+                foreach (GameObject go in this.units)
                 {
                     if (!go.GetComponent(typeof(IUnit)))
                     {
@@ -577,11 +584,13 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The command to idle function.
         /// Send unit(s) to idle.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
-        private void CommandToIdle()
+        private void CommandToIdle(RaycastHit hit)
         {
-            // If there is no destination or the destination clicked is another unit..just return and dont move
-            if (this.theclickedactionobject == null || this.theclickedactionobject.GetComponent(typeof(IUnit)))
+            // If the destination clicked is another unit, or the destination clicked is the barracks, just return and dont move.
+            if (hit.transform.gameObject.GetComponent(typeof(IUnit)) || hit.transform.gameObject.name == "Barracks")
             {
                 return;
             }
@@ -593,23 +602,23 @@ namespace Assets.Scripts.Controllers
                 this.theUnit.SetTheMovePosition(this.clickdestination);
                 this.theUnit.ChangeStates("Idle");
             }
-            else if (this.Units.Count > 0)
+            else if (this.units.Count > 0)
             {
-                for (int i = 0; i < this.Units.Count; i++)
+                for (int i = 0; i < this.units.Count; i++)
                 {
-                    float angle = i * (2 * 3.14159f / this.Units.Count);
+                    float angle = i * (2 * 3.14159f / this.units.Count);
                     float x = Mathf.Cos(angle) * 1.5f;
                     float z = Mathf.Sin(angle) * 1.5f;
 
                     this.clickdestination = new Vector3(this.clickdestination.x + x, 0.5f, this.clickdestination.z + z);
 
-                    if (!this.Units[i].GetComponent(typeof(IUnit)))
+                    if (!this.units[i].GetComponent(typeof(IUnit)))
                     {
-                        Debug.LogWarning(string.Format("hey, no component on {0}", this.Units[i].name));
+                        Debug.LogWarning(string.Format("hey, no component on {0}", this.units[i].name));
                     }
                     else
                     {
-                        IUnit unit = (IUnit)this.Units[i].GetComponent(typeof(IUnit));
+                        IUnit unit = (IUnit)this.units[i].GetComponent(typeof(IUnit));
 
                         unit.SetTarget(null);
                         unit.SetTheMovePosition(this.clickdestination);
@@ -646,9 +655,9 @@ namespace Assets.Scripts.Controllers
                 this.theUnit.SetTheMovePosition(this.clickdestination);
                 this.theUnit.ChangeStates("Stock");
             }
-            else if (this.Units.Count > 0)
+            else if (this.units.Count > 0)
             {
-                foreach (GameObject go in this.Units)
+                foreach (GameObject go in this.units)
                 {
                     if (!go.GetComponent(typeof(IUnit)))
                     {
@@ -684,9 +693,9 @@ namespace Assets.Scripts.Controllers
                     this.theUnit.SetTheMovePosition(destination);
                 }
             }
-            else if (this.Units.Count > 0)
+            else if (this.units.Count > 0)
             {
-                foreach (GameObject go in this.Units)
+                foreach (GameObject go in this.units)
                 {
                     if (!go.GetComponent(typeof(IUnit)))
                     {

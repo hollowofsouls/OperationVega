@@ -52,14 +52,5 @@ namespace Assets.Scripts.Interfaces
         /// <remarks><paramref name="destinationState"></paramref> -The state to transition to.</remarks>
         /// </summary>
         void ChangeStates(string destinationState);
-
-        /// <summary>
-        /// The get all stats function.
-        /// This function will return all stats from a unit.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="uint[]"/>.
-        /// </returns>
-        int[] GetAllStats();
     }
 }

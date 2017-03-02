@@ -28,7 +28,8 @@ namespace Assets.Scripts
         /// <summary>
         /// The enemy prefab reference.
         /// </summary>
-        public GameObject EnemyPrefab;
+        [SerializeField]
+        private GameObject enemyPrefab;
 
         /// <summary>
         /// The start function.
@@ -77,7 +78,7 @@ namespace Assets.Scripts
 
                     Vector3 spawnposition = new Vector3(this.transform.position.x + x, 0, this.transform.position.z + z);
                     // Spawn
-                    Instantiate(this.EnemyPrefab, spawnposition, Quaternion.LookRotation(-other.transform.forward));
+                    Instantiate(this.enemyPrefab, spawnposition, Quaternion.LookRotation(-other.transform.forward));
                 }
 
                 this.spawntimer = 0;
