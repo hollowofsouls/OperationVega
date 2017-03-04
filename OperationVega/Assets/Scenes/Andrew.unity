@@ -592,7 +592,7 @@ GameObject:
   - component: {fileID: 356389510}
   - component: {fileID: 356389512}
   - component: {fileID: 356389511}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Harvester
   m_TagString: Targetable
   m_Icon: {fileID: 0}
@@ -1007,13 +1007,13 @@ GameObject:
   - component: {fileID: 494181249}
   - component: {fileID: 494181254}
   - component: {fileID: 494181248}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Extractor
   m_TagString: Targetable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &494181248
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1561,7 +1561,7 @@ GameObject:
   - component: {fileID: 1449517978}
   - component: {fileID: 1449517984}
   - component: {fileID: 1449517983}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Miner
   m_TagString: Targetable
   m_Icon: {fileID: 0}

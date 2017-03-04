@@ -4,10 +4,12 @@ namespace Assets.Scripts
     using System.Collections.Generic;
     using System.Linq;
 
-    using Assets.Scripts.Managers;
-
     using Controllers;
+
     using Interfaces;
+
+    using Managers;
+
     using UnityEngine;
     using UnityEngine.AI;
 
@@ -18,15 +20,16 @@ namespace Assets.Scripts
     public class Enemy : MonoBehaviour, ICombat
     {
         /// <summary>
+        /// The current target reference.
+        /// </summary>
+        [HideInInspector]
+        public GameObject Currenttarget;
+
+        /// <summary>
         /// The enemy finite state machine.
         /// Used to keep track of the enemy states.
         /// </summary>
         private readonly FiniteStateMachine<string> theEnemyFSM = new FiniteStateMachine<string>();
-
-        /// <summary>
-        /// The current target reference.
-        /// </summary>
-        private GameObject currenttarget;
 
         /// <summary>
         /// The target to attack.
@@ -83,17 +86,11 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
-            if (this.timebetweenattacks >= this.mystats.Attackspeed && Vector3.Distance(this.currenttarget.transform.position, this.transform.position) <= this.mystats.Attackrange)
+            if (this.timebetweenattacks >= this.mystats.Attackspeed && Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) <= this.mystats.Attackrange)
             {
                 Debug.Log("Enemy attacked!");
                 this.target.TakeDamage(5);
                 this.timebetweenattacks = 0;
-            }
-
-            if (Vector3.Distance(this.currenttarget.transform.position, this.transform.position) > this.mystats.Attackrange)
-            {
-                this.target = null;
-                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
             }
         }
 
@@ -108,6 +105,30 @@ namespace Assets.Scripts
             this.mystats.Health -= damage;
         }
 
+        /// <summary>
+        /// The change states function.
+        /// This function changes the state to the passed in state.
+        /// <para></para>
+        /// <remarks><paramref name="destinationState"></paramref> -The state to transition to.</remarks>
+        /// </summary>
+        public void ChangeStates(string destinationState)
+        {
+            string thecurrentstate = this.theEnemyFSM.CurrentState.Statename;
+
+            switch (destinationState)
+            {
+                case "Battle":
+                    this.target = (ICombat)this.Currenttarget.GetComponent(typeof(ICombat));
+                    this.theEnemyFSM.Feed(thecurrentstate + "To" + destinationState);
+                    break;
+                case "Idle":
+                    this.theEnemyFSM.Feed(thecurrentstate + "To" + destinationState);
+                    break;
+                default:
+                    break;
+            }
+        }
+        
         /// <summary>
         /// The taint function allows the enemy to taint a resource.
         /// </summary>
@@ -163,13 +184,12 @@ namespace Assets.Scripts
             this.mystats.Speed = 2;
             this.mystats.Attackspeed = 2;
             this.mystats.Skillcooldown = 20;
-            this.mystats.Attackrange = 1.5f;
+            this.mystats.Attackrange = 2.0f;
 
             this.timetotaint = 0;
 
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
-            this.navagent.updateRotation = false;
             this.navagent.speed = this.mystats.Speed;
 
             MeshCollider mc = this.GetComponent<MeshCollider>();
@@ -207,9 +227,13 @@ namespace Assets.Scripts
         {
             if (this.target != null)
             {
-                if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
+               this.Attack();
+
+                if (Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) > this.GetComponent<EnemyAI>().Radius)
                 {
-                    this.Attack();
+                    this.Currenttarget = null;
+                    this.target = null;
+                    this.ChangeStates("Idle");
                 }
             }
         }
@@ -240,18 +264,18 @@ namespace Assets.Scripts
         /// </summary>
         private void FindClosestTarget()
         {
-            if (this.currenttarget.GetComponent(typeof(IUnit)))
+            if (this.Currenttarget.GetComponent(typeof(IUnit)))
             {
-                this.target = (ICombat)this.currenttarget.GetComponent(typeof(ICombat));
+                this.target = (ICombat)this.Currenttarget.GetComponent(typeof(ICombat));
                 this.navagent.stoppingDistance = 1.5f;
-                this.navagent.SetDestination(this.currenttarget.transform.position);
+                this.navagent.SetDestination(this.Currenttarget.transform.position);
                 this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToBattle");
             }
-            else if (this.currenttarget.GetComponent(typeof(IResources)))
+            else if (this.Currenttarget.GetComponent(typeof(IResources)))
             {
-                this.targetResource = (IResources)this.currenttarget.GetComponent(typeof(IResources));
+                this.targetResource = (IResources)this.Currenttarget.GetComponent(typeof(IResources));
                 this.navagent.stoppingDistance = 1.0f;
-                this.navagent.SetDestination(this.currenttarget.transform.position);
+                this.navagent.SetDestination(this.Currenttarget.transform.position);
                 this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToTaintResource");
             }
         }
@@ -267,13 +291,13 @@ namespace Assets.Scripts
             switch (this.theEnemyFSM.CurrentState.Statename)
             {
                 case "Idle":
-                    this.IdleState();
+                    //this.IdleState();
                     break;
                 case "Battle":
                     this.BattleState();
                     break;
                 case "TaintResource":
-                    this.TaintResourceState();
+                    //this.TaintResourceState();
                     break;
                 default:
                     break;
@@ -286,10 +310,13 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateRotation()
         {
-            Vector3 dir = this.currenttarget.transform.position - this.transform.position;
-            Quaternion lookrotation = Quaternion.LookRotation(dir);
-            Vector3 rotation = Quaternion.Lerp(this.transform.rotation, lookrotation, Time.deltaTime * 5).eulerAngles;
-            this.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+            if (this.Currenttarget != null)
+            {
+                Vector3 dir = this.Currenttarget.transform.position - this.transform.position;
+                Quaternion lookrotation = Quaternion.LookRotation(dir);
+                Vector3 rotation = Quaternion.Lerp(this.transform.rotation, lookrotation, Time.deltaTime * 5).eulerAngles;
+                this.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+            }
         }
 
         /// <summary>
@@ -324,7 +351,7 @@ namespace Assets.Scripts
                     return false;
                 }
             }
-            this.currenttarget = this.theTargets[0];
+            this.Currenttarget = this.theTargets[0];
             
             // Return true if its a unit or an untainted resource
             return true;
