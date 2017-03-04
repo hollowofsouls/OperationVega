@@ -6,7 +6,6 @@ TagManager:
   tags:
   - PickUp
   - Spawnpoint
-  - Targetable
   layers:
   - Default
   - TransparentFX
@@ -16,7 +15,7 @@ TagManager:
   - UI
   - 
   - 
-  - Unit
+  - Targetable
   - 
   - 
   - 

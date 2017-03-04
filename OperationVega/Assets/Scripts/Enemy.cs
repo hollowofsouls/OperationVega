@@ -2,7 +2,6 @@
 namespace Assets.Scripts
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     using Controllers;
 
@@ -53,12 +52,6 @@ namespace Assets.Scripts
         private float timetotaint;
 
         /// <summary>
-        /// The targets list.
-        /// All the possible targets on the map.
-        /// </summary>
-        private List<GameObject> theTargets = new List<GameObject>();
-
-        /// <summary>
         /// The time between attacks reference.
         /// Stores the reference to the timer between attacks.
         /// </summary>
@@ -70,18 +63,6 @@ namespace Assets.Scripts
         private NavMeshAgent navagent;
 
         /// <summary>
-        /// Instance of the Handler delegate.
-        /// Called in changing to the idle state.
-        /// </summary>
-        private Handler idleHandler;
-
-        /// <summary>
-        /// The range handler delegate.
-        /// The delegate handles setting the stopping distance upon changing state.
-        /// </summary>
-        private delegate void Handler();
-
-        /// <summary>
         /// The attack function gives the enemy functionality to attack.
         /// </summary>
         public void Attack()
@@ -89,7 +70,10 @@ namespace Assets.Scripts
             if (this.timebetweenattacks >= this.mystats.Attackspeed && Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) <= this.mystats.Attackrange)
             {
                 Debug.Log("Enemy attacked!");
+                IUnit u = this.target as IUnit;
+                u.SetTarget(this.gameObject);
                 this.target.TakeDamage(5);
+
                 this.timebetweenattacks = 0;
             }
         }
@@ -124,6 +108,10 @@ namespace Assets.Scripts
                 case "Idle":
                     this.theEnemyFSM.Feed(thecurrentstate + "To" + destinationState);
                     break;
+                case "TaintResource":
+                    this.targetResource = (IResources)this.Currenttarget.GetComponent(typeof(IResources));
+                    this.theEnemyFSM.Feed(thecurrentstate + "To" + destinationState);
+                    break;
                 default:
                     break;
             }
@@ -134,14 +122,12 @@ namespace Assets.Scripts
         /// </summary>
         public void Taint()
         {
-            this.timetotaint += 1 * Time.deltaTime;
-
-            if (this.timetotaint >= 3)
+            if (Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) <= this.mystats.Attackrange && this.timetotaint >= 3)
             {
                 Debug.Log("I Tainted it");
                 this.targetResource.Taint = true;
                 this.targetResource = null;
-                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
+                this.ChangeStates("Idle");
                 this.timetotaint = 0;
             }
         }
@@ -151,9 +137,8 @@ namespace Assets.Scripts
         /// </summary>
         private void Awake()
         {
-            this.idleHandler = this.Search;
             this.theEnemyFSM.CreateState("Init", null);
-            this.theEnemyFSM.CreateState("Idle", this.idleHandler);
+            this.theEnemyFSM.CreateState("Idle", null);
             this.theEnemyFSM.CreateState("Battle", null);
             this.theEnemyFSM.CreateState("TaintResource", null);
 
@@ -187,7 +172,6 @@ namespace Assets.Scripts
             this.mystats.Attackrange = 2.0f;
 
             this.timetotaint = 0;
-
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.speed = this.mystats.Speed;
@@ -195,28 +179,6 @@ namespace Assets.Scripts
             MeshCollider mc = this.GetComponent<MeshCollider>();
             mc.sharedMesh = this.GetComponentsInChildren<MeshFilter>()[1].mesh;
             this.theEnemyFSM.Feed("auto");
-        }
-
-        /// <summary>
-        /// The search function.
-        /// This function is called upon switching to the idle state.
-        /// This function finds all the objects in the scene that can be targeted.
-        /// </summary>
-        private void Search()
-        {
-            this.theTargets = GameObject.FindGameObjectsWithTag("Targetable").ToList();
-        }
-
-        /// <summary>
-        /// The idle state function.
-        /// Has the functionality of checking for closest targets.
-        /// </summary>
-        private void IdleState()
-        {
-            if (this.SortTargets())
-            {
-                this.FindClosestTarget();
-            }
         }
 
         /// <summary>
@@ -246,38 +208,20 @@ namespace Assets.Scripts
         {
             if (this.targetResource != null && !this.targetResource.Taint)
             {
-                if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
-                {
-                    this.Taint();
-                }
+                this.Taint();
             }
-            else
-            {
-                this.targetResource = null;
-                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
-            }
-        }
-
-        /// <summary>
-        /// The find closest target function.
-        /// Finds the closest target to the enemy.
-        /// </summary>
-        private void FindClosestTarget()
-        {
-            if (this.Currenttarget.GetComponent(typeof(IUnit)))
-            {
-                this.target = (ICombat)this.Currenttarget.GetComponent(typeof(ICombat));
-                this.navagent.stoppingDistance = 1.5f;
-                this.navagent.SetDestination(this.Currenttarget.transform.position);
-                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToBattle");
-            }
-            else if (this.Currenttarget.GetComponent(typeof(IResources)))
-            {
-                this.targetResource = (IResources)this.Currenttarget.GetComponent(typeof(IResources));
-                this.navagent.stoppingDistance = 1.0f;
-                this.navagent.SetDestination(this.Currenttarget.transform.position);
-                this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToTaintResource");
-            }
+            //if (this.targetResource != null)
+            //{
+            //    if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
+            //    {
+            //        this.Taint();
+            //    }
+            //}
+            //else
+            //{
+            //    this.targetResource = null;
+            //    this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
+            //}
         }
 
         /// <summary>
@@ -287,17 +231,17 @@ namespace Assets.Scripts
         private void UpdateEnemy()
         {
             this.timebetweenattacks += 1 * Time.deltaTime;
+            this.timetotaint += 1 * Time.deltaTime;
 
             switch (this.theEnemyFSM.CurrentState.Statename)
             {
                 case "Idle":
-                    //this.IdleState();
                     break;
                 case "Battle":
                     this.BattleState();
                     break;
                 case "TaintResource":
-                    //this.TaintResourceState();
+                    this.TaintResourceState();
                     break;
                 default:
                     break;
@@ -317,44 +261,6 @@ namespace Assets.Scripts
                 Vector3 rotation = Quaternion.Lerp(this.transform.rotation, lookrotation, Time.deltaTime * 5).eulerAngles;
                 this.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
             }
-        }
-
-        /// <summary>
-        /// The sort targets function.
-        /// Sorts the list until able to find a unit to attack or resource to taint.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private bool SortTargets()
-        {
-            this.theTargets.Sort(delegate(GameObject a, GameObject b)
-            {
-                float distanceA = Vector3.Distance(a.transform.position, this.transform.position);
-                float distanceB = Vector3.Distance(b.transform.position, this.transform.position);
-
-                if (distanceA > distanceB)
-                    return 1;
-                if (distanceA < distanceB)
-                    return -1;
-
-                return 0;
-            });
-
-            if (this.theTargets[0].GetComponent(typeof(IResources)))
-            {
-                this.targetResource = (IResources)this.theTargets[0].GetComponent(typeof(IResources));
-                
-                if (this.targetResource.Taint)
-                {
-                    this.theTargets.Remove(this.theTargets[0]);
-                    return false;
-                }
-            }
-            this.Currenttarget = this.theTargets[0];
-            
-            // Return true if its a unit or an untainted resource
-            return true;
         }
 
         /// <summary>
