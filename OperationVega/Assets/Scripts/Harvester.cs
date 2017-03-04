@@ -307,6 +307,7 @@ namespace Assets.Scripts
             switch (destinationState)
             {
                 case "Battle":
+                    this.DropItems();
                     this.navagent.updateRotation = false;
                     this.theHarvesterFsm.Feed(thecurrentstate + "To" + destinationState, this.mystats.Attackrange);
                     break;
@@ -502,47 +503,72 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The drop items function.
+        /// </summary>
+        private void DropItems()
+        {
+            Transform[] children = this.transform.GetComponentsInChildren<Transform>(true);
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                float angle = i * (2 * 3.14159f / children.Length);
+                float x = Mathf.Cos(angle) * 1.5f;
+                float z = Mathf.Sin(angle) * 1.5f;
+
+                children[i].gameObject.SetActive(true);
+
+                if (children[i].name == "Food" || children[i].name == "FoodTainted")
+                {
+                    children[i].position = new Vector3(this.transform.position.x + x, 0f, this.transform.position.z + z);
+                    children[i].tag = "PickUp";
+                    children[i].parent = null;
+                    this.mystats.Resourcecount = 0;
+                }
+            }
+        }
+
+        /// <summary>
         /// The idle state function.
         /// Has the functionality of checking for dropped items.
         /// </summary>
         private void IdleState()
         {
-            if (this.theitemdropped != null && this.objecttopickup == null)
-            {
-                if (this.transform.Find("Food") && this.theitemdropped.name == "FoodTainted")
-                {
-                    return;
-                }
-                else if (this.transform.Find("FoodTainted") && this.theitemdropped.name == "Food")
-                {
-                    return;
-                }
+            //if (this.theitemdropped != null && this.objecttopickup == null)
+            //{
+            //    if (this.transform.Find("Food") && this.theitemdropped.name == "FoodTainted")
+            //    {
+            //        return;
+            //    }
+            //    else if (this.transform.Find("FoodTainted") && this.theitemdropped.name == "Food")
+            //    {
+            //        return;
+            //    }
 
-                this.navagent.SetDestination(this.theitemdropped.transform.position);
+            //    this.navagent.SetDestination(this.theitemdropped.transform.position);
 
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
-                {
-                    Debug.Log("Found my food");
-                    this.theitemdropped.transform.SetParent(this.transform);
-                    this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
-                    this.theitemdropped = null;
+            //    if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            //    {
+            //        Debug.Log("Found my food");
+            //        this.theitemdropped.transform.SetParent(this.transform);
+            //        this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+            //        this.theitemdropped = null;
 
-                    if (this.transform.Find("FoodTainted"))
-                    {
-                        this.ChangeStates("Decontaminate");
-                        GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                        Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
-                        this.navagent.SetDestination(thedoor.position);
-                    }
-                    else
-                    {
-                        this.ChangeStates("Stock");
-                        GameObject thesilo = GameObject.Find("Silo");
-                        Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
-                        this.navagent.SetDestination(destination);
-                    }
-                }
-            }
+            //        if (this.transform.Find("FoodTainted"))
+            //        {
+            //            this.ChangeStates("Decontaminate");
+            //            GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
+            //            Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
+            //            this.navagent.SetDestination(thedoor.position);
+            //        }
+            //        else
+            //        {
+            //            this.ChangeStates("Stock");
+            //            GameObject thesilo = GameObject.Find("Silo");
+            //            Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+            //            this.navagent.SetDestination(destination);
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
@@ -553,28 +579,6 @@ namespace Assets.Scripts
         {
             if (this.target != null)
             {
-                Transform cleanfood = this.transform.Find("Food");
-                Transform dirtyfood = this.transform.Find("FoodTainted");
-
-                if (cleanfood != null)
-                {
-                    cleanfood.position = new Vector3(cleanfood.position.x, 0f, cleanfood.position.z);
-                    this.theitemdropped = cleanfood.gameObject;
-                    this.theitemdropped.tag = "PickUp";
-                    cleanfood.gameObject.SetActive(true);
-                    cleanfood.transform.parent = null;
-                    this.mystats.Resourcecount = 0;
-                }
-                else if (dirtyfood != null)
-                {
-                    dirtyfood.position = new Vector3(dirtyfood.position.x, 0f, dirtyfood.position.z);
-                    this.theitemdropped = dirtyfood.gameObject;
-                    this.theitemdropped.tag = "PickUp";
-                    dirtyfood.gameObject.SetActive(true);
-                    dirtyfood.transform.parent = null;
-                    this.mystats.Resourcecount = 0;
-                }
-
                 if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();

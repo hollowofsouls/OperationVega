@@ -241,6 +241,7 @@ namespace Assets.Scripts
             switch (destinationState)
             {
                 case "Battle":
+                    this.DropItems();
                     this.navagent.updateRotation = false;
                     this.theExtractorFsm.Feed(thecurrentstate + "To" + destinationState, this.mystats.Attackrange);
                     break;
@@ -409,27 +410,52 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The drop items function.
+        /// </summary>
+        private void DropItems()
+        {
+            Transform[] children = this.transform.GetComponentsInChildren<Transform>(true);
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                float angle = i * (2 * 3.14159f / children.Length);
+                float x = Mathf.Cos(angle) * 1.5f;
+                float z = Mathf.Sin(angle) * 1.5f;
+
+                children[i].gameObject.SetActive(true);
+
+                if (children[i].name == "GasTank")
+                {
+                    children[i].position = new Vector3(this.transform.position.x + x, 0.25f, this.transform.position.z + z);
+                    children[i].tag = "PickUp";
+                    children[i].parent = null;
+                    this.mystats.Resourcecount = 0;
+                }
+            }
+        }
+
+        /// <summary>
         /// The idle state function.
         /// Has the functionality of checking for dropped items.
         /// </summary>
         private void IdleState()
         {
-            if (this.theitemdropped != null && this.objecttopickup == null)
-            {
-                this.navagent.SetDestination(this.theitemdropped.transform.position);
+            //if (this.theitemdropped != null && this.objecttopickup == null)
+            //{
+            //    this.navagent.SetDestination(this.theitemdropped.transform.position);
 
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
-                {
-                    Debug.Log("Found my gas");
-                    this.theitemdropped.transform.SetParent(this.transform);
-                    this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
-                    this.theitemdropped = null;
-                    this.ChangeStates("Stock");
-                    GameObject thesilo = GameObject.Find("Silo");
-                    Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
-                    this.navagent.SetDestination(destination);
-                }
-            }
+            //    if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            //    {
+            //        Debug.Log("Found my gas");
+            //        this.theitemdropped.transform.SetParent(this.transform);
+            //        this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+            //        this.theitemdropped = null;
+            //        this.ChangeStates("Stock");
+            //        GameObject thesilo = GameObject.Find("Silo");
+            //        Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+            //        this.navagent.SetDestination(destination);
+            //    }
+            //}
         }
 
         /// <summary>
@@ -440,18 +466,6 @@ namespace Assets.Scripts
         {
             if (this.target != null)
             {
-                Transform gastank = this.transform.Find("GasTank");
-
-                if (gastank != null)
-                {
-                    gastank.position = new Vector3(gastank.position.x, 0.25f, gastank.position.z);
-                    this.theitemdropped = gastank.gameObject;
-                    this.theitemdropped.tag = "PickUp";
-                    gastank.gameObject.SetActive(true);
-                    gastank.transform.parent = null;
-                    this.mystats.Resourcecount = 0;
-                }
-
                 if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();
@@ -537,7 +551,7 @@ namespace Assets.Scripts
                 this.objecttopickup.transform.position = this.transform.position + (this.transform.forward * 0.6f);
                 this.objecttopickup.transform.SetParent(this.transform);
 
-                if (gastank != null)
+                if (gastank != null && gastank.gameObject.activeInHierarchy)
                 {
                     this.objecttopickup.gameObject.SetActive(false);
                 }

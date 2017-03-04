@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3085be1e191543a4385f1f0708e778cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyPrefab: {fileID: 1369044774945046, guid: 306ac9bf644b5114d842cd9c57d2d223,
+  enemyPrefab: {fileID: 1369044774945046, guid: 306ac9bf644b5114d842cd9c57d2d223,
     type: 2}
 --- !u!54 &21404819
 Rigidbody:
@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdbfc2e187441a64a88dbd7a29f4101a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  state: 1
 --- !u!224 &271567426 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224157088012627228, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
@@ -770,10 +770,6 @@ MonoBehaviour:
   upgradepanel: {fileID: 0}
   unitbutton: {fileID: 1954308782065930, guid: c5544d39d1e284749a7f8359889cb4e6, type: 2}
   selectionHighlight: {fileID: 2800000, guid: ddcfce0b72b55e845b2c7a5baa66bc79, type: 3}
-  theselectedobject: {fileID: 0}
-  theclickedactionobject: {fileID: 0}
-  Units: []
-  clickdestination: {x: 0, y: 0, z: 0}
 --- !u!114 &442365871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1299,7 +1295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e1b012cb6261b46a9ba80862462751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  state: 1
 --- !u!224 &1008699288 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224092049792341490, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,

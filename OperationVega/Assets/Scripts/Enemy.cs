@@ -85,14 +85,13 @@ namespace Assets.Scripts
         {
             if (this.timebetweenattacks >= this.mystats.Attackspeed && Vector3.Distance(this.currenttarget.transform.position, this.transform.position) <= this.mystats.Attackrange)
             {
-                Debug.Log("Enemy hit!");
+                Debug.Log("Enemy attacked!");
                 this.target.TakeDamage(5);
                 this.timebetweenattacks = 0;
             }
 
             if (Vector3.Distance(this.currenttarget.transform.position, this.transform.position) > this.mystats.Attackrange)
             {
-                Debug.Log("Unit out of range");
                 this.target = null;
                 this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
             }

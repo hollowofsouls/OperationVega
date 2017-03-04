@@ -66,11 +66,6 @@ namespace Assets.Scripts
         private NavMeshAgent navagent;
 
         /// <summary>
-        /// The reference to the physical item dropped.
-        /// </summary>
-        private GameObject theitemdropped;
-
-        /// <summary>
         /// The object to pickup.
         /// </summary>
         private GameObject objecttopickup;
@@ -307,6 +302,7 @@ namespace Assets.Scripts
             {
                 case "Battle":
                     this.navagent.updateRotation = false;
+                    this.DropItems();
                     this.theMinerFsm.Feed(thecurrentstate + "To" + destinationState, this.mystats.Attackrange);
                     break;
                 case "Idle":
@@ -384,6 +380,31 @@ namespace Assets.Scripts
                 this.theobjecttolookat = this.objecttopickup;
                 this.navagent.SetDestination(thepickup.transform.position);
                 this.ChangeStates("PickUp");
+            }
+        }
+
+        /// <summary>
+        /// The drop items function.
+        /// </summary>
+        private void DropItems()
+        {
+            Transform[] children = this.transform.GetComponentsInChildren<Transform>(true);
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                float angle = i * (2 * 3.14159f / children.Length);
+                float x = Mathf.Cos(angle) * 1.5f;
+                float z = Mathf.Sin(angle) * 1.5f;
+
+                children[i].gameObject.SetActive(true);
+
+                if (children[i].name == "Minerals" || children[i].name == "MineralsTainted")
+                {
+                    children[i].position = new Vector3(this.transform.position.x + x, 0f, this.transform.position.z + z);
+                    children[i].tag = "PickUp";
+                    children[i].parent = null;
+                    this.mystats.Resourcecount = 0;
+                }
             }
         }
 
@@ -506,43 +527,43 @@ namespace Assets.Scripts
         /// </summary>
         private void IdleState()
         {
-            if (this.theitemdropped != null && this.objecttopickup == null)
-            {
+            //if (this.theitemdropped != null && this.objecttopickup == null)
+            //{
 
-                if (this.transform.Find("Minerals") && this.theitemdropped.name == "MineralsTainted")
-                {
-                    return;
-                }
-                else if (this.transform.Find("MineralsTainted") && this.theitemdropped.name == "Minerals")
-                {
-                    return;
-                }
+            //    if (this.transform.Find("Minerals") && this.theitemdropped.name == "MineralsTainted")
+            //    {
+            //        return;
+            //    }
+            //    else if (this.transform.Find("MineralsTainted") && this.theitemdropped.name == "Minerals")
+            //    {
+            //        return;
+            //    }
 
-                this.navagent.SetDestination(this.theitemdropped.transform.position);
+            //    this.navagent.SetDestination(this.theitemdropped.transform.position);
 
-                if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
-                {
-                    Debug.Log("Found my mineral");
-                    this.theitemdropped.transform.SetParent(this.transform);
-                    this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
-                    this.theitemdropped = null;
+            //    if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
+            //    {
+            //        Debug.Log("Found my mineral");
+            //        this.theitemdropped.transform.SetParent(this.transform);
+            //        this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
+            //        this.theitemdropped = null;
 
-                    if (this.transform.Find("MineralsTainted"))
-                    {
-                        this.ChangeStates("Decontaminate");
-                        GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-                        Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
-                        this.navagent.SetDestination(thedoor.position);
-                    }
-                    else
-                    {
-                        this.ChangeStates("Stock");
-                        GameObject thesilo = GameObject.Find("Silo");
-                        Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
-                        this.navagent.SetDestination(destination);
-                    }
-                }
-            }
+            //        if (this.transform.Find("MineralsTainted"))
+            //        {
+            //            this.ChangeStates("Decontaminate");
+            //            GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
+            //            Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
+            //            this.navagent.SetDestination(thedoor.position);
+            //        }
+            //        else
+            //        {
+            //            this.ChangeStates("Stock");
+            //            GameObject thesilo = GameObject.Find("Silo");
+            //            Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
+            //            this.navagent.SetDestination(destination);
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
@@ -553,28 +574,6 @@ namespace Assets.Scripts
         {
             if (this.target != null)
             {
-                Transform cleanminerals = this.transform.Find("Minerals");
-                Transform dirtyminerals = this.transform.Find("MineralsTainted");
-
-                if (cleanminerals != null)
-                {
-                    cleanminerals.position = new Vector3(cleanminerals.position.x, 0f, cleanminerals.position.z);
-                    this.theitemdropped = cleanminerals.gameObject;
-                    this.theitemdropped.tag = "PickUp";
-                    cleanminerals.gameObject.SetActive(true);
-                    cleanminerals.transform.parent = null;
-                    this.mystats.Resourcecount = 0;
-                }
-                else if (dirtyminerals != null)
-                {
-                    dirtyminerals.position = new Vector3(dirtyminerals.position.x, 0f, dirtyminerals.position.z);
-                    this.theitemdropped = dirtyminerals.gameObject;
-                    this.theitemdropped.tag = "PickUp";
-                    dirtyminerals.gameObject.SetActive(true);
-                    dirtyminerals.transform.parent = null;
-                    this.mystats.Resourcecount = 0;
-                }
-
                 if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
                 {
                     this.Attack();
