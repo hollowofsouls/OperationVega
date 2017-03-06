@@ -142,9 +142,14 @@ namespace Assets.Scripts
             set
             {
                 this.currentvalue = value;
+
                 if (this.currentvalue == this.maxvalue)
                 {
                     this.IsCompleted = true;
+                }
+                else if (this.currentvalue > this.maxvalue)
+                {
+                    this.currentvalue = this.maxvalue;
                 }
             }
         }

@@ -5,6 +5,8 @@ namespace Assets.Scripts.Managers
     using System.Collections.Generic;
 
     using UnityEngine;
+    using UnityEngine.UI;
+
     using Random = System.Random;
 
     /// <summary>
@@ -24,9 +26,29 @@ namespace Assets.Scripts.Managers
         public Dictionary<ObjectiveType, Objective> TheObjectives;
 
         /// <summary>
+        /// The text prefab reference.
+        /// This is the text to be instantiated.
+        /// </summary>
+        [SerializeField]
+        private GameObject textprefab;
+
+        /// <summary>
         /// The instance of the ObjectiveManager.
         /// </summary>
         private static ObjectiveManager instance;
+
+        /// <summary>
+        /// The game canvas reference.
+        /// This is the game canvas to set the text to.
+        /// </summary>
+        [SerializeField]
+        private RectTransform thegameui;
+
+        /// <summary>
+        /// The upgrade points earned reference.
+        /// This is to hold reference to how many points earned.
+        /// </summary>
+        private int upgradepointsearned;
 
         /// <summary>
         /// Gets the instance of the ObjectiveManager.
@@ -62,7 +84,7 @@ namespace Assets.Scripts.Managers
             User.UpgradePoints = 8;
         }
 
-      /// <summary>
+        /// <summary>
         /// The on destroy function.
         /// </summary>
         private void OnDestroy()
@@ -88,13 +110,13 @@ namespace Assets.Scripts.Managers
         /// </returns>
         private IEnumerator UpdateObjective()
         {
-            Debug.Log("Objective complete...");
-            yield return new WaitForSeconds(2);
-            Debug.Log("Objective updating...");
             Objective obj = this.ObjectiveQueue.Dequeue();
 
             this.UpgradePointDisbursement(obj);
-            Debug.Log(User.UpgradePoints);
+
+            this.CreateText();
+
+            yield return new WaitForSeconds(2);
 
             if (obj.Type != ObjectiveType.Main)
             {
@@ -126,14 +148,36 @@ namespace Assets.Scripts.Managers
             {
                 case ObjectiveType.Main:
                     User.UpgradePoints += 50;
+                    this.upgradepointsearned = 50;
                     break;
                 case ObjectiveType.Kill:
-                    User.UpgradePoints += (obj.Maxvalue >= 30 && obj.Maxvalue % 5 == 0) ? 5 : 2;
+                    this.upgradepointsearned = (obj.Maxvalue >= 30 && obj.Maxvalue % 5 == 0) ? 5 : 2;
+                    User.UpgradePoints += this.upgradepointsearned;
                     break;
                 case ObjectiveType.Craft:
-                     User.UpgradePoints += (obj.Maxvalue % 2 == 0) ? 2 : 1;
+                    this.upgradepointsearned = (obj.Maxvalue % 2 == 0) ? 2 : 1;
+                    User.UpgradePoints += this.upgradepointsearned;
                     break;
             }
         }
+
+        /// <summary>
+        /// The create text function.
+        /// This function handles the instantiation of the objective completed text.
+        /// </summary>
+        private void CreateText()
+        {
+            GameObject theTextGo = Instantiate(this.textprefab, Vector3.zero, Quaternion.identity);
+
+            theTextGo.transform.SetParent(this.thegameui);
+
+            theTextGo.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            theTextGo.GetComponent<RectTransform>().offsetMax -= theTextGo.GetComponent<RectTransform>().offsetMax;
+
+            Text thetext = theTextGo.GetComponent<Text>();
+
+            thetext.text = "Objective Completed!\n" + this.upgradepointsearned + " upgrade point(s) earned.";
+        }
+
     }
 }
