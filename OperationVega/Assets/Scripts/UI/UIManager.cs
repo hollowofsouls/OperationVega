@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Assets.Scripts.Managers;
 using Assets.Scripts;
+using Assets.Scripts.Controllers;
 
 
 
@@ -54,6 +55,8 @@ namespace UI
         [SerializeField]
         private RectTransform m_CraftingTAB;
         [SerializeField]
+        private RectTransform m_UnitTAB;
+        [SerializeField]
         private RectTransform m_WorkshopUI;
         [SerializeField]
         private RectTransform m_OptionsUI;
@@ -86,6 +89,17 @@ namespace UI
         private Text m_FuelT;
         [SerializeField]
         private Text m_SteelT;
+        [SerializeField]
+        private Text m_KillT;
+        [SerializeField]
+        private Text m_CraftT;
+        [SerializeField]
+        private Text m_MainT;
+
+        [SerializeField]
+        public GameObject foodinstance;
+        [SerializeField]
+        private GameObject cookedfoodPrefab;
 
         [SerializeField]
         private Image m_Input1;
@@ -94,6 +108,7 @@ namespace UI
 
         bool revertactionstab;
         bool revertcraftingtab;
+        bool revertunittab;
         bool undo1;
         bool undo2;
         bool undo3;
@@ -116,6 +131,8 @@ namespace UI
             revertactionstab = true;
             //Bool use to manage crafting tab
             revertcraftingtab = true;
+            //Bool use to manage unit tab
+            revertunittab = true;
 
             undo1 = true;
             undo2 = true;
@@ -135,6 +152,7 @@ namespace UI
             EventManager.Subscribe("Extract", this.OnExtract);
             EventManager.Subscribe("Actions", this.OnActions);
             EventManager.Subscribe("Crafting", this.OnCrafting);
+            EventManager.Subscribe("UnitTab", this.OnUnit);
             EventManager.Subscribe("Build Rocket", this.OnBuild);
             EventManager.Subscribe("Thrusters", this.OnThrusters);
             EventManager.Subscribe("Apply Chassis", this.OnChassis);
@@ -145,6 +163,10 @@ namespace UI
             EventManager.Subscribe("OnEChoice", this.OnEChoice);
             EventManager.Subscribe("Player choose yes", this.OnYes);
             EventManager.Subscribe("Player choose no", this.OnNo);
+            EventManager.Subscribe("SAExtract", this.OnSAExtract);
+            EventManager.Subscribe("SAMiner", this.OnSAMiner);
+            EventManager.Subscribe("SAUnit", this.OnSAUnit);
+            EventManager.Subscribe("SAHarvest", this.OnSAHarvest);
             #endregion
 
             #region -- Main Menu Subscribers --
@@ -162,7 +184,7 @@ namespace UI
             #region -- Crafting Subscribers --
             EventManager.Subscribe("Minerals", this.Minerals);
             EventManager.Subscribe("Food", this.Food);
-            EventManager.Subscribe("CookedFood", this.CookedFood);
+            EventManager.Subscribe("CookedFood", this.OnCookedFood);
             EventManager.Subscribe("Gas", this.Gas);
             EventManager.Subscribe("Fuel", this.Fuel);
             #endregion
@@ -186,6 +208,7 @@ namespace UI
             EventManager.UnSubscribe("Extract", this.OnExtract);
             EventManager.UnSubscribe("Actions", this.OnActions);
             EventManager.UnSubscribe("Crafting", this.OnCrafting);
+            EventManager.UnSubscribe("UnitTab", this.OnUnit);
             EventManager.UnSubscribe("Build Rocket", this.OnBuild);
             EventManager.UnSubscribe("Thrusters", this.OnThrusters);
             EventManager.UnSubscribe("Apply Chassis", this.OnChassis);
@@ -194,6 +217,12 @@ namespace UI
             EventManager.UnSubscribe("OnMChoice", this.OnMChoice);
             EventManager.UnSubscribe("OnHChoice", this.OnHChoice);
             EventManager.UnSubscribe("OnEChoice", this.OnEChoice);
+            EventManager.UnSubscribe("Player choose yes", this.OnYes);
+            EventManager.UnSubscribe("Player choose no", this.OnNo);
+            EventManager.UnSubscribe("SAExtract", this.OnSAExtract);
+            EventManager.UnSubscribe("SAMiner", this.OnSAMiner);
+            EventManager.UnSubscribe("SAUnit", this.OnSAUnit);
+            EventManager.UnSubscribe("SAHarvest", this.OnSAHarvest);
             #endregion
 
             #region -- Main Menu Unsubscribers --
@@ -220,6 +249,10 @@ namespace UI
 
         void Update()
         {
+            //m_KillT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Kill].GetObjectiveInfo();
+            //m_CraftT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Craft].GetObjectiveInfo();
+            //m_MainT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].GetObjectiveInfo();
+
             //Updates the amount of resources the player has.
             m_MineralsT.text = " " + User.MineralsCount;
             m_FoodT.text = " " + User.FoodCount;
@@ -266,6 +299,10 @@ namespace UI
 
                 m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, Scalefactor);
                 m_CraftingTAB.offsetMin = new Vector2(m_CraftingTAB.offsetMin.x, -115);
+
+                m_UnitTAB.offsetMax = new Vector2(m_UnitTAB.offsetMax.x, Scalefactor);
+                m_UnitTAB.offsetMin = new Vector2(m_UnitTAB.offsetMin.x, -115);
+
             }
         }
 
@@ -324,6 +361,29 @@ namespace UI
 
             Debug.Log("Move Crafting Tab down");
         }
+        public void OnUnitClick()
+        {
+            EventManager.Publish("UnitTab");
+        }
+        private void OnUnit()
+        {
+            if(revertunittab)
+            {
+                m_UnitTAB.offsetMax = new Vector2(m_UnitTAB.offsetMax.x, 0);
+                m_UnitTAB.offsetMin = new Vector2(m_UnitTAB.offsetMin.x, 0);
+
+                revertunittab = false;
+            }
+            else if(!revertunittab)
+            {
+                revertunittab = true;
+
+                m_UnitTAB.offsetMax = new Vector2(m_UnitTAB.offsetMax.x, Scalefactor);
+                m_UnitTAB.offsetMin = new Vector2(m_UnitTAB.offsetMin.x, -115);
+            }
+
+            Debug.Log("Move Unit Tab down");
+        }
         public void OnRallyClick()
         {
             EventManager.Publish("Rally");
@@ -349,6 +409,7 @@ namespace UI
 
         private void OnRecall()
         {
+            UnitController.Self.CallHome();
             //Function will be use to recall upon click.
             Debug.Log("Recall to barracks.");
         }
@@ -358,6 +419,7 @@ namespace UI
         }
         private void OnCancelAction()
         {
+            UnitController.Self.CancelAction();
             //Function will cancel previous action upon click.
             Debug.Log("Cancel Previous Action");
         }
@@ -607,7 +669,14 @@ namespace UI
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
-            Debug.Log("Cooked Food");
+            if (User.CookedFoodCount > 0)
+            {
+                Vector3 mousePosition;
+                mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
+                mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                this.foodinstance = Instantiate(cookedfoodPrefab, mousePosition, Quaternion.identity);
+                Debug.Log("Cooked Food");
+            }
         }
 
         public void Gas()
@@ -802,6 +871,52 @@ namespace UI
 
 
         #endregion
+
+        #region -- SelectAll --
+        public void OnSAExtractClick()
+        {
+            EventManager.Publish("SAExtract");
+        }
+        private void OnSAExtract()
+        {
+            //Calls the SelectAll Extractors function within the UnitController.
+            UnitController.Self.SelectAllExtractors();
+            Debug.Log("Select All Extract");
+        }
+
+        public void OnSAMinerClick()
+        {
+            EventManager.Publish("SAMiner");
+        }
+        private void OnSAMiner()
+        {
+            //Calls the SelectAll Miners function within the UnitController.
+            UnitController.Self.SelectAllMiners();
+            Debug.Log("Select All Miner");
+        }
+
+        public void OnSAUnitClick()
+        {
+            EventManager.Publish("SAUnit");
+        }
+        private void OnSAUnit()
+        {
+            //Calls the Select All Units function within the UnitController.
+            UnitController.Self.SelectAllUnits();
+            Debug.Log("Select All Units");
+        }
+        public void OnSAHarvestClick()
+        {
+            EventManager.Publish("SAHarvest");
+        }
+        private void OnSAHarvest()
+        {
+            //Calls the Select All Harvesters function within the UnitController.
+            UnitController.Self.SelectAllHarvesters();
+            Debug.Log("Select All Harvesters");
+        }
+        #endregion
+
 
     }
 }
