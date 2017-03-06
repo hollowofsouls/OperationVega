@@ -621,7 +621,6 @@ namespace Assets.Scripts.Controllers
             // Send unit back to idle
             if (this.theUnit != null)
             {
-                this.theUnit.SetTarget(null);
                 this.theUnit.SetTheMovePosition(this.clickdestination);
                 this.theUnit.ChangeStates("Idle");
             }
@@ -643,7 +642,6 @@ namespace Assets.Scripts.Controllers
                     {
                         IUnit unit = (IUnit)this.units[i].GetComponent(typeof(IUnit));
 
-                        unit.SetTarget(null);
                         unit.SetTheMovePosition(this.clickdestination);
                         unit.ChangeStates("Idle");
                     }

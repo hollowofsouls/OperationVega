@@ -71,6 +71,12 @@ namespace Assets.Scripts
         private GameObject objecttopickup;
 
         /// <summary>
+        /// The got hit first reference.
+        /// Determines how the unit should act upon taking damage.
+        /// </summary>
+        private bool gothitfirst;
+
+        /// <summary>
         /// The time between attacks reference.
         /// Stores the reference to the timer between attacks.
         /// </summary>
@@ -268,6 +274,12 @@ namespace Assets.Scripts
         public void TakeDamage(int damage)
         {
             this.mystats.Health -= damage;
+
+            if (this.theEnemy != null && this.gothitfirst)
+            {
+                this.gothitfirst = false;
+                this.ChangeStates("Battle");
+            }
         }
 
         /// <summary>
@@ -329,6 +341,27 @@ namespace Assets.Scripts
                     break;
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// The set target function.
+        /// Auto sets the object as the target for the unit.
+        /// <para></para>
+        /// <remarks><paramref name="theTarget"></paramref> -The object that will be set as the target for attacking.</remarks>
+        /// </summary>
+        public void AutoTarget(GameObject theTarget)
+        {
+            if (this.theEnemy == null && theTarget != null)
+            {
+                this.theEnemy = theTarget;
+
+                if (this.gothitfirst)
+                {
+                    this.theobjecttolookat = this.theEnemy;
+                }
+
+                this.target = (ICombat)theTarget.GetComponent(typeof(ICombat));
             }
         }
 
@@ -462,6 +495,7 @@ namespace Assets.Scripts
             this.mystats.Attackrange = 3.0f;
             this.mystats.Resourcecount = 0;
 
+            this.gothitfirst = true;
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
 
@@ -527,43 +561,14 @@ namespace Assets.Scripts
         /// </summary>
         private void IdleState()
         {
-            //if (this.theitemdropped != null && this.objecttopickup == null)
-            //{
-
-            //    if (this.transform.Find("Minerals") && this.theitemdropped.name == "MineralsTainted")
-            //    {
-            //        return;
-            //    }
-            //    else if (this.transform.Find("MineralsTainted") && this.theitemdropped.name == "Minerals")
-            //    {
-            //        return;
-            //    }
-
-            //    this.navagent.SetDestination(this.theitemdropped.transform.position);
-
-            //    if (this.navagent.remainingDistance <= this.navagent.stoppingDistance && !this.navagent.pathPending)
-            //    {
-            //        Debug.Log("Found my mineral");
-            //        this.theitemdropped.transform.SetParent(this.transform);
-            //        this.theitemdropped.transform.position = this.transform.position + (this.transform.forward * 0.6f);
-            //        this.theitemdropped = null;
-
-            //        if (this.transform.Find("MineralsTainted"))
-            //        {
-            //            this.ChangeStates("Decontaminate");
-            //            GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
-            //            Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
-            //            this.navagent.SetDestination(thedoor.position);
-            //        }
-            //        else
-            //        {
-            //            this.ChangeStates("Stock");
-            //            GameObject thesilo = GameObject.Find("Silo");
-            //            Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
-            //            this.navagent.SetDestination(destination);
-            //        }
-            //    }
-            //}
+            if (this.theEnemy != null)
+            {
+                if (Vector3.Distance(this.theEnemy.transform.position, this.transform.position) > this.theEnemy.GetComponent<EnemyAI>().Radius)
+                {
+                    this.gothitfirst = true;
+                    this.theEnemy = null;
+                }
+            }
         }
 
         /// <summary>
@@ -792,6 +797,6 @@ namespace Assets.Scripts
         private void OnDestroy()
         {
             User.MinerCount--;
-        }
+        } 
     }
 }

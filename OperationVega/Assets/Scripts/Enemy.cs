@@ -71,7 +71,7 @@ namespace Assets.Scripts
             {
                 Debug.Log("Enemy attacked!");
                 IUnit u = this.target as IUnit;
-                u.SetTarget(this.gameObject);
+                u.AutoTarget(this.gameObject);
                 this.target.TakeDamage(5);
 
                 this.timebetweenattacks = 0;
@@ -210,18 +210,6 @@ namespace Assets.Scripts
             {
                 this.Taint();
             }
-            //if (this.targetResource != null)
-            //{
-            //    if (this.navagent.remainingDistance <= this.mystats.Attackrange && !this.navagent.pathPending)
-            //    {
-            //        this.Taint();
-            //    }
-            //}
-            //else
-            //{
-            //    this.targetResource = null;
-            //    this.theEnemyFSM.Feed(this.theEnemyFSM.CurrentState.Statename + "ToIdle");
-            //}
         }
 
         /// <summary>

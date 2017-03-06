@@ -22,6 +22,14 @@ namespace Assets.Scripts.Interfaces
         void SetTarget(GameObject theTarget);
 
         /// <summary>
+        /// The set target function.
+        /// Auto sets the object as the target for the unit.
+        /// <para></para>
+        /// <remarks><paramref name="theTarget"></paramref> -The object that will be set as the target for attacking.</remarks>
+        /// </summary>
+        void AutoTarget(GameObject theTarget);
+
+        /// <summary>
         /// The set target resource function.
         /// The function sets the unit with the resource.
         /// <para></para>
