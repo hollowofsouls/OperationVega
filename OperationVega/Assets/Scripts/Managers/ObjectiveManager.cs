@@ -59,7 +59,7 @@ namespace Assets.Scripts.Managers
             this.TheObjectives.Add(ObjectiveType.Kill, killObjective);
             this.TheObjectives.Add(ObjectiveType.Craft, craftObjective);
 
-            User.UpgradePoints = 7;
+            User.UpgradePoints = 8;
         }
 
       /// <summary>

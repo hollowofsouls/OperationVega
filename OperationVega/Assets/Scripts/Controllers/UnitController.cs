@@ -45,6 +45,19 @@ namespace Assets.Scripts.Controllers
         private Vector3 clickdestination;
 
         /// <summary>
+        /// The cooked food prefab reference.
+        /// </summary>
+        [SerializeField]
+        private GameObject cookedfoodprefab;
+
+        /// <summary>
+        /// The food instance reference.
+        /// This is a reference to the instantiated cooked food. 
+        /// So it can be used and deleted.
+        /// </summary>
+        private GameObject foodinstance;
+
+        /// <summary>
         /// The content field reference.
         /// </summary>
         [SerializeField]
@@ -372,6 +385,14 @@ namespace Assets.Scripts.Controllers
             this.ActivateDragScreen();
             this.SelectUnits();
             this.CommandUnits();
+
+            if (Input.GetKeyDown(KeyCode.F1) && this.foodinstance == null)
+            {
+                Vector3 mousePosition;
+                mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
+                mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                this.foodinstance = Instantiate(this.cookedfoodprefab, mousePosition, Quaternion.identity);
+            }
         }
 
         /// <summary>
@@ -487,6 +508,8 @@ namespace Assets.Scripts.Controllers
                 if (Physics.Raycast(ray.origin, ray.direction, out hit))
                 {
                     this.clickdestination = new Vector3(hit.point.x, 0.5f, hit.point.z);
+
+                    this.HealUnit(hit);
 
                     if (hit.transform.GetComponent<Enemy>())
                     {
@@ -714,6 +737,31 @@ namespace Assets.Scripts.Controllers
                             unit.SetTheMovePosition(destination);
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The heal unit function.
+        /// Heals the unit with food.
+        /// <para></para>
+        /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
+        /// </summary>
+        private void HealUnit(RaycastHit hit)
+        {
+            // The object hit is a unit and we have an instance of the cooked food to use
+            if (hit.transform.gameObject.GetComponent(typeof(IUnit)) && this.foodinstance != null)
+            {
+                Stats stats = hit.transform.gameObject.GetComponent<Stats>();
+
+                // If the unit can be healed
+                if (stats.Health < stats.Maxhealth)
+                {
+                    // Heal unit
+                    hit.transform.gameObject.GetComponent<Stats>().Health += 20;
+                    
+                    // Destroy the food
+                    Destroy(this.foodinstance);
                 }
             }
         }
