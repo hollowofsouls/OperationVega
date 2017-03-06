@@ -27,22 +27,39 @@ namespace Assets.Scripts
 		/// <summary>
 		/// The selectable cockpit.
 		/// </summary>
-		private Cockpit selectableCockpit;
+		// private Cockpit selectableCockpit;
 
 		/// <summary>
 		/// The selectable chassis.
 		/// </summary>
-		private Chassis selectableChassis;
+		// private Chassis selectableChassis;
 
 		/// <summary>
 		/// The selectable wings.
 		/// </summary>
-		private Wings selectableWings;
+		// private Wings selectableWings;
 
 		/// <summary>
 		/// The selectable thrusters.
 		/// </summary>
-		private Thrusters selectableThrusters;
+		// private Thrusters selectableThrusters;
+
+		private BaseCockpit currentCockpit;
+
+		/// <summary>
+		/// The cockpit 1.
+		/// </summary>
+		public Cockpit Cockpit1;
+
+		/// <summary>
+		/// The cockpit 2.
+		/// </summary>
+		public Cockpit Cockpit2;
+
+		/// <summary>
+		/// The cockpit 3.
+		/// </summary>
+		public Cockpit Cockpit3;
 
 		/// <summary>
 		/// Gets or sets the part list.
@@ -129,6 +146,33 @@ namespace Assets.Scripts
 			}
 		}
 
+		public void AddCockpit(List<IRocketParts> secondaryList, Cockpit selectedCockpit)
+		{
+
+			if (User.SteelCount >= selectedCockpit.Accessed.SteelCost && User.FuelCount >= selectedCockpit.Accessed.FuelCost)
+			{
+				if (!secondaryList.OfType<BaseCockpit>().Any())
+				{
+					this.allParts.Add(selectedCockpit.Accessed);
+					this.totalQuality += selectedCockpit.Accessed.Quality;
+					User.SteelCount -= selectedCockpit.Accessed.SteelCost;
+					User.FuelCount -= selectedCockpit.Accessed.FuelCost;
+					this.currentCockpit = selectedCockpit.Accessed;
+				}
+				else if (secondaryList.OfType<BaseCockpit>().Any() && !secondaryList.Contains(selectedCockpit.Accessed))
+				{
+					this.totalQuality -= this.currentCockpit.Quality;
+					this.allParts.Remove(this.currentCockpit);
+
+					this.allParts.Add(selectedCockpit.Accessed);
+					this.totalQuality += selectedCockpit.Accessed.Quality;
+					User.SteelCount -= selectedCockpit.Accessed.SteelCost;
+					User.FuelCount -= selectedCockpit.Accessed.FuelCost;
+					this.currentCockpit = selectedCockpit.Accessed;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Use this for initialization
 		/// </summary>
@@ -136,15 +180,18 @@ namespace Assets.Scripts
 		{
 			this.allParts = new List<IRocketParts>();
 
-			this.selectableCockpit = FindObjectOfType<Cockpit>();
-			this.selectableChassis = FindObjectOfType<Chassis>();
-			this.selectableWings = FindObjectOfType<Wings>();
-			this.selectableThrusters = FindObjectOfType<Thrusters>();
+			// this.selectableCockpit = FindObjectOfType<Cockpit>();
+			// this.selectableChassis = FindObjectOfType<Chassis>();
+			// this.selectableWings = FindObjectOfType<Wings>();
+			//this.selectableThrusters = FindObjectOfType<Thrusters>();
+			this.Cockpit1.Accessed = new BaseCockpit(20, 200, 0, 20);
+			this.Cockpit2.Accessed = new BaseCockpit(30, 200, 0, 50);
+			this.Cockpit3.Accessed = new BaseCockpit(40, 200, 0, 80);
 
-			this.selectableCockpit.Accessed = new BaseCockpit(20, 200, 0, 20);
-			this.selectableChassis.Accessed = new BaseChassis(200, 0, 20);
-			this.selectableWings.Accessed = new BaseWings(200, 0, 20);
-			this.selectableThrusters.Accessed = new BaseThrusters(200, 50, 20);
+			// this.selectableCockpit.Accessed = new BaseCockpit(20, 200, 0, 20);
+			// this.selectableChassis.Accessed = new BaseChassis(200, 0, 20);
+			// this.selectableWings.Accessed = new BaseWings(200, 0, 20);
+			// this.selectableThrusters.Accessed = new BaseThrusters(200, 50, 20);
 		}
 
 		/// <summary>
@@ -156,23 +203,23 @@ namespace Assets.Scripts
 
 			if (Input.GetMouseButtonDown(0))
 			{
-				this.AddParts(spareList, this.selectableCockpit.Accessed);
+				this.AddCockpit(spareList, this.Cockpit1);
 			}
 
 			if (Input.GetMouseButtonDown(1))
 			{
-				this.AddParts(spareList, this.selectableChassis.Accessed);
+				this.AddCockpit(spareList, this.Cockpit2);
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad1))
 			{
-				this.AddParts(spareList, this.selectableWings.Accessed);
+				this.AddCockpit(spareList, this.Cockpit3);
 			}
 
-			if (Input.GetKeyDown(KeyCode.Keypad2))
-			{
-				this.AddParts(spareList, this.selectableThrusters.Accessed);
-			}
+			//if (Input.GetKeyDown(KeyCode.Keypad2))
+			//{
+			//	this.AddParts(spareList, this.selectableThrusters.Accessed);
+			//}
 
 			if (Input.GetKeyDown(KeyCode.A))
 			{
