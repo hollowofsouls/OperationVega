@@ -172,6 +172,8 @@ namespace UI
             //Bool use to manage unit tab
             revertunittab = true;
 
+            instance = this;
+
             undo1 = true;
             undo2 = true;
             undo3 = true;
@@ -220,7 +222,7 @@ namespace UI
             #endregion
 
             #region -- Crafting Subscribers --
-            EventManager.Subscribe("Minerals", this.Minerals);
+            EventManager.Subscribe("Minerals", this.OnMinerals);
             EventManager.Subscribe("Food", this.Food);
             EventManager.Subscribe("CookedFood", this.OnCookedFood);
             EventManager.Subscribe("Gas", this.Gas);
@@ -351,7 +353,7 @@ namespace UI
         /// <para></para>
         /// <remarks><paramref name="theunit"></paramref> -The unit to pass in so the unit button will have reference to it.</remarks>
         /// </summary>
-        private void CreateUnitButton(GameObject theunit)
+        public void CreateUnitButton(GameObject theunit)
         {
             GameObject button = Instantiate(this.unitbutton);
             button.transform.SetParent(this.contentfield);
@@ -376,6 +378,19 @@ namespace UI
             //button.GetComponent<UnitButton>().Upgradepanel = this.upgradepanel;
 
             this.theUnitButtonsList.Add(button);
+        }
+
+        /// <summary>
+        /// The clear unit buttons list function.
+        /// This function destroys the buttons populated for a unit and clears the list.
+        /// </summary>
+        public void ClearUnitButtonsList()
+        {
+            foreach (GameObject go in this.theUnitButtonsList)
+            {
+                Destroy(go);
+            }
+            this.theUnitButtonsList.Clear();
         }
 
 
@@ -513,6 +528,8 @@ namespace UI
         }
         private void OnClear()
         {
+            minerals.sprite = Input1.sprite;
+            Input2.sprite = Input2.sprite;
             //This function will clear items in the craft.
             Debug.Log("Clear");
         }
@@ -716,6 +733,7 @@ namespace UI
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
+            Input1.sprite = minerals.sprite;
             Debug.Log("Minerals");
         }
 
@@ -748,6 +766,8 @@ namespace UI
                 mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
                 this.foodinstance = Instantiate(cookedfoodPrefab, mousePosition, Quaternion.identity);
                 Debug.Log("Cooked Food");
+
+                User.CookedFoodCount--;
             }
         }
 
