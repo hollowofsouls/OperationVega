@@ -212,6 +212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 381470711}
   - component: {fileID: 381470710}
+  - component: {fileID: 381470712}
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
@@ -270,8 +271,19 @@ MonoBehaviour:
   foodinstance: {fileID: 100000, guid: d91dd13a1323f9d49b25c69d0465d9be, type: 3}
   cookedfoodPrefab: {fileID: 1131821788970860, guid: 90373d2eb11a33443a6ea48eece04ea6,
     type: 2}
-  m_Input1: {fileID: 0}
-  m_Input2: {fileID: 0}
+  upgradepanel: {fileID: 0}
+  tooltippanel: {fileID: 0}
+  unitbutton: {fileID: 0}
+  Input1: {fileID: 0}
+  Input2: {fileID: 0}
+  Output: {fileID: 0}
+  minerals: {fileID: 0}
+  food: {fileID: 0}
+  cookedFood: {fileID: 0}
+  Steel: {fileID: 0}
+  fuel: {fileID: 0}
+  gas: {fileID: 0}
+  contentfield: {fileID: 0}
 --- !u!4 &381470711
 Transform:
   m_ObjectHideFlags: 0
@@ -285,6 +297,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &381470712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 381470709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ccdb4366a31a33458fd593e24868b98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textprefab: {fileID: 0}
+  thegameui: {fileID: 0}
 --- !u!224 &402031977 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224782349150370558, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,

@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using Assets.Scripts.Managers;
 using Assets.Scripts;
 using Assets.Scripts.Controllers;
+using Assets.Scripts.Interfaces;
 
 
 
@@ -96,15 +97,52 @@ namespace UI
         [SerializeField]
         private Text m_MainT;
 
-        [SerializeField]
+        [HideInInspector]
         public GameObject foodinstance;
         [SerializeField]
         private GameObject cookedfoodPrefab;
+        [SerializeField]
+        public GameObject upgradepanel;
+        [SerializeField]
+        public GameObject tooltippanel;
+        [SerializeField]
+        private GameObject unitbutton;
 
         [SerializeField]
-        private Image m_Input1;
+        public Image Input1;
         [SerializeField]
-        private Image m_Input2;
+        public Image Input2;
+        [SerializeField]
+        public Image Output;
+        [SerializeField]
+        public Image minerals;
+        [SerializeField]
+        public Image food;
+        [SerializeField]
+        public Image cookedFood;
+        [SerializeField]
+        public Image Steel;
+        [SerializeField]
+        public Image fuel;
+        [SerializeField]
+        public Image gas;
+
+
+        [SerializeField]
+        private Transform contentfield;
+
+        private readonly List<GameObject> theUnitButtonsList = new List<GameObject>();
+
+        private static UIManager instance;
+
+
+        public static UIManager Self
+        {
+            get
+            {
+                return instance;
+            }
+        }
 
         bool revertactionstab;
         bool revertcraftingtab;
@@ -249,9 +287,9 @@ namespace UI
 
         void Update()
         {
-            //m_KillT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Kill].GetObjectiveInfo();
-            //m_CraftT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Craft].GetObjectiveInfo();
-            //m_MainT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].GetObjectiveInfo();
+            m_KillT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Kill].GetObjectiveInfo();
+            m_CraftT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Craft].GetObjectiveInfo();
+            m_MainT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].GetObjectiveInfo();
 
             //Updates the amount of resources the player has.
             m_MineralsT.text = " " + User.MineralsCount;
@@ -304,6 +342,40 @@ namespace UI
                 m_UnitTAB.offsetMin = new Vector2(m_UnitTAB.offsetMin.x, -115);
 
             }
+        }
+
+        /// <summary>
+        /// The create unit button function.
+        /// This function populates the panel with the a button for the unit that was
+        /// passed in.
+        /// <para></para>
+        /// <remarks><paramref name="theunit"></paramref> -The unit to pass in so the unit button will have reference to it.</remarks>
+        /// </summary>
+        private void CreateUnitButton(GameObject theunit)
+        {
+            GameObject button = Instantiate(this.unitbutton);
+            button.transform.SetParent(this.contentfield);
+
+            IUnit u = (IUnit)theunit.GetComponent(typeof(IUnit));
+
+            if (u is Harvester)
+            {
+                button.GetComponentInChildren<Text>().text = "H";
+            }
+            else if (u is Miner)
+            {
+                button.GetComponentInChildren<Text>().text = "M";
+            }
+            else if (u is Extractor)
+            {
+                button.GetComponentInChildren<Text>().text = "E";
+            }
+
+            button.AddComponent<UnitButton>().Unit = theunit;
+            //button.GetComponent<UnitButton>().Tooltippanel = this.tooltippanel;
+            //button.GetComponent<UnitButton>().Upgradepanel = this.upgradepanel;
+
+            this.theUnitButtonsList.Add(button);
         }
 
 
