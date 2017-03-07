@@ -13,6 +13,7 @@ namespace Assets.Scripts
     /// <summary>
     /// The harvester class.
     /// </summary>
+    [RequireComponent(typeof(Stats))]
     public class Harvester : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
@@ -780,11 +781,6 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            if (!this.GetComponent<Stats>())
-            {
-                this.gameObject.AddComponent<Stats>();
-            }
-
             this.InitUnit();
             this.theHarvesterFsm.Feed("auto", 0.1f);
             GameManager.Instance.TheHarvesters.Add(this);

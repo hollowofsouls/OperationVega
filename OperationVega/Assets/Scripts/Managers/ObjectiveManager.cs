@@ -1,9 +1,10 @@
 ﻿
 namespace Assets.Scripts.Managers
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
+
+    using UI;
 
     using UnityEngine;
     using UnityEngine.UI;
@@ -15,12 +16,6 @@ namespace Assets.Scripts.Managers
     /// </summary>
     public class ObjectiveManager : MonoBehaviour
     {
-        public Text killtext;
-
-        public Text crafttext;
-
-        public Text maintext;
-
         /// <summary>
         /// The objective queue.
         /// This queues up each objective as its completed.
@@ -43,13 +38,6 @@ namespace Assets.Scripts.Managers
         /// The instance of the ObjectiveManager.
         /// </summary>
         private static ObjectiveManager instance;
-
-        /// <summary>
-        /// The game canvas reference.
-        /// This is the game canvas to set the text to.
-        /// </summary>
-        [SerializeField]
-        private RectTransform thegameui;
 
         /// <summary>
         /// The upgrade points earned reference.
@@ -77,6 +65,7 @@ namespace Assets.Scripts.Managers
         private void Start()
         {
             instance = this;
+            
             EventManager.Subscribe("UpdateObjective", this.OnUpdateObjective);
             this.TheObjectives = new Dictionary<ObjectiveType, Objective>();
 
@@ -89,28 +78,6 @@ namespace Assets.Scripts.Managers
             this.TheObjectives.Add(ObjectiveType.Craft, craftObjective);
 
             User.UpgradePoints = 8;
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                this.TheObjectives[ObjectiveType.Craft].Currentvalue++;
-            }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                Destroy(FindObjectOfType<Enemy>().gameObject);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                this.TheObjectives[ObjectiveType.Main].Currentvalue++;
-            }
-
-            this.killtext.text = this.TheObjectives[ObjectiveType.Kill].GetObjectiveInfo();
-            this.crafttext.text = this.TheObjectives[ObjectiveType.Craft].GetObjectiveInfo();
-            this.maintext.text = this.TheObjectives[ObjectiveType.Main].GetObjectiveInfo();
         }
 
         /// <summary>
@@ -201,7 +168,7 @@ namespace Assets.Scripts.Managers
             GameObject theTextGo = Instantiate(this.textprefab, Vector3.zero, Quaternion.identity);
             Text thetext = theTextGo.GetComponent<Text>();
 
-            theTextGo.transform.SetParent(this.thegameui);
+            theTextGo.transform.SetParent(UIManager.Self.BackgroundUI.GetComponent<RectTransform>());
 
             if (obj.Type == ObjectiveType.Main)
             {
@@ -222,6 +189,5 @@ namespace Assets.Scripts.Managers
                 thetext.text = "Craft Objective Completed!\n" + this.upgradepointsearned + " upgrade point(s) earned.";
             }
         }
-
     }
 }

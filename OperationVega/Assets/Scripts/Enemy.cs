@@ -1,8 +1,6 @@
 ﻿
 namespace Assets.Scripts
 {
-    using System.Collections.Generic;
-
     using Controllers;
 
     using Interfaces;
@@ -16,6 +14,8 @@ namespace Assets.Scripts
     /// The enemy class.
     /// </summary>
     [RequireComponent(typeof(MeshCollider))]
+    [RequireComponent(typeof(EnemyAI))]
+    [RequireComponent(typeof(Stats))]
     public class Enemy : MonoBehaviour, ICombat
     {
         /// <summary>
@@ -156,11 +156,6 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            if (!this.GetComponent<Stats>())
-            {
-                this.gameObject.AddComponent<Stats>();
-            }
-
             this.mystats = this.GetComponent<Stats>();
             this.mystats.Health = 100;
             this.mystats.Maxhealth = 100;

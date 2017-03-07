@@ -9,6 +9,7 @@ namespace Assets.Scripts
     /// <summary>
     /// The extractor class.
     /// </summary>
+    [RequireComponent(typeof(Stats))]
     public class Extractor : MonoBehaviour, IUnit, ICombat
     {
         /// <summary>
@@ -633,11 +634,6 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-            if (!this.GetComponent<Stats>())
-            {
-                this.gameObject.AddComponent<Stats>();
-            }
-
             this.InitUnit();
             this.theExtractorFsm.Feed("auto", 0.1f);
             User.ExtractorCount++;

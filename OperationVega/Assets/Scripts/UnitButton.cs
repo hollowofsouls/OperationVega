@@ -1,6 +1,8 @@
 ﻿
 namespace Assets.Scripts
 {
+    using UI;
+
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
@@ -18,20 +20,6 @@ namespace Assets.Scripts
         /// </summary>
         [HideInInspector]
         public GameObject Unit;
-
-        /// <summary>
-        /// The stats panel reference.
-        /// This is the tooltip panel that will toggle on and off.
-        /// </summary>
-        [HideInInspector]
-        public GameObject Tooltippanel;
-
-        /// <summary>
-        /// The upgrade panel reference.
-        /// This is the upgrade panel that will open up.
-        /// </summary>
-        [HideInInspector]
-        public GameObject Upgradepanel;
 
         /// <summary>
         /// The unit stats reference.
@@ -54,8 +42,8 @@ namespace Assets.Scripts
         {
             GameObject selectionsquare = this.Unit.transform.FindChild("SelectionHighlight").gameObject;
             selectionsquare.GetComponent<MeshRenderer>().material.color = Color.red;
-            this.UpdateStatsPanel(this.Tooltippanel);
-            this.Tooltippanel.SetActive(true);
+            this.UpdateStatsPanel(UIManager.Self.tooltippanel);
+            UIManager.Self.tooltippanel.SetActive(true);
         }
 
         /// <summary>
@@ -68,7 +56,7 @@ namespace Assets.Scripts
         {
             GameObject selectionsquare = this.Unit.transform.FindChild("SelectionHighlight").gameObject;
             selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-            this.Tooltippanel.SetActive(false);
+            UIManager.Self.tooltippanel.SetActive(false);
         }
 
         /// <summary>
@@ -81,8 +69,8 @@ namespace Assets.Scripts
         public void OnPointerClick(PointerEventData eventData)
         {
             // Pause the game - to be implemented here
-            this.Upgradepanel.SetActive(true);
-            this.UpdateStatsPanel(this.Upgradepanel);
+            UIManager.Self.upgradepanel.SetActive(true);
+            this.UpdateStatsPanel(UIManager.Self.upgradepanel);
         }
 
         /// <summary>
@@ -91,8 +79,8 @@ namespace Assets.Scripts
         private void Start()
         {
             this.unitstats = this.Unit.GetComponent<Stats>();
-            this.statsbuttons = this.Upgradepanel.GetComponentsInChildren<Button>();
-            this.statsbuttons[0].onClick.AddListener(delegate { this.Upgradepanel.SetActive(false); });
+            this.statsbuttons = UIManager.Self.upgradepanel.GetComponentsInChildren<Button>();
+            this.statsbuttons[0].onClick.AddListener(delegate { UIManager.Self.upgradepanel.SetActive(false); });
             this.statsbuttons[1].onClick.AddListener(delegate { this.UpdateUnitStat(1); });
             this.statsbuttons[2].onClick.AddListener(delegate { this.UpdateUnitStat(2); });
             this.statsbuttons[3].onClick.AddListener(delegate { this.UpdateUnitStat(3); });
@@ -124,7 +112,7 @@ namespace Assets.Scripts
             theUIStats[8].text = "AttackRange: " + this.unitstats.Attackrange;
             theUIStats[9].text = "ResourceCount: " + this.unitstats.Resourcecount;
 
-            if (thepanel.name == this.Upgradepanel.name)
+            if (thepanel.name == UIManager.Self.upgradepanel.name)
             {
                 theUIStats[10].text = "Upgrade Points Available: " + User.UpgradePoints;
             }
@@ -208,7 +196,7 @@ namespace Assets.Scripts
                     break;
             }
 
-            this.UpdateStatsPanel(this.Upgradepanel);
+            this.UpdateStatsPanel(UIManager.Self.upgradepanel);
         }
     }
 }

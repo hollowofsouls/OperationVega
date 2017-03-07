@@ -6,10 +6,11 @@ namespace Assets.Scripts.Controllers
 
     using Interfaces;
 
+    using UI;
+
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
-    using UnityEngine.UI;
 
     /// <summary>
     /// The unit controller class.
@@ -43,43 +44,6 @@ namespace Assets.Scripts.Controllers
         /// The click destination of where to send the unit.
         /// </summary>
         private Vector3 clickdestination;
-
-        /// <summary>
-        /// The cooked food prefab reference.
-        /// </summary>
-        [SerializeField]
-        private GameObject cookedfoodprefab;
-
-        /// <summary>
-        /// The food instance reference.
-        /// This is a reference to the instantiated cooked food. 
-        /// So it can be used and deleted.
-        /// </summary>
-        private GameObject foodinstance;
-
-        /// <summary>
-        /// The content field reference.
-        /// </summary>
-        [SerializeField]
-        private Transform contentfield;
-
-        /// <summary>
-        /// The tool tip panel reference.
-        /// </summary>
-        [SerializeField]
-        private GameObject tooltippanel;
-
-        /// <summary>
-        /// The upgrade panel reference.
-        /// </summary>
-        [SerializeField]
-        private GameObject upgradepanel;
-
-        /// <summary>
-        /// The unit button reference to the prefab.
-        /// </summary>
-        [SerializeField]
-        private GameObject unitbutton;
 
         /// <summary>
         /// The selection highlight is the texture.
@@ -171,7 +135,7 @@ namespace Assets.Scripts.Controllers
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                     this.units.Add(theunit);
-                    this.CreateUnitButton(theunit);
+                    UIManager.Self.CreateUnitButton(theunit);
                 }
 
             }
@@ -191,7 +155,7 @@ namespace Assets.Scripts.Controllers
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                 this.units.Add(h.gameObject);
-                this.CreateUnitButton(h.gameObject);
+                UIManager.Self.CreateUnitButton(h.gameObject);
             }
         }
 
@@ -209,7 +173,7 @@ namespace Assets.Scripts.Controllers
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                 this.units.Add(e.gameObject);
-                this.CreateUnitButton(e.gameObject);
+                UIManager.Self.CreateUnitButton(e.gameObject);
             }
         }
 
@@ -227,7 +191,7 @@ namespace Assets.Scripts.Controllers
                 selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                 selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                 this.units.Add(m.gameObject);
-                this.CreateUnitButton(m.gameObject);
+                UIManager.Self.CreateUnitButton(m.gameObject);
             }
         }
 
@@ -248,7 +212,7 @@ namespace Assets.Scripts.Controllers
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                     this.units.Add(go);
-                    this.CreateUnitButton(go);
+                    UIManager.Self.CreateUnitButton(go);
                 }
             }
         }
@@ -322,40 +286,6 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// The create unit button function.
-        /// This function populates the panel with the a button for the unit that was
-        /// passed in.
-        /// <para></para>
-        /// <remarks><paramref name="theunit"></paramref> -The unit to pass in so the unit button will have reference to it.</remarks>
-        /// </summary>
-        private void CreateUnitButton(GameObject theunit)
-        {
-            GameObject button = Instantiate(this.unitbutton);
-            button.transform.SetParent(this.contentfield);
-
-            IUnit u = (IUnit)theunit.GetComponent(typeof(IUnit));
-
-            if (u is Harvester)
-            {
-                button.GetComponentInChildren<Text>().text = "H";
-            }
-            else if (u is Miner)
-            {
-                button.GetComponentInChildren<Text>().text = "M";
-            }
-            else if (u is Extractor)
-            {
-                button.GetComponentInChildren<Text>().text = "E";
-            }
-
-            button.AddComponent<UnitButton>().Unit = theunit;
-            button.GetComponent<UnitButton>().Tooltippanel = this.tooltippanel;
-            button.GetComponent<UnitButton>().Upgradepanel = this.upgradepanel;
-
-            this.theUnitButtonsList.Add(button);
-        }
-
-        /// <summary>
         /// The clear unit buttons list function.
         /// This function destroys the buttons populated for a unit and clears the list.
         /// </summary>
@@ -385,14 +315,6 @@ namespace Assets.Scripts.Controllers
             this.ActivateDragScreen();
             this.SelectUnits();
             this.CommandUnits();
-
-            if (Input.GetKeyDown(KeyCode.F1) && this.foodinstance == null)
-            {
-                Vector3 mousePosition;
-                mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
-                mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                this.foodinstance = Instantiate(this.cookedfoodprefab, mousePosition, Quaternion.identity);
-            }
         }
 
         /// <summary>
@@ -418,7 +340,7 @@ namespace Assets.Scripts.Controllers
                         GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                         selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
-                        this.CreateUnitButton(this.theselectedobject);
+                        UIManager.Self.CreateUnitButton(this.theselectedobject);
                     }
                 }
             }
@@ -748,7 +670,7 @@ namespace Assets.Scripts.Controllers
         private void HealUnit(RaycastHit hit)
         {
             // The object hit is a unit and we have an instance of the cooked food to use
-            if (hit.transform.gameObject.GetComponent(typeof(IUnit)) && this.foodinstance != null)
+            if (hit.transform.gameObject.GetComponent(typeof(IUnit)) && UIManager.Self.foodinstance != null)
             {
                 Stats stats = hit.transform.gameObject.GetComponent<Stats>();
 
@@ -759,7 +681,7 @@ namespace Assets.Scripts.Controllers
                     hit.transform.gameObject.GetComponent<Stats>().Health += 20;
                     
                     // Destroy the food
-                    Destroy(this.foodinstance);
+                    Destroy(UIManager.Self.foodinstance);
                 }
             }
         }
