@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Assets.Scripts;
+using UI;
 
 
 namespace Assets.Scripts
@@ -12,13 +14,17 @@ namespace Assets.Scripts
         string Items;
         //Integer that will hold the amount.
         int Amount;
+
+
         
         
+      
         //Public Craft constructor that has item / amount in the parameters
         public Craft(string item, int amount)
         {
             this.Items = item;
             this.Amount = amount;
+
         }
 
        
