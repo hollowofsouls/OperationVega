@@ -1,6 +1,7 @@
 ﻿
 namespace Assets.Scripts.Managers
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -14,6 +15,12 @@ namespace Assets.Scripts.Managers
     /// </summary>
     public class ObjectiveManager : MonoBehaviour
     {
+        public Text killtext;
+
+        public Text crafttext;
+
+        public Text maintext;
+
         /// <summary>
         /// The objective queue.
         /// This queues up each objective as its completed.
@@ -84,6 +91,28 @@ namespace Assets.Scripts.Managers
             User.UpgradePoints = 8;
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                this.TheObjectives[ObjectiveType.Craft].Currentvalue++;
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Destroy(FindObjectOfType<Enemy>().gameObject);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                this.TheObjectives[ObjectiveType.Main].Currentvalue++;
+            }
+
+            this.killtext.text = this.TheObjectives[ObjectiveType.Kill].GetObjectiveInfo();
+            this.crafttext.text = this.TheObjectives[ObjectiveType.Craft].GetObjectiveInfo();
+            this.maintext.text = this.TheObjectives[ObjectiveType.Main].GetObjectiveInfo();
+        }
+
         /// <summary>
         /// The on destroy function.
         /// </summary>
@@ -114,8 +143,7 @@ namespace Assets.Scripts.Managers
 
             this.UpgradePointDisbursement(obj);
 
-            this.CreateText();
-
+            this.CreateText(obj);
             yield return new WaitForSeconds(2);
 
             if (obj.Type != ObjectiveType.Main)
@@ -134,6 +162,7 @@ namespace Assets.Scripts.Managers
                 obj.Currentvalue = 0;
                 obj.IsCompleted = false;
             }
+
         }
 
         /// <summary>
@@ -164,19 +193,34 @@ namespace Assets.Scripts.Managers
         /// <summary>
         /// The create text function.
         /// This function handles the instantiation of the objective completed text.
+        /// <para></para>
+        /// <remarks><paramref name="obj"></paramref> -The objective to check for the destination to instantiate text.</remarks>
         /// </summary>
-        private void CreateText()
+        private void CreateText(Objective obj)
         {
             GameObject theTextGo = Instantiate(this.textprefab, Vector3.zero, Quaternion.identity);
+            Text thetext = theTextGo.GetComponent<Text>();
 
             theTextGo.transform.SetParent(this.thegameui);
 
-            theTextGo.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-            theTextGo.GetComponent<RectTransform>().offsetMax -= theTextGo.GetComponent<RectTransform>().offsetMax;
-
-            Text thetext = theTextGo.GetComponent<Text>();
-
-            thetext.text = "Objective Completed!\n" + this.upgradepointsearned + " upgrade point(s) earned.";
+            if (obj.Type == ObjectiveType.Main)
+            {
+                theTextGo.GetComponent<RectTransform>().offsetMax = new Vector2(0, 54);
+                theTextGo.GetComponent<RectTransform>().offsetMin = new Vector2(0, 54);
+                thetext.text = "Main Objective Completed!\n" + this.upgradepointsearned + " upgrade point(s) earned.";
+            }
+            else if (obj.Type == ObjectiveType.Kill)
+            {
+                theTextGo.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+                theTextGo.GetComponent<RectTransform>().offsetMax -= theTextGo.GetComponent<RectTransform>().offsetMax;
+                thetext.text = "Kill Objective Completed!\n" + this.upgradepointsearned + " upgrade point(s) earned.";
+            }
+            else if (obj.Type == ObjectiveType.Craft)
+            {
+                theTextGo.GetComponent<RectTransform>().offsetMax = new Vector2(0, -54);
+                theTextGo.GetComponent<RectTransform>().offsetMin = new Vector2(0, -54);
+                thetext.text = "Craft Objective Completed!\n" + this.upgradepointsearned + " upgrade point(s) earned.";
+            }
         }
 
     }
