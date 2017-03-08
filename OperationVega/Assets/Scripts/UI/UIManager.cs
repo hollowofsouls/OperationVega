@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 using Button = UnityEngine.UI.Button;
 using Text = UnityEngine.UI.Text;
 using UnityEngine.Events;
@@ -121,7 +122,7 @@ namespace UI
         [SerializeField]
         public Image cookedFood;
         [SerializeField]
-        public Image Steel;
+        public Image steel;
         [SerializeField]
         public Image fuel;
         [SerializeField]
@@ -135,6 +136,9 @@ namespace UI
 
         private static UIManager instance;
 
+        [HideInInspector]
+        public GameObject unit;
+
 
         public static UIManager Self
         {
@@ -144,9 +148,13 @@ namespace UI
             }
         }
 
+        private Button[] statsbuttons;
+
         bool revertactionstab;
         bool revertcraftingtab;
         bool revertunittab;
+        bool input1b;
+        bool input2b;
         bool undo1;
         bool undo2;
         bool undo3;
@@ -172,6 +180,9 @@ namespace UI
             //Bool use to manage unit tab
             revertunittab = true;
 
+            input1b = true;
+            input2b = true;
+
             instance = this;
 
             undo1 = true;
@@ -195,9 +206,18 @@ namespace UI
             EventManager.Subscribe("UnitTab", this.OnUnit);
             EventManager.Subscribe("Build Rocket", this.OnBuild);
             EventManager.Subscribe("Thrusters", this.OnThrusters);
+            EventManager.Subscribe("Player chose TC1", this.OnTC1);
+            EventManager.Subscribe("Player chose TC2", this.OnTC2);
+            EventManager.Subscribe("Player chose TC2", this.OnTC3);
             EventManager.Subscribe("Apply Chassis", this.OnChassis);
             EventManager.Subscribe("Cockpit", this.OnCockpit);
+            EventManager.Subscribe("Player chose CP1", this.OnCP1);
+            EventManager.Subscribe("Player chose CP2", this.OnCP2);
+            EventManager.Subscribe("Player chose CP3", this.OnCP3);
             EventManager.Subscribe("Apply Wings", this.OnWings);
+            EventManager.Subscribe("WingChoice1", this.OnWC1);
+            EventManager.Subscribe("WingChoice2", this.OnWC2);
+            EventManager.Subscribe("WingChoice3", this.OnWC2);
             EventManager.Subscribe("OnMChoice", this.OnMChoice);
             EventManager.Subscribe("OnHChoice", this.OnHChoice);
             EventManager.Subscribe("OnEChoice", this.OnEChoice);
@@ -223,10 +243,11 @@ namespace UI
 
             #region -- Crafting Subscribers --
             EventManager.Subscribe("Minerals", this.OnMinerals);
-            EventManager.Subscribe("Food", this.Food);
+            EventManager.Subscribe("Food", this.OnFood);
             EventManager.Subscribe("CookedFood", this.OnCookedFood);
-            EventManager.Subscribe("Gas", this.Gas);
-            EventManager.Subscribe("Fuel", this.Fuel);
+            EventManager.Subscribe("Gas", this.OnGas);
+            EventManager.Subscribe("Fuel", this.OnFuel);
+            EventManager.Subscribe("Steel", this.OnSteel);
             #endregion
 
 
@@ -251,9 +272,18 @@ namespace UI
             EventManager.UnSubscribe("UnitTab", this.OnUnit);
             EventManager.UnSubscribe("Build Rocket", this.OnBuild);
             EventManager.UnSubscribe("Thrusters", this.OnThrusters);
+            EventManager.UnSubscribe("Player chose TC1", this.OnTC1);
+            EventManager.UnSubscribe("Player chose TC2", this.OnTC2);
+            EventManager.UnSubscribe("Player chose TC2", this.OnTC3);
             EventManager.UnSubscribe("Apply Chassis", this.OnChassis);
             EventManager.UnSubscribe("Cockpit", this.OnCockpit);
+            EventManager.UnSubscribe("Player chose CP1", this.OnCP1);
+            EventManager.UnSubscribe("Player chose CP2", this.OnCP2);
+            EventManager.UnSubscribe("Player chose CP3", this.OnCP3);
             EventManager.UnSubscribe("Apply Wings", this.OnWings);
+            EventManager.UnSubscribe("WingChoice1", this.OnWC1);
+            EventManager.UnSubscribe("WingChoice2", this.OnWC2);
+            EventManager.UnSubscribe("WingChoice3", this.OnWC2);
             EventManager.UnSubscribe("OnMChoice", this.OnMChoice);
             EventManager.UnSubscribe("OnHChoice", this.OnHChoice);
             EventManager.UnSubscribe("OnEChoice", this.OnEChoice);
@@ -283,6 +313,7 @@ namespace UI
             EventManager.UnSubscribe("CookedFood", this.OnCookedFood);
             EventManager.UnSubscribe("Gas", this.OnGas);
             EventManager.UnSubscribe("Fuel", this.OnFuel);
+            EventManager.UnSubscribe("Steel", this.OnSteel);
             #endregion
         }
         #region -- VOID FUNCTIONS --
@@ -301,6 +332,118 @@ namespace UI
             m_FuelT.text = "" + User.FuelCount;
             m_SteelT.text = "" + User.SteelCount;
 
+        }
+
+        /// <summary>
+        /// The update panel function.
+        /// Updates the passed panel with the units information.
+        /// <para></para>
+        /// <remarks><paramref name="thepanel"></paramref> -The panel to update with the units information.</remarks>
+        /// </summary>
+        private void UpdateStatsPanel(GameObject thepanel)
+        {
+            Text[] theUIStats = thepanel.transform.GetComponentsInChildren<Text>();
+
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            // Skip assigning index 0 because it the "Stats" text.
+            theUIStats[1].text = "Health: " + unitstats.Health;
+            theUIStats[2].text = "MaxHealth: " + unitstats.Maxhealth;
+            theUIStats[3].text = "Strength: " + unitstats.Strength;
+            theUIStats[4].text = "Defense: " +  unitstats.Defense;
+            theUIStats[5].text = "Speed: " + unitstats.Speed;
+            theUIStats[6].text = "AttackSpeed: " + unitstats.Attackspeed;
+            theUIStats[7].text = "SkillCooldown: " + unitstats.Skillcooldown;
+            theUIStats[8].text = "AttackRange: " + unitstats.Attackrange;
+            theUIStats[9].text = "ResourceCount: " + unitstats.Resourcecount;
+
+            if (thepanel.name == upgradepanel.name)
+            {
+                theUIStats[10].text = "Upgrade Points Available: " + User.UpgradePoints;
+            }
+        }
+
+        /// <summary>
+        /// The update unit stat function.
+        /// Updates the units corresponding stat.
+        /// <para></para>
+        /// <remarks><paramref name="thebuttonindex"></paramref> -The button index of the clicked button to determine which stat to increase.</remarks>
+        /// </summary>
+        public void UpdateUnitStat(int thebuttonindex)
+        {
+            // Just return if no points are available
+            if (User.UpgradePoints <= 0)
+            {
+                return;
+            }
+
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            switch (thebuttonindex)
+            {
+                case 1:
+                    unitstats.Maxhealth += 20;
+                    User.UpgradePoints--;
+                    if (unitstats.Maxhealth >= 500)
+                    {
+                        this.statsbuttons[1].gameObject.SetActive(false);
+                    }
+                    break;
+                case 2:
+                    unitstats.Strength += 2;
+                    User.UpgradePoints--;
+                    if (unitstats.Strength >= 100)
+                    {
+                        this.statsbuttons[2].gameObject.SetActive(false);
+                    }
+                    break;
+                case 3:
+                    unitstats.Defense += 2;
+                    User.UpgradePoints--;
+                    if (unitstats.Defense >= 100)
+                    {
+                        this.statsbuttons[3].gameObject.SetActive(false);
+                    }
+                    break;
+                case 4:
+                    if (User.UpgradePoints < 2) return;
+                    unitstats.Speed++;
+                    unit.GetComponent<NavMeshAgent>().speed = unitstats.Speed;
+                    User.UpgradePoints -= 2;
+                    if (unitstats.Speed >= 7)
+                    {
+                        this.statsbuttons[4].gameObject.SetActive(false);
+                    }
+                    break;
+                case 5:
+                    if (User.UpgradePoints < 4) return;
+                    unitstats.Attackspeed--;
+                    User.UpgradePoints -= 4;
+                    if (unitstats.Attackspeed <= 1)
+                    {
+                        this.statsbuttons[5].gameObject.SetActive(false);
+                    }
+                    break;
+                case 6:
+                    unitstats.Skillcooldown--;
+                    User.UpgradePoints--;
+                    if (unitstats.Skillcooldown <= 10)
+                    {
+                        this.statsbuttons[6].gameObject.SetActive(false);
+                    }
+                    break;
+                case 7:
+                    if (User.UpgradePoints < 4) return;
+                    unitstats.Attackrange++;
+                    User.UpgradePoints -= 4;
+                    if (unitstats.Attackrange >= 10.0f)
+                    {
+                        statsbuttons[7].gameObject.SetActive(false);
+                    }
+                    break;
+            }
+
+            this.UpdateStatsPanel(UIManager.Self.upgradepanel);
         }
 
         void ScaleFactor()
@@ -374,8 +517,6 @@ namespace UI
             }
 
             button.AddComponent<UnitButton>().Unit = theunit;
-            //button.GetComponent<UnitButton>().Tooltippanel = this.tooltippanel;
-            //button.GetComponent<UnitButton>().Upgradepanel = this.upgradepanel;
 
             this.theUnitButtonsList.Add(button);
         }
@@ -528,8 +669,16 @@ namespace UI
         }
         private void OnClear()
         {
-            minerals.sprite = Input1.sprite;
-            Input2.sprite = Input2.sprite;
+
+            //minerals.sprite = Input1.sprite;
+            //minerals.sprite = Input2.sprite;
+            //steel.sprite = Input1.sprite;
+            //steel.sprite = Input2.sprite;
+            //gas.sprite = Input1.sprite;
+            //gas.sprite = Input2.sprite;
+            //fuel.sprite = Input1.sprite;
+            //fuel.sprite = Input2.sprite;
+
             //This function will clear items in the craft.
             Debug.Log("Clear");
         }
@@ -733,7 +882,18 @@ namespace UI
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
-            Input1.sprite = minerals.sprite;
+            if (input1b)
+            {
+                Input1.sprite = minerals.sprite;
+
+                input1b = false;
+            }
+            else if (!input1b)
+            {
+                Input2.sprite = minerals.sprite;
+
+                input1b = true;
+            }
             Debug.Log("Minerals");
         }
 
@@ -780,6 +940,18 @@ namespace UI
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
+            if (input1b)
+            {
+                Input1.sprite = gas.sprite;
+
+                input1b = false;
+            }
+            else if (!input1b)
+            {
+                Input2.sprite = gas.sprite;
+
+                input2b = false;
+            }
             User.GasCount++;
             Debug.Log("Gas");
         }
@@ -792,10 +964,44 @@ namespace UI
         private void OnFuel()
         {
             //Will Change the source image to the first craft slot
+
+            if (input1b)
+            {
+                Input1.sprite = fuel.sprite;
+
+                input1b = false;
+            }
+            else if (!input1b)
+            {
+                Input2.sprite = fuel.sprite;
+
+                input2b = false;
+            }
             //Second Slot if first one is selected.
             User.FuelCount++;
 
             Debug.Log("Fuel");
+        }
+        public void Steel()
+        {
+            EventManager.Publish("Steel");
+        }
+
+        private void OnSteel()
+        {
+            if (input1b)
+            {
+                Input1.sprite = steel.sprite;
+
+                input1b = false;
+            }
+            else if (!input1b)
+            {
+                Input2.sprite = steel.sprite;
+
+                input1b = true;
+            }
+            Debug.Log("Steel");
         }
 
         #endregion
@@ -1009,6 +1215,17 @@ namespace UI
         }
         #endregion
 
+        #region -- Upgrades --
+        public void OnMaxHealthClick()
+        {
+            EventManager.Publish("MaxHealth");
+        }
+        private void OnMaxHealth()
+        {
+
+            Debug.Log("Increases Max Health");
+        }
+        #endregion
 
     }
 }
