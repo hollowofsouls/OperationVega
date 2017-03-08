@@ -71,6 +71,7 @@ namespace Assets.Scripts
             // Pause the game - to be implemented here
             UIManager.Self.upgradepanel.SetActive(true);
             this.UpdateStatsPanel(UIManager.Self.upgradepanel);
+            UIManager.Self.unit = this.Unit;
         }
 
         /// <summary>

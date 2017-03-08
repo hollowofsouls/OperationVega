@@ -29,12 +29,6 @@ namespace Assets.Scripts.Controllers
         private static Rect dragscreen = new Rect(0, 0, 0, 0);
 
         /// <summary>
-        /// The unit buttons list.
-        /// This function holds references to each button created.
-        /// </summary>
-        private readonly List<GameObject> theUnitButtonsList = new List<GameObject>();
-
-        /// <summary>
         /// The list of units selected by the drag screen.
         /// </summary>
         [HideInInspector]
@@ -286,19 +280,6 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// The clear unit buttons list function.
-        /// This function destroys the buttons populated for a unit and clears the list.
-        /// </summary>
-        private void ClearUnitButtonsList()
-        {
-            foreach (GameObject go in this.theUnitButtonsList)
-            {
-                Destroy(go);
-            }
-            this.theUnitButtonsList.Clear();
-        }
-
-        /// <summary>
         /// The start function.
         /// </summary>
         private void Start()
@@ -398,7 +379,7 @@ namespace Assets.Scripts.Controllers
                         selectionsquare.GetComponent<MeshRenderer>().enabled = false;
                     }
 
-                    this.ClearUnitButtonsList();
+                    UIManager.Self.ClearUnitButtonsList();
                 }
 
 
@@ -410,7 +391,7 @@ namespace Assets.Scripts.Controllers
                     GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = false;
                     this.theselectedobject = null;
-                    this.ClearUnitButtonsList();
+                    UIManager.Self.ClearUnitButtonsList();
                 }
             }
         }
