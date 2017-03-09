@@ -186,7 +186,14 @@ namespace Assets.Scripts
             {
                this.Attack();
 
-                if (Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) > this.GetComponent<EnemyAI>().Radius)
+                // If the unit has died
+                if (this.Currenttarget == null)
+                {
+                    this.target = null;
+                    this.ChangeStates("Idle");
+                }
+                // If unit is alive but out of range
+                else if (Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) > this.GetComponent<EnemyAI>().Radius)
                 {
                     this.Currenttarget = null;
                     this.target = null;

@@ -199,6 +199,13 @@ namespace Assets.Scripts
         {
             this.mystats.Health -= damage;
 
+            // Check if unit dies
+            if (this.mystats.Health <= 0)
+            {
+                Destroy(this.gameObject);
+            }
+
+            // If unit is not dead
             if (this.theEnemy != null && this.gothitfirst)
             {
                 this.gothitfirst = false;

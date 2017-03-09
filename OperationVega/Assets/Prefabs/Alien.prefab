@@ -20,10 +20,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4508014184173144}
   - component: {fileID: 95542379568608970}
-  - component: {fileID: 64413130769019952}
-  - component: {fileID: 114472517460831172}
   - component: {fileID: 195502046839593276}
-  - component: {fileID: 114453055364723110}
+  - component: {fileID: 114831596278809886}
+  - component: {fileID: 114295083800932094}
+  - component: {fileID: 64173025658154766}
+  - component: {fileID: 114591092306604782}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Untagged
@@ -251,7 +252,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1761271212638084}
   m_Mesh: {fileID: 4300002, guid: 6c486178b617ffa428cf636fe0a03022, type: 3}
---- !u!64 &64413130769019952
+--- !u!64 &64173025658154766
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -282,7 +283,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114453055364723110
+--- !u!114 &114295083800932094
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -294,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Radius: 5
---- !u!114 &114472517460831172
+--- !u!114 &114591092306604782
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -305,7 +306,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48296f92e64e0eb42a0d8d8a9be8a3c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currenttarget: {fileID: 0}
+  Currenttarget: {fileID: 0}
+--- !u!114 &114831596278809886
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1369044774945046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a78fc9536304fec43b7d0cac72323132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 0
+  Maxhealth: 0
+  Strength: 0
+  Defense: 0
+  Speed: 0
+  Attackspeed: 0
+  Skillcooldown: 0
+  Attackrange: 0
+  Resourcecount: 0
 --- !u!195 &195502046839593276
 NavMeshAgent:
   m_ObjectHideFlags: 1
