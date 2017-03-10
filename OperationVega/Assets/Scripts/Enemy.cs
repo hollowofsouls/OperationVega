@@ -85,8 +85,13 @@ namespace Assets.Scripts
         /// </summary>
         public void TakeDamage(int damage)
         {
-            Debug.Log("Enemy took damage");
             this.mystats.Health -= damage;
+
+            // Check if unit dies
+            if (this.mystats.Health <= 0)
+            {
+                Destroy(this.gameObject);
+            }
         }
 
         /// <summary>

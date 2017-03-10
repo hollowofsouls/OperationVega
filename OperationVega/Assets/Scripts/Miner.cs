@@ -249,6 +249,13 @@ namespace Assets.Scripts
         /// </summary>
         public void Attack()
         {
+            if (this.theEnemy == null)
+            {
+                this.gothitfirst = true;
+                this.target = null;
+                this.ChangeStates("Idle");
+            }
+
             if (this.timebetweenattacks >= this.mystats.Attackspeed)
             {
                 Vector3 thedisplacement = (this.transform.position - this.theEnemy.transform.position).normalized;
@@ -554,7 +561,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateRotation()
         {
-            if (!this.navagent.updateRotation)
+            if (!this.navagent.updateRotation && this.theobjecttolookat != null)
             {
                 Vector3 dir = this.theobjecttolookat.transform.position - this.transform.position;
                 Quaternion lookrotation = Quaternion.LookRotation(dir);
