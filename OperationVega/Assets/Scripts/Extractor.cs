@@ -168,6 +168,14 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The special ability for the extractor.
+        /// </summary>
+        public void SpecialAbility()
+        {
+           Debug.Log("Extractor Special Ability Activated");
+        }
+
+        /// <summary>
         /// The attack function gives the extractor functionality to attack.
         /// </summary>
         public void Attack()
@@ -218,14 +226,6 @@ namespace Assets.Scripts
                 this.gothitfirst = false;
                 this.ChangeStates("Battle");
             }
-        }
-
-        /// <summary>
-        /// The fear factor ability for the extractor.
-        /// </summary>
-        public void FearFactor()
-        {
-            
         }
 
         /// <summary>

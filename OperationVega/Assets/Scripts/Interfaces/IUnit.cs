@@ -14,6 +14,11 @@ namespace Assets.Scripts.Interfaces
         void Harvest();
 
         /// <summary>
+        /// The Special Ability function activates a unit(s) special ability.
+        /// </summary>
+        void SpecialAbility();
+
+        /// <summary>
         /// The set target function.
         /// Sets the object as the target for the unit.
         /// <para></para>

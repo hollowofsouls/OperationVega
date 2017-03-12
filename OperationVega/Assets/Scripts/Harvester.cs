@@ -233,6 +233,14 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The special ability for the harvester.
+        /// </summary>
+        public void SpecialAbility()
+        {
+            Debug.Log("Harvester Special Ability Activated");
+        }
+
+        /// <summary>
         /// The decontaminate function provides functionality of the harvester to decontaminate a resource.
         /// </summary>
         public void Decontaminate()
@@ -289,16 +297,6 @@ namespace Assets.Scripts
         public void SetTheMovePosition(Vector3 targetPos)
         {
             this.navagent.SetDestination(targetPos);
-        }
-
-        /// <summary>
-        /// The heal stun ability for the harvester.
-        /// This function will be the ability to allow the harvester to
-        /// stun enemies and heal other units.
-        /// </summary>
-        public void HealStun()
-        {
-
         }
 
         /// <summary>

@@ -82,13 +82,13 @@ namespace Assets.Scripts
             this.unitstats = this.Unit.GetComponent<Stats>();
             this.statsbuttons = UIManager.Self.upgradepanel.GetComponentsInChildren<Button>();
             this.statsbuttons[0].onClick.AddListener(delegate { UIManager.Self.upgradepanel.SetActive(false); });
-            this.statsbuttons[1].onClick.AddListener(delegate { this.UpdateUnitStat(1); });
-            this.statsbuttons[2].onClick.AddListener(delegate { this.UpdateUnitStat(2); });
-            this.statsbuttons[3].onClick.AddListener(delegate { this.UpdateUnitStat(3); });
-            this.statsbuttons[4].onClick.AddListener(delegate { this.UpdateUnitStat(4); });
-            this.statsbuttons[5].onClick.AddListener(delegate { this.UpdateUnitStat(5); });
-            this.statsbuttons[6].onClick.AddListener(delegate { this.UpdateUnitStat(6); });
-            this.statsbuttons[7].onClick.AddListener(delegate { this.UpdateUnitStat(7); });
+            this.statsbuttons[1].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(1); });
+            this.statsbuttons[2].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(2); });
+            this.statsbuttons[3].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(3); });
+            this.statsbuttons[4].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(4); });
+            this.statsbuttons[5].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(5); });
+            this.statsbuttons[6].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(6); });
+            this.statsbuttons[7].onClick.AddListener(delegate { UIManager.Self.UpdateUnitStat(7); });
 
         }
 
@@ -117,87 +117,6 @@ namespace Assets.Scripts
             {
                 theUIStats[10].text = "Upgrade Points Available: " + User.UpgradePoints;
             }
-        }
-
-        /// <summary>
-        /// The update unit stat function.
-        /// Updates the units corresponding stat.
-        /// <para></para>
-        /// <remarks><paramref name="thebuttonindex"></paramref> -The button index of the clicked button to determine which stat to increase.</remarks>
-        /// </summary>
-        private void UpdateUnitStat(int thebuttonindex)
-        {
-            // Just return if no points are available
-            if (User.UpgradePoints <= 0)
-            {
-                return;
-            }
-
-            switch (thebuttonindex)
-            {
-                case 1:
-                    this.unitstats.Maxhealth += 20;
-                    User.UpgradePoints--;
-                    if (this.unitstats.Maxhealth >= 500)
-                    {
-                        this.statsbuttons[1].gameObject.SetActive(false);
-                    }
-                    break;
-                case 2:
-                    this.unitstats.Strength += 2;
-                    User.UpgradePoints--;
-                    if (this.unitstats.Strength >= 100)
-                    {
-                        this.statsbuttons[2].gameObject.SetActive(false);
-                    }
-                    break;
-                case 3:
-                    this.unitstats.Defense += 2;
-                    User.UpgradePoints--;
-                    if (this.unitstats.Defense >= 100)
-                    {
-                        this.statsbuttons[3].gameObject.SetActive(false);
-                    }
-                    break;
-                case 4:
-                    if (User.UpgradePoints < 2) return;
-                    this.unitstats.Speed++;
-                    this.Unit.GetComponent<NavMeshAgent>().speed = this.unitstats.Speed;
-                    User.UpgradePoints -= 2;
-                    if (this.unitstats.Speed >= 7)
-                    {
-                        this.statsbuttons[4].gameObject.SetActive(false);
-                    }
-                    break;
-                case 5:
-                    if (User.UpgradePoints < 4) return;
-                    this.unitstats.Attackspeed--;
-                    User.UpgradePoints -= 4;
-                    if (this.unitstats.Attackspeed <= 1)
-                    {
-                        this.statsbuttons[5].gameObject.SetActive(false);
-                    }
-                    break;
-                case 6:
-                    this.unitstats.Skillcooldown--;
-                    User.UpgradePoints--;
-                    if (this.unitstats.Skillcooldown <= 10)
-                    {
-                        this.statsbuttons[6].gameObject.SetActive(false);
-                    }
-                    break;
-                case 7:
-                    if (User.UpgradePoints < 4) return;
-                    this.unitstats.Attackrange++;
-                    User.UpgradePoints -= 4;
-                    if (this.unitstats.Attackrange >= 10.0f)
-                    {
-                        this.statsbuttons[7].gameObject.SetActive(false);
-                    }
-                    break;
-            }
-
-            this.UpdateStatsPanel(UIManager.Self.upgradepanel);
         }
     }
 }

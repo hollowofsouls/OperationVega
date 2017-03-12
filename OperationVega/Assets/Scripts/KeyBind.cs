@@ -100,7 +100,7 @@ namespace Assets.Scripts
             }
             else if (Input.GetKeyDown(this.thekeybinddictionary["SpecialAbility"]))
             {
-
+                EventManager.Publish("ActivateAbility");
             }
             else if (Input.GetKeyDown(this.thekeybinddictionary["Save"]))
             {

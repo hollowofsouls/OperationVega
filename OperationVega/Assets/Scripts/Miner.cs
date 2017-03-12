@@ -194,6 +194,14 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The special ability for the miner.
+        /// </summary>
+        public void SpecialAbility()
+        {
+            Debug.Log("Miner Special Ability Activated");
+        }
+
+        /// <summary>
         /// The decontaminate function provides functionality of the miner to decontaminate a resource.
         /// </summary>
         public void Decontaminate()
@@ -295,14 +303,6 @@ namespace Assets.Scripts
                 this.gothitfirst = false;
                 this.ChangeStates("Battle");
             }
-        }
-
-        /// <summary>
-        /// The taunt ability for the miner.
-        /// </summary>
-        public void Taunt()
-        {
-
         }
 
         /// <summary>

@@ -4,6 +4,8 @@ namespace Assets.Scripts.Controllers
     using System.Collections.Generic;
     using System.Linq;
 
+    using Managers;
+
     using Interfaces;
 
     using UI;
@@ -286,6 +288,7 @@ namespace Assets.Scripts.Controllers
         {
             instance = this;
             this.theBarracks = GameObject.Find("Barracks");
+            EventManager.Subscribe("ActivateAbility", this.ActivateAbility);
         }
 
         /// <summary>
@@ -296,6 +299,14 @@ namespace Assets.Scripts.Controllers
             this.ActivateDragScreen();
             this.SelectUnits();
             this.CommandUnits();
+        }
+
+        /// <summary>
+        /// The on destroy function.
+        /// </summary>
+        private void OnDestroy()
+        {
+            EventManager.UnSubscribe("ActivateAbility", this.ActivateAbility);
         }
 
         /// <summary>
@@ -369,30 +380,27 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ClearSelectedUnits()
         {
-            if (!EventSystem.current.IsPointerOverGameObject())
+            if (this.units.Count > 0)
             {
-                if (this.units.Count > 0)
+                foreach (GameObject go in this.units)
                 {
-                    foreach (GameObject go in this.units)
-                    {
-                        GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
-                        selectionsquare.GetComponent<MeshRenderer>().enabled = false;
-                    }
-
-                    UIManager.Self.ClearUnitButtonsList();
-                }
-
-
-                this.units.Clear();
-                this.theUnit = null;
-
-                if (this.theselectedobject != null)
-                {
-                    GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
+                    GameObject selectionsquare = go.transform.FindChild("SelectionHighlight").gameObject;
                     selectionsquare.GetComponent<MeshRenderer>().enabled = false;
-                    this.theselectedobject = null;
-                    UIManager.Self.ClearUnitButtonsList();
                 }
+
+                UIManager.Self.ClearUnitButtonsList();
+            }
+
+
+            this.units.Clear();
+            this.theUnit = null;
+
+            if (this.theselectedobject != null)
+            {
+                GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
+                selectionsquare.GetComponent<MeshRenderer>().enabled = false;
+                this.theselectedobject = null;
+                UIManager.Self.ClearUnitButtonsList();
             }
         }
 
@@ -664,6 +672,18 @@ namespace Assets.Scripts.Controllers
                     // Destroy the food
                     Destroy(UIManager.Self.foodinstance);
                 }
+            }
+        }
+
+        /// <summary>
+        /// The Activate Ability function.
+        /// Activates the ability of the selected unit.
+        /// </summary>
+        private void ActivateAbility()
+        {
+            if (this.theUnit != null)
+            {
+                this.theUnit.SpecialAbility();
             }
         }
 
