@@ -78,6 +78,12 @@ namespace Assets.Scripts
         private bool gothitfirst;
 
         /// <summary>
+        /// The cool down timer reference.
+        /// Keeps track of when the unit is able to use its special ability.
+        /// </summary>
+        private float cooldowntimer;
+
+        /// <summary>
         /// The time between attacks reference.
         /// Stores the reference to the timer between attacks.
         /// </summary>
@@ -198,7 +204,29 @@ namespace Assets.Scripts
         /// </summary>
         public void SpecialAbility()
         {
-            Debug.Log("Miner Special Ability Activated");
+            // If able to use ability
+            if (this.cooldowntimer >= this.mystats.Skillcooldown)
+            {
+                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 7);
+
+                // If nothing hit by cast then return
+                if (validtargets.Length < 1) return;
+
+                foreach (Collider c in validtargets)
+                {
+                    // If its an enemy - Make them head towards the miner
+                    if (c.gameObject.GetComponent<Enemy>())
+                    {
+                        c.gameObject.GetComponent<Enemy>().Currenttarget = this.gameObject;
+                        c.gameObject.GetComponent<EnemyAI>().taunted = true;
+                        c.gameObject.GetComponent<Enemy>().ChangeStates("Battle");
+                        c.gameObject.GetComponent<NavMeshAgent>().SetDestination(this.transform.position);
+                    }
+                }
+
+                this.cooldowntimer = 0;
+                Debug.Log("Miner Special Ability Activated");
+            }
         }
 
         /// <summary>
@@ -462,6 +490,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateUnit()
         {
+            this.cooldowntimer += 1 * Time.deltaTime;
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
             this.decontime += 1 * Time.deltaTime;
@@ -513,6 +542,7 @@ namespace Assets.Scripts
             this.gothitfirst = true;
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
+            this.cooldowntimer = this.mystats.Skillcooldown;
 
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();

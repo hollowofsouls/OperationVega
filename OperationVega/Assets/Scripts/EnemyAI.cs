@@ -22,6 +22,20 @@ namespace Assets.Scripts
         public float Radius = 5.0f;
 
         /// <summary>
+        /// The stunned reference.
+        /// Reference if whether the enemy has been stunned.
+        /// </summary>
+        //[HideInInspector]
+        public bool stunned;
+
+        /// <summary>
+        /// The taunted reference.
+        /// Reference if whether the enemy has been taunted.
+        /// </summary>
+        //[HideInInspector]
+        public bool taunted;
+
+        /// <summary>
         /// The targets reference.
         /// List of the available targets.
         /// </summary>
@@ -60,6 +74,8 @@ namespace Assets.Scripts
             this.mynavagent = this.GetComponent<NavMeshAgent>();
             this.mynavagent.stoppingDistance = 1.2f;
             this.checkrate = Random.Range(0.5f, 1.0f);
+            this.stunned = false;
+            this.taunted = false;
         }
 
         /// <summary>
@@ -67,7 +83,14 @@ namespace Assets.Scripts
         /// </summary>
         private void Update()
         {
-            this.CheckForUnits();
+            if (!this.stunned && !this.taunted)
+            {
+                this.CheckForUnits();
+            }
+            else if (this.taunted && this.enemyreference.Currenttarget != null)
+            {
+                this.mynavagent.SetDestination(this.enemyreference.Currenttarget.transform.position);
+            }
         }
 
         /// <summary>

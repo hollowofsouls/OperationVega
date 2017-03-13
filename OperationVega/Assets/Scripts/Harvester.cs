@@ -1,6 +1,8 @@
 ﻿
 namespace Assets.Scripts
 {
+    using System.Collections;
+
     using Controllers;
 
     using Interfaces;
@@ -85,6 +87,12 @@ namespace Assets.Scripts
         /// Determines how the unit should act upon taking damage.
         /// </summary>
         private bool gothitfirst;
+
+        /// <summary>
+        /// The cool down timer reference.
+        /// Keeps track of when the unit is able to use its special ability.
+        /// </summary>
+        private float cooldowntimer;
 
         /// <summary>
         /// The time between attacks reference.
@@ -237,7 +245,44 @@ namespace Assets.Scripts
         /// </summary>
         public void SpecialAbility()
         {
-            Debug.Log("Harvester Special Ability Activated");
+            // If able to use ability
+            if (this.cooldowntimer >= this.mystats.Skillcooldown)
+            {
+                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 7);
+
+                // If nothing hit by cast then return
+                if (validtargets.Length < 1) return;
+
+                foreach (Collider c in validtargets)
+                {
+                    // If its an enemy - Stop them
+                    if (c.gameObject.GetComponent<Enemy>())
+                    {
+                        Debug.Log("Found An enemy");
+                        NavMeshAgent navagent = c.gameObject.GetComponent<NavMeshAgent>();
+                        EnemyAI enemy = c.gameObject.GetComponent<EnemyAI>();
+
+                        this.StartCoroutine(this.EnemyStopTimer(navagent, enemy));
+
+                    } // If its a unit - Try and heal them
+                    else if (c.gameObject.GetComponent(typeof(IUnit)))
+                    {
+                        Stats unitstats = c.gameObject.GetComponent<Stats>();
+
+                        // Only heal them if health is less than max health
+                        if (unitstats.Health < unitstats.Maxhealth)
+                        {
+                            unitstats.Health += 20;
+
+                            // If health is greater than max health..set health to max health, else just set it to the current health value.
+                            unitstats.Health = unitstats.Health > unitstats.Maxhealth ? unitstats.Maxhealth : unitstats.Health;
+                        }
+                    }
+                }
+
+                this.cooldowntimer = 0;
+                Debug.Log("Harvester Special Ability Activated");
+            }
         }
 
         /// <summary>
@@ -443,6 +488,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateUnit()
         {
+            this.cooldowntimer += 1 * Time.deltaTime;
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
             this.decontime += 1 * Time.deltaTime;
@@ -494,6 +540,7 @@ namespace Assets.Scripts
             this.gothitfirst = true;
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
+            this.cooldowntimer = this.mystats.Skillcooldown;
 
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
@@ -734,6 +781,28 @@ namespace Assets.Scripts
                     this.Decontaminate();
                 }
             }
+        }
+
+        /// <summary>
+        /// The enemy stop timer function.
+        /// The enemy takes the stun effect .
+        /// <para></para>
+        /// <remarks><paramref name="nav"></paramref> -The nav agent to stop and resume.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="enemy"></paramref> -The enemy ai to set its stunned value.</remarks>
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IEnumerator"/>.
+        /// </returns>
+        private IEnumerator EnemyStopTimer(NavMeshAgent nav, EnemyAI enemy)
+        {
+            enemy.stunned = true;
+            nav.Stop();
+            Debug.Log("Starting to wait");
+            yield return new WaitForSeconds(3);
+            enemy.stunned = false;
+            nav.Resume();
+            Debug.Log("Done waiting.");
         }
 
         /// <summary>

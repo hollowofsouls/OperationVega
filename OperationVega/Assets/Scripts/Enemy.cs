@@ -203,6 +203,7 @@ namespace Assets.Scripts
                     this.Currenttarget = null;
                     this.target = null;
                     this.ChangeStates("Idle");
+                    this.GetComponent<EnemyAI>().taunted = false;
                 }
             }
         }
