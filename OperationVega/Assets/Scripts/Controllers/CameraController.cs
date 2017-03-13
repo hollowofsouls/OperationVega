@@ -1,6 +1,8 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
+    using System;
+
     using UnityEngine;
 
     /// <summary>
@@ -10,9 +12,19 @@ namespace Assets.Scripts.Controllers
     public class CameraController : MonoBehaviour
     {
         /// <summary>
+        /// The pan with mouse reference.
+        /// </summary>
+        public static bool Panwithmouse;
+
+        /// <summary>
         /// The mouse position x.
         /// </summary>
         private float mousePosX;
+
+        /// <summary>
+        /// The border offset reference.
+        /// </summary>
+        private float borderoffset;
 
         /// <summary>
         /// The speed at which the camera moves.
@@ -27,6 +39,15 @@ namespace Assets.Scripts.Controllers
         public uint RotateSpeed;
 
         /// <summary>
+        /// The start function.
+        /// </summary>
+        private void Start()
+        {
+            Panwithmouse = false;
+            this.borderoffset = 20;
+        }
+
+        /// <summary>
         /// The update function.
         /// </summary>
         private void Update()
@@ -34,8 +55,8 @@ namespace Assets.Scripts.Controllers
             this.ZoomCamera();
             this.PanCamera();
 
-            this.MoveSpeed = (uint)Mathf.Clamp(this.MoveSpeed, 2, 5);
-            this.RotateSpeed = (uint)Mathf.Clamp(this.RotateSpeed, 2, 5);
+            this.MoveSpeed = (uint)Mathf.Clamp(this.MoveSpeed, 3, 5);
+            this.RotateSpeed = (uint)Mathf.Clamp(this.RotateSpeed, 3, 5);
         }
 
         /// <summary>
@@ -49,7 +70,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The pan camera function.
-        /// Moves the camera based on key presses
+        /// Moves the camera based on key presses or mouse position.
         /// </summary>
         private void PanCamera()
         {
@@ -69,6 +90,37 @@ namespace Assets.Scripts.Controllers
             {
                 this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                this.transform.eulerAngles = Vector3.zero;
+                this.transform.position = Vector3.zero;
+            }
+
+            if (Panwithmouse)
+            {
+                if (Input.mousePosition.x >= Screen.width - this.borderoffset && Input.mousePosition.x < Screen.width)
+                {
+                    this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
+                }
+                if (Input.mousePosition.x <= this.borderoffset && Input.mousePosition.x > 0)
+                {
+                    this.transform.position -= this.transform.right * this.MoveSpeed * Time.deltaTime;
+                }
+                if (Input.mousePosition.y >= Screen.height - this.borderoffset && Input.mousePosition.y < Screen.height)
+                {
+                    this.transform.position += this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                }
+                if (Input.mousePosition.y <= this.borderoffset && Input.mousePosition.y > 0)
+                {
+                    this.transform.position -= this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                Panwithmouse = !Panwithmouse;
+            }
         }
 
         /// <summary>
@@ -82,10 +134,10 @@ namespace Assets.Scripts.Controllers
             }
             else if (Input.mouseScrollDelta.y > 0)
             {
-                 Camera.main.orthographicSize -= 0.25f;
+                Camera.main.orthographicSize -= 0.25f;
             }
 
-            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3, 10);
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 7, 10);
         }
 
         /// <summary>
@@ -93,14 +145,72 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void RotateCamera()
         {
-            if (Input.GetMouseButton(1))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftAlt))
             {
                 if (Input.mousePosition.x != this.mousePosX)
                 {
                     float camroty = (Input.mousePosition.x - this.mousePosX) * this.RotateSpeed * Time.deltaTime;
                     this.transform.Rotate(0.0f, camroty, 0.0f);
+                    this.transform.eulerAngles = new Vector3(0, this.ClampAngle(this.transform.eulerAngles.y, -45.0f, 45.0f), 0);
                 }
             }
+        }
+
+        /// <summary>
+        /// The Clamp angle function.
+        /// Clamps the angle to passed in arguments.
+        /// <para></para>
+        /// <remarks><paramref name="angle"></paramref> -The angle to rotate.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="min"></paramref> -The lowest angle allowed.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="max"></paramref> -The max angle allowed.</remarks>
+        /// </summary>
+        /// <returns>
+        /// The <see cref="float"/>.
+        /// </returns>
+        private float ClampAngle(float angle, float min, float max)
+        {
+            // Make sure the numbers are never less than 0 and greater than 360.
+            angle = Mathf.Repeat(angle, 360);
+            min = Mathf.Repeat(min, 360);
+            max = Mathf.Repeat(max, 360);
+            bool inverse = false;
+            float tmin = min;
+            float tangle = angle;
+            if (min > 180)
+            {
+                inverse = !inverse;
+                tmin -= 180;
+            }
+            if (angle > 180)
+            {
+                inverse = !inverse;
+                tangle -= 180;
+            }
+            bool result = !inverse ? tangle > tmin : tangle < tmin;
+            if (!result)
+                angle = min;
+
+            inverse = false;
+            tangle = angle;
+            float tmax = max;
+            if (angle > 180)
+            {
+                inverse = !inverse;
+                tangle -= 180;
+            }
+            if (max > 180)
+            {
+                inverse = !inverse;
+                tmax -= 180;
+            }
+
+            result = !inverse ? tangle < tmax : tangle > tmax;
+            if (!result)
+                angle = max;
+
+            return angle;
         }
     }
 }

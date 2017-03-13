@@ -7,7 +7,7 @@ namespace Assets.Scripts.Managers
 
     /// <summary>
     /// The game manager class. This class is responsible for 
-    /// managing the win/loss conditions of the game
+    /// managing the win/loss conditions of the game.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
@@ -63,6 +63,12 @@ namespace Assets.Scripts.Managers
         /// </returns>
         public bool CheckForWin()
         {
+            if (this.HasBuiltShip)
+            {
+                ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].Currentvalue++;
+                Debug.Log("Ship has been built now press launch to end the game");
+                return true;
+            }
             return false;
         }
 
@@ -75,7 +81,21 @@ namespace Assets.Scripts.Managers
         /// </returns>
         public bool CheckForLoss()
         {
+            // If there are no harvesters left on the map, cant purchase anymore, the ship hasnt been built, and you dont have the rigth parts to build the ship.
+            if (this.TheHarvesters.Count == 0 && User.FoodCount < 5 && !this.HasBuiltShip)
+            {
+                Debug.Log("Game Over - No more food to purchase harvesters, no more harvesters left on the map and the ship hasnt been built");
+                return true;
+            }
             return false;
+        }
+
+        /// <summary>
+        /// The awake function.
+        /// </summary>
+        private void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 }
