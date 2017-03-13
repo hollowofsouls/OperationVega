@@ -188,6 +188,8 @@ namespace UI
             undo1 = true;
             undo2 = true;
             undo3 = true;
+
+            this.statsbuttons = upgradepanel.GetComponentsInChildren<Button>();
             ScaleFactor();
 
             #region -- Ingame Subscribers --
@@ -208,7 +210,7 @@ namespace UI
             EventManager.Subscribe("Thrusters", this.OnThrusters);
             EventManager.Subscribe("Player chose TC1", this.OnTC1);
             EventManager.Subscribe("Player chose TC2", this.OnTC2);
-            EventManager.Subscribe("Player chose TC2", this.OnTC3);
+            EventManager.Subscribe("Player chose TC3", this.OnTC3);
             EventManager.Subscribe("Apply Chassis", this.OnChassis);
             EventManager.Subscribe("Cockpit", this.OnCockpit);
             EventManager.Subscribe("Player chose CP1", this.OnCP1);
@@ -217,7 +219,7 @@ namespace UI
             EventManager.Subscribe("Apply Wings", this.OnWings);
             EventManager.Subscribe("WingChoice1", this.OnWC1);
             EventManager.Subscribe("WingChoice2", this.OnWC2);
-            EventManager.Subscribe("WingChoice3", this.OnWC2);
+            EventManager.Subscribe("WingChoice3", this.OnWC3);
             EventManager.Subscribe("OnMChoice", this.OnMChoice);
             EventManager.Subscribe("OnHChoice", this.OnHChoice);
             EventManager.Subscribe("OnEChoice", this.OnEChoice);
@@ -248,6 +250,17 @@ namespace UI
             EventManager.Subscribe("Gas", this.OnGas);
             EventManager.Subscribe("Fuel", this.OnFuel);
             EventManager.Subscribe("Steel", this.OnSteel);
+            #endregion
+
+            #region --Upgrades--
+            EventManager.Subscribe("MaxHealth", this.OnMaxHealth);
+            EventManager.Subscribe("Strength", this.OnStrength);
+            EventManager.Subscribe("Defense", this.OnDefense);
+            EventManager.Subscribe("Speed", this.OnSpeed);
+            EventManager.Subscribe("AttackSpeed", this.OnAttackSpeed);
+            EventManager.Subscribe("SkillCoolDown", this.OnSkillCoolDown);
+            EventManager.Subscribe("AttackRange", this.OnAttackRange);
+            
             #endregion
 
 
@@ -315,6 +328,16 @@ namespace UI
             EventManager.UnSubscribe("Fuel", this.OnFuel);
             EventManager.UnSubscribe("Steel", this.OnSteel);
             #endregion
+
+            #region -- Upgrades Unsubscribers --
+            EventManager.UnSubscribe("MaxHealth", this.OnMaxHealth);
+            EventManager.UnSubscribe("Strength", this.OnStrength);
+            EventManager.UnSubscribe("Defense", this.OnDefense);
+            EventManager.UnSubscribe("Speed", this.OnSpeed);
+            EventManager.UnSubscribe("AttackSpeed", this.OnAttackSpeed);
+            EventManager.UnSubscribe("SkillCoolDown", this.OnSkillCoolDown);
+            EventManager.UnSubscribe("AttackRange", this.OnAttackRange);
+            #endregion
         }
         #region -- VOID FUNCTIONS --
 
@@ -340,7 +363,7 @@ namespace UI
         /// <para></para>
         /// <remarks><paramref name="thepanel"></paramref> -The panel to update with the units information.</remarks>
         /// </summary>
-        private void UpdateStatsPanel(GameObject thepanel)
+        public void UpdateStatsPanel(GameObject thepanel)
         {
             Text[] theUIStats = thepanel.transform.GetComponentsInChildren<Text>();
 
@@ -1222,9 +1245,122 @@ namespace UI
         }
         private void OnMaxHealth()
         {
+            //Updates the MaxHealth when the button is clicked.
+            Stats unitstats = unit.GetComponent<Stats>();
 
+            unitstats.Maxhealth += 20;
+            User.UpgradePoints--;
+            if (unitstats.Maxhealth >= 500)
+            {
+                this.statsbuttons[1].gameObject.SetActive(false);
+            }
             Debug.Log("Increases Max Health");
         }
+        public void OnStrengthClick()
+        {
+            EventManager.Publish("Strength");
+        }
+        private void OnStrength()
+        {
+            //Updates the Strength when the button is clicked.
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            unitstats.Strength += 2;
+            User.UpgradePoints--;
+            if (unitstats.Strength >= 100)
+            {
+                this.statsbuttons[2].gameObject.SetActive(false);
+            }
+        }
+        public void OnDefenseClick()
+        {
+            EventManager.Publish("Defense");
+        }
+        private void OnDefense()
+        {
+            //Updates the Defense when the button is clicked.
+            Stats unitstats = unit.GetComponent<Stats>();  
+
+            unitstats.Defense += 2;
+            User.UpgradePoints--;
+            if (unitstats.Defense >= 100)
+            {
+                this.statsbuttons[3].gameObject.SetActive(false);
+            }
+
+            Debug.Log("Upgrade Defense");
+        }
+        public void OnSpeedClick()
+        {
+            EventManager.Publish("Speed");
+        }
+        private void OnSpeed()
+        {
+            //Updates the Speed when the button is clicked.
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            if (User.UpgradePoints < 2) return;
+            unitstats.Speed++;
+            unit.GetComponent<NavMeshAgent>().speed = unitstats.Speed;
+            User.UpgradePoints -= 2;
+            if (unitstats.Speed >= 7)
+            {
+                this.statsbuttons[4].gameObject.SetActive(false);
+            }
+        }
+        public void OnAttackSpeedClick()
+        {
+            EventManager.Publish("AttackSpeed");
+        }
+        private void OnAttackSpeed()
+        {
+            //Updates the AttackSpeed when the button is clicked.
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            if (User.UpgradePoints < 4) return;
+            unitstats.Attackspeed--;
+            User.UpgradePoints -= 4;
+            if (unitstats.Attackspeed <= 1)
+            {
+                this.statsbuttons[5].gameObject.SetActive(false);
+            }
+        }
+        
+        public void OnSkillCoolDownClick()
+        {
+            EventManager.Publish("SkillCoolDown");
+        }
+        private void OnSkillCoolDown()
+        {
+            //Updates the SkkillCoolDowns when the button is clicked.
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            unitstats.Skillcooldown--;
+            User.UpgradePoints--;
+            if (unitstats.Skillcooldown <= 10)
+            {
+                this.statsbuttons[6].gameObject.SetActive(false);
+            }
+        }
+
+        public void OnAttackRangeClick()
+        {
+            EventManager.Publish("AttackRange");
+        }
+        private void OnAttackRange()
+        {
+            //Updates the AttackRange when clicked.
+            Stats unitstats = unit.GetComponent<Stats>();
+
+            if (User.UpgradePoints < 4) return;
+            unitstats.Attackrange++;
+            User.UpgradePoints -= 4;
+            if (unitstats.Attackrange >= 10.0f)
+            {
+                statsbuttons[7].gameObject.SetActive(false);
+            }
+        }
+       
         #endregion
 
     }
