@@ -3,6 +3,9 @@ namespace Assets.Scripts
 {
     using Controllers;
     using Interfaces;
+
+    using UnityEditorInternal;
+
     using UnityEngine;
     using UnityEngine.AI;
 
@@ -61,6 +64,12 @@ namespace Assets.Scripts
         /// Determines how the unit should act upon taking damage.
         /// </summary>
         private bool gothitfirst;
+
+        /// <summary>
+        /// The cool down timer reference.
+        /// Keeps track of when the unit is able to use its special ability.
+        /// </summary>
+        private float cooldowntimer;
 
         /// <summary>
         /// The time between attacks reference.
@@ -172,7 +181,29 @@ namespace Assets.Scripts
         /// </summary>
         public void SpecialAbility()
         {
-           Debug.Log("Extractor Special Ability Activated");
+            // If able to use ability
+            if (this.cooldowntimer >= this.mystats.Skillcooldown)
+            {
+                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 5);
+
+                // If nothing hit by cast then return
+                if (validtargets.Length < 1) return;
+
+                foreach (Collider c in validtargets)
+                {
+                    // If its an enemy - Stop them
+                    if (c.gameObject.GetComponent<Enemy>())
+                    {
+                        c.gameObject.GetComponent<Enemy>().Currenttarget = null;
+                        c.gameObject.transform.rotation = Quaternion.Euler(0f, c.transform.forward.y, 0f);
+                        c.gameObject.GetComponent<Enemy>().ChangeStates("Idle");
+                        c.gameObject.GetComponent<EnemyAI>().scared = true;
+                    }
+                }
+
+                this.cooldowntimer = 0;
+                Debug.Log("Extractor Special Ability Activated");
+            }
         }
 
         /// <summary>
@@ -356,6 +387,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateUnit()
         {
+            this.cooldowntimer += 1 * Time.deltaTime;
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
 
@@ -396,13 +428,13 @@ namespace Assets.Scripts
             this.mystats.Defense = 7;
             this.mystats.Speed = 3;
             this.mystats.Attackspeed = 3;
-            this.mystats.Skillcooldown = 20;
+            this.mystats.Skillcooldown = 15;
             this.mystats.Attackrange = 5.0f;
             this.mystats.Resourcecount = 0;
 
             this.gothitfirst = true;
             this.harvesttime = 1.0f;
-
+            this.cooldowntimer = this.mystats.Skillcooldown;
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.speed = this.mystats.Speed;

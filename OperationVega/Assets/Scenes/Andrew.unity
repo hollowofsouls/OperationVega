@@ -999,7 +999,7 @@ GameObject:
   - component: {fileID: 375257732}
   - component: {fileID: 375257733}
   - component: {fileID: 375257737}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Harvester
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1056,7 +1056,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: 0
+  m_BaseOffset: -0.06
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!23 &375257735
@@ -1978,7 +1978,7 @@ GameObject:
   - component: {fileID: 1108053180}
   - component: {fileID: 1108053181}
   - component: {fileID: 1108053185}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Miner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2037,7 +2037,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: 0
+  m_BaseOffset: -0.06
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!23 &1108053183
@@ -2625,7 +2625,7 @@ GameObject:
   - component: {fileID: 1868915304}
   - component: {fileID: 1868915305}
   - component: {fileID: 1868915308}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Extractor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2649,7 +2649,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: 0
+  m_BaseOffset: -0.06
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &1868915304

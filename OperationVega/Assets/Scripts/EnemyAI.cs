@@ -25,15 +25,28 @@ namespace Assets.Scripts
         /// The stunned reference.
         /// Reference if whether the enemy has been stunned.
         /// </summary>
-        //[HideInInspector]
+        [HideInInspector]
         public bool stunned;
 
         /// <summary>
         /// The taunted reference.
         /// Reference if whether the enemy has been taunted.
         /// </summary>
-        //[HideInInspector]
+        [HideInInspector]
         public bool taunted;
+
+        /// <summary>
+        /// The scared reference.
+        /// Reference if whether the enemy is scared.
+        /// </summary>
+        [HideInInspector]
+        public bool scared;
+
+        /// <summary>
+        /// The timer reference.
+        /// Reference to how long the enemy should run away from the unit.
+        /// </summary>
+        private float runtimer;
 
         /// <summary>
         /// The targets reference.
@@ -76,6 +89,8 @@ namespace Assets.Scripts
             this.checkrate = Random.Range(0.5f, 1.0f);
             this.stunned = false;
             this.taunted = false;
+            this.scared = false;
+            this.runtimer = 1;
         }
 
         /// <summary>
@@ -83,13 +98,27 @@ namespace Assets.Scripts
         /// </summary>
         private void Update()
         {
-            if (!this.stunned && !this.taunted)
+            if (!this.stunned && !this.taunted && !this.scared)
             {
                 this.CheckForUnits();
             }
             else if (this.taunted && this.enemyreference.Currenttarget != null)
             {
                 this.mynavagent.SetDestination(this.enemyreference.Currenttarget.transform.position);
+            }
+            else if (this.scared && !this.stunned)
+            {
+                this.runtimer += 1 * Time.deltaTime;
+
+                this.mynavagent.SetDestination(this.transform.position * this.runtimer);
+
+                // If the enemy has been scared for 5 seconds then the effect wore off
+                if (this.runtimer >= 5.0f)
+                {
+                    this.scared = false;
+                    this.runtimer = 1;
+                    this.mynavagent.SetDestination(this.transform.position);
+                }
             }
         }
 

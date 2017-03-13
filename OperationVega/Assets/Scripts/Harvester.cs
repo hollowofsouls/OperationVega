@@ -248,7 +248,7 @@ namespace Assets.Scripts
             // If able to use ability
             if (this.cooldowntimer >= this.mystats.Skillcooldown)
             {
-                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 7);
+                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 5);
 
                 // If nothing hit by cast then return
                 if (validtargets.Length < 1) return;
