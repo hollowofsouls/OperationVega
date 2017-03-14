@@ -197,7 +197,7 @@ namespace Assets.Scripts
                     }
                 }
 
-                //UIManager.Self.currentcooldown = 0;
+                UIManager.Self.currentcooldown = 0;
                 this.mystats.CurrentSkillCooldown = 0;
                 Debug.Log("Extractor Special Ability Activated");
             }
