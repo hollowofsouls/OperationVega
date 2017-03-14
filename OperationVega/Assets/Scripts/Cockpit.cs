@@ -17,6 +17,11 @@ namespace Assets.Scripts
 		/// <summary>
 		/// The accessed.
 		/// </summary>
+		[SerializeField]
 		public BaseCockpit Accessed;
+		public void Create(BaseCockpit c)
+		{
+			Accessed = c;
+		}
 	}
 }

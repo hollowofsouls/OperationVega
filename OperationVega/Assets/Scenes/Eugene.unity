@@ -121,6 +121,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd6a1f8f8d514f4e94006cae4272c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!23 &110899324
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -200,6 +204,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1454f68aa590334caaeb113750748e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    capacity: 0
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!1001 &212995575
 Prefab:
   m_ObjectHideFlags: 0
@@ -284,6 +293,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd6a1f8f8d514f4e94006cae4272c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!23 &235675373
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -398,6 +411,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1319332556061512, guid: def828c8491876c4f97c3dbd741fc2af, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: def828c8491876c4f97c3dbd741fc2af, type: 2}
   m_IsPrefabParent: 0
@@ -417,6 +434,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1454f68aa590334caaeb113750748e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    capacity: 0
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!1 &411632544 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1568762578423162, guid: 5fd901652b033d34898a2e27dc09cf68,
@@ -433,6 +455,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e398d56e8ab7bf438b78e026fa28a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!1 &462955470
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,12 +502,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b1f0d847f018be46992c217745e8eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cockpit1: {fileID: 1844044481}
-  Cockpit2: {fileID: 393269931}
+  testPrefab2: {fileID: 1461431263578688, guid: 2e26880bf3755da438ce926df08f89c2,
+    type: 2}
   Cockpit3: {fileID: 196197279}
+  Thrusters1: {fileID: 235675372}
+  Thrusters2: {fileID: 110899323}
+  Thrusters3: {fileID: 975547408}
   Wings1: {fileID: 1475487945}
   Wings2: {fileID: 411632547}
   Wings3: {fileID: 1758029546}
+  testPrefab: {fileID: 1319332556061512, guid: def828c8491876c4f97c3dbd741fc2af, type: 2}
+  rocketPart: []
 --- !u!23 &462955473
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -622,10 +653,11 @@ MonoBehaviour:
   minerals: {fileID: 0}
   food: {fileID: 0}
   cookedFood: {fileID: 0}
-  Steel: {fileID: 0}
+  steel: {fileID: 0}
   fuel: {fileID: 0}
   gas: {fileID: 0}
   contentfield: {fileID: 0}
+  unit: {fileID: 0}
 --- !u!114 &892147282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,11 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ccdb4366a31a33458fd593e24868b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  killtext: {fileID: 0}
-  crafttext: {fileID: 0}
-  maintext: {fileID: 0}
   textprefab: {fileID: 0}
-  thegameui: {fileID: 0}
 --- !u!1 &975547407
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,6 +700,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd6a1f8f8d514f4e94006cae4272c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!23 &975547409
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1003,6 +1035,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1461431263578688, guid: 2e26880bf3755da438ce926df08f89c2, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2e26880bf3755da438ce926df08f89c2, type: 2}
   m_IsPrefabParent: 0
@@ -1022,6 +1058,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e398d56e8ab7bf438b78e026fa28a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!224 &1495678622 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224716927554149908, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
@@ -1980,6 +2020,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e398d56e8ab7bf438b78e026fa28a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!1 &1844044480 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1319332556061512, guid: def828c8491876c4f97c3dbd741fc2af,
@@ -1996,6 +2040,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1454f68aa590334caaeb113750748e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Accessed:
+    capacity: 0
+    steel: 0
+    fuel: 0
+    quality: 0
 --- !u!1001 &1977132355
 Prefab:
   m_ObjectHideFlags: 0
