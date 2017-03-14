@@ -332,6 +332,8 @@ namespace Assets.Scripts.Controllers
                         GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                         selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                        //UIManager.Self.currentcooldown = this.theselectedobject.GetComponent<Stats>().CurrentSkillCooldown;
+                        //UIManager.Self.abilityunit = this.theselectedobject;
                         UIManager.Self.CreateUnitButton(this.theselectedobject);
                     }
                 }

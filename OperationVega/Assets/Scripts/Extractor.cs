@@ -4,6 +4,8 @@ namespace Assets.Scripts
     using Controllers;
     using Interfaces;
 
+    using UI;
+
     using UnityEditorInternal;
 
     using UnityEngine;
@@ -64,12 +66,6 @@ namespace Assets.Scripts
         /// Determines how the unit should act upon taking damage.
         /// </summary>
         private bool gothitfirst;
-
-        /// <summary>
-        /// The cool down timer reference.
-        /// Keeps track of when the unit is able to use its special ability.
-        /// </summary>
-        private float cooldowntimer;
 
         /// <summary>
         /// The time between attacks reference.
@@ -182,7 +178,7 @@ namespace Assets.Scripts
         public void SpecialAbility()
         {
             // If able to use ability
-            if (this.cooldowntimer >= this.mystats.Skillcooldown)
+            if (this.mystats.CurrentSkillCooldown >= this.mystats.MaxSkillCooldown)
             {
                 Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 5);
 
@@ -201,7 +197,8 @@ namespace Assets.Scripts
                     }
                 }
 
-                this.cooldowntimer = 0;
+                //UIManager.Self.currentcooldown = 0;
+                this.mystats.CurrentSkillCooldown = 0;
                 Debug.Log("Extractor Special Ability Activated");
             }
         }
@@ -387,7 +384,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateUnit()
         {
-            this.cooldowntimer += 1 * Time.deltaTime;
+            this.mystats.CurrentSkillCooldown += 1.0f * Time.deltaTime;
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
 
@@ -428,13 +425,14 @@ namespace Assets.Scripts
             this.mystats.Defense = 7;
             this.mystats.Speed = 3;
             this.mystats.Attackspeed = 3;
-            this.mystats.Skillcooldown = 15;
+            this.mystats.MaxSkillCooldown = 15;
+            this.mystats.CurrentSkillCooldown = this.mystats.MaxSkillCooldown;
             this.mystats.Attackrange = 5.0f;
             this.mystats.Resourcecount = 0;
 
             this.gothitfirst = true;
             this.harvesttime = 1.0f;
-            this.cooldowntimer = this.mystats.Skillcooldown;
+            
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.speed = this.mystats.Speed;
