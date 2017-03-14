@@ -11,6 +11,7 @@ using Assets.Scripts.Controllers;
 
 namespace Assets.Scripts
 {
+    //Currently need to figure out how exactly I want crafting to be set up. 
     public class Craft2 : MonoBehaviour
     {
         #region --Variables--
