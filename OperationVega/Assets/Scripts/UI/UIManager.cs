@@ -1237,6 +1237,8 @@ namespace UI
         {
             EventManager.Publish("Defense");
         }
+
+       
         private void OnDefense()
         {
             //Updates the Defense when the button is clicked.
