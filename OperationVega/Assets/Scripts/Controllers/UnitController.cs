@@ -13,6 +13,7 @@ namespace Assets.Scripts.Controllers
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
+    using UnityEngine.UI;
 
     /// <summary>
     /// The unit controller class.
@@ -20,6 +21,7 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
+
         /// <summary>
         /// The instance of the class.
         /// </summary>
@@ -198,7 +200,7 @@ namespace Assets.Scripts.Controllers
         public void SelectAllUnits()
         {
             this.ClearSelectedUnits();
-            List<GameObject> units = GameObject.FindGameObjectsWithTag("Targetable").ToList();
+            List<GameObject> units = GameObject.FindGameObjectsWithTag("Player").ToList();
 
             foreach (GameObject go in units)
             {
@@ -700,6 +702,8 @@ namespace Assets.Scripts.Controllers
                 GUI.color = new Color(1, 1, 1, 0.5f);
                 GUI.DrawTexture(dragscreen, this.selectionHighlight);
             }
+
+            KeyBind.Self.HotkeyChange();
         }
     }
 }

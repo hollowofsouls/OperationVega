@@ -673,6 +673,26 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114977416116730334, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 442365871}
+    - target: {fileID: 114093503159148024, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 442365871}
+    - target: {fileID: 114835465601455738, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 442365871}
+    - target: {fileID: 114477837597619804, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 442365871}
     - target: {fileID: 224521283858052674, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
       propertyPath: m_AnchorMax.x
@@ -688,29 +708,15 @@ Prefab:
       propertyPath: m_SizeDelta.y
       value: 19
       objectReference: {fileID: 0}
-    - target: {fileID: 224386228563859506, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.0000022798777
-      objectReference: {fileID: 0}
-    - target: {fileID: 224101907126213888, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
-        type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224101907126213888, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
-        type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224101907126213888, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
-        type: 2}
-      propertyPath: m_SizeDelta.x
-      value: -1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &336885428 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114196919873386678, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 336885427}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1001 &346970214
 Prefab:
   m_ObjectHideFlags: 0
@@ -816,7 +822,7 @@ GameObject:
   - component: {fileID: 375257737}
   m_Layer: 8
   m_Name: Harvester
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1042,6 +1048,7 @@ MonoBehaviour:
   upgradepanel: {fileID: 2017443997}
   tooltippanel: {fileID: 1366697166}
   unitbutton: {fileID: 1954308782065930, guid: c5544d39d1e284749a7f8359889cb4e6, type: 2}
+  abilityunit: {fileID: 0}
   Input1: {fileID: 0}
   Input2: {fileID: 0}
   Output: {fileID: 0}
@@ -1051,6 +1058,8 @@ MonoBehaviour:
   steel: {fileID: 0}
   fuel: {fileID: 0}
   gas: {fileID: 0}
+  skillIcon: {fileID: 336885428}
+  currentcooldown: 0
   contentfield: {fileID: 21860276}
   unit: {fileID: 0}
 --- !u!114 &442365872
@@ -1100,6 +1109,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70cf5a91d3c89d64480d9820c3d906f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Timer: 0
+  CurrentKey: {fileID: 0}
+  buttonimages:
+  - {fileID: 21300054, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300016, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300010, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300004, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300002, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300008, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300014, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300020, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300026, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300048, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300034, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300036, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300042, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300040, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300014, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300032, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300028, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300022, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300052, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300016, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300042, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300000, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300006, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300032, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300012, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300018, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300024, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300046, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300010, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300040, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300004, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300030, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300034, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300028, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300056, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300050, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300044, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300038, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300036, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
+  - {fileID: 21300000, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300018, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300008, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  - {fileID: 21300022, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
 --- !u!1001 &465729416
 Prefab:
   m_ObjectHideFlags: 0
@@ -1796,7 +1851,7 @@ GameObject:
   - component: {fileID: 1108053185}
   m_Layer: 8
   m_Name: Miner
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2444,7 +2499,7 @@ GameObject:
   - component: {fileID: 1868915308}
   m_Layer: 8
   m_Name: Extractor
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
