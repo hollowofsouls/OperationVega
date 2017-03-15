@@ -382,6 +382,11 @@ namespace UI
 
         }
 
+        public void OnChangeKeyClicked(GameObject clicked)
+        {
+            KeyBind.Self.CurrentKey = clicked;
+        }
+
         /// <summary>
         /// The update panel function.
         /// Updates the passed panel with the units information.
