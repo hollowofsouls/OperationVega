@@ -8,6 +8,7 @@ using UI;
 
 namespace Assets.Scripts
 {
+    [System.Serializable]
     public class Craft : MonoBehaviour
     {
         //Will be used to desribe resources as Items
