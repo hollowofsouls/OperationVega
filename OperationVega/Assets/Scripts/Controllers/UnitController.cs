@@ -4,16 +4,15 @@ namespace Assets.Scripts.Controllers
     using System.Collections.Generic;
     using System.Linq;
 
-    using Managers;
-
     using Interfaces;
+
+    using Managers;
 
     using UI;
 
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
-    using UnityEngine.UI;
 
     /// <summary>
     /// The unit controller class.
@@ -133,6 +132,8 @@ namespace Assets.Scripts.Controllers
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                     this.units.Add(theunit);
+                    UIManager.Self.currentcooldown = theunit.GetComponent<Stats>().CurrentSkillCooldown;
+                    UIManager.Self.abilityunit = theunit;
                     UIManager.Self.CreateUnitButton(theunit);
                 }
 
@@ -688,6 +689,14 @@ namespace Assets.Scripts.Controllers
             if (this.theUnit != null)
             {
                 this.theUnit.SpecialAbility();
+            }
+            else if (this.units.Count > 0)
+            {
+                foreach (GameObject go in this.units)
+                {
+                    IUnit unit = (IUnit)go.GetComponent(typeof(IUnit));
+                    unit.SpecialAbility();
+                }
             }
         }
 
