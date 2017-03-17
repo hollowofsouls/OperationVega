@@ -4,12 +4,12 @@ namespace Assets.Scripts.Interfaces
     using UnityEngine;
 
     /// <summary>
-    /// The Unit interface to represent what it means to be a Unit.
+    /// The Unit interface to represent unit functionality.
     /// </summary>
     public interface IUnit
     {
         /// <summary>
-        /// The harvest function allows an object to harvest a resource.
+        /// The harvest function allows a unit to harvest a resource.
         /// </summary>
         void Harvest();
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Interfaces
 
         /// <summary>
         /// The set target resource function.
-        /// The function sets the unit with the resource.
+        /// The function sets the unit with the resource to target.
         /// <para></para>
         /// <remarks><paramref name="theResource"></paramref> -The object that will be set as the target resource.</remarks>
         /// </summary>
@@ -60,7 +60,7 @@ namespace Assets.Scripts.Interfaces
 
         /// <summary>
         /// The change states function.
-        /// This function changes the state to the passed in state.
+        /// This function changes the state of the unit to the passed in state.
         /// <para></para>
         /// <remarks><paramref name="destinationState"></paramref> -The state to transition to.</remarks>
         /// </summary>

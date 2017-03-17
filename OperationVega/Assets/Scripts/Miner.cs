@@ -3,9 +3,7 @@ namespace Assets.Scripts
 {
     using Controllers;
     using Interfaces;
-
     using UI;
-
     using UnityEngine;
     using UnityEngine.AI;
 

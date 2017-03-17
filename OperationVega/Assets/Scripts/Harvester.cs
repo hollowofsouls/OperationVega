@@ -2,15 +2,10 @@
 namespace Assets.Scripts
 {
     using System.Collections;
-
     using Controllers;
-
     using Interfaces;
-
     using Managers;
-
     using UI;
-
     using UnityEngine;
     using UnityEngine.AI;
 

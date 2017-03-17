@@ -38,16 +38,19 @@ namespace Assets.Scripts
 
         /// <summary>
         /// The sprite dictionary reference.
+        /// Holds reference to all the sprites used for the keys.
         /// </summary>
         private readonly Dictionary<KeyCode, Sprite> spritedictionary = new Dictionary<KeyCode, Sprite>();
 
         /// <summary>
         /// The possible keys reference.
+        /// Reference to all the possible keys that register on press.
         /// </summary>
         private readonly List<KeyCode> possiblekeys = new List<KeyCode>();
 
         /// <summary>
         /// The button images reference.
+        /// Holds reference in the hierarchy for all sprites.
         /// </summary>
         [SerializeField]
         private List<Sprite> buttonimages = new List<Sprite>();
@@ -304,7 +307,7 @@ namespace Assets.Scripts
             this.possiblekeys.Add(KeyCode.V);
             this.possiblekeys.Add(KeyCode.X);
             this.possiblekeys.Add(KeyCode.Z);
-            this.possiblekeys.Add(KeyCode.KeypadEnter);
+            this.possiblekeys.Add(KeyCode.Return);
             this.possiblekeys.Add(KeyCode.Escape);
             this.possiblekeys.Add(KeyCode.Slash);
             this.possiblekeys.Add(KeyCode.Space);

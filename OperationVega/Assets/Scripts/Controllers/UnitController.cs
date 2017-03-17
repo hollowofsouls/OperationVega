@@ -3,13 +3,9 @@ namespace Assets.Scripts.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;
-
     using Interfaces;
-
     using Managers;
-
     using UI;
-
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
@@ -703,6 +699,7 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The On GUI function.
         /// This draws the drag screen to the screen.
+        /// Also, uses the KeyBind class to change hot keys.
         /// </summary>
         private void OnGUI()
         {
