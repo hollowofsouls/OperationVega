@@ -30,7 +30,6 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The list of units selected by the drag screen.
         /// </summary>
-        [HideInInspector]
         private readonly List<GameObject> units = new List<GameObject>();
 
         /// <summary>
@@ -314,6 +313,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void SelectUnits()
         {
+            // If the left mouse button is pressed and its not clicking on a UI element
             if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 this.ClearSelectedUnits();
@@ -345,6 +345,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ActivateDragScreen()
         {
+            // If the left mouse button is held down and its not on a UI element
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 this.startclick = Input.mousePosition;
@@ -411,6 +412,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void CommandUnits()
         {
+            // If the right mouse button is pressed and its not on a UI element
             if (Input.GetKeyDown(KeyCode.Mouse1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -563,7 +565,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to pick up function.
-        /// This function sends unit(s) to the pickup item.
+        /// This function sends unit to the pickup item.
         /// <para></para>
         /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
@@ -609,7 +611,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to decontaminate function.
-        /// Send unit(s) to decontaminate.
+        /// Send unit(s) to decontaminate a tainted resource.
         /// <para></para>
         /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
@@ -653,13 +655,13 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The heal unit function.
-        /// Heals the unit with food.
+        /// Heals the clicked unit with food.
         /// <para></para>
         /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
         private void HealUnit(RaycastHit hit)
         {
-            // The object hit is a unit and we have an instance of the cooked food to use
+            // If the object hit is a unit and we have an instance of the cooked food to use
             if (hit.transform.gameObject.GetComponent(typeof(IUnit)) && UIManager.Self.foodinstance != null)
             {
                 Stats stats = hit.transform.gameObject.GetComponent<Stats>();
@@ -678,7 +680,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The Activate Ability function.
-        /// Activates the ability of the selected unit.
+        /// Activates the ability of the selected unit(s).
         /// </summary>
         private void ActivateAbility()
         {

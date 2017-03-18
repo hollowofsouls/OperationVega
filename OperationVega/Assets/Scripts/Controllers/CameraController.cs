@@ -1,8 +1,6 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
-    using System;
-
     using UnityEngine;
 
     /// <summary>
@@ -12,9 +10,14 @@ namespace Assets.Scripts.Controllers
     public class CameraController : MonoBehaviour
     {
         /// <summary>
+        /// The speed at which the camera moves.
+        /// </summary>
+        public static uint MoveSpeed = 3;
+
+        /// <summary>
         /// The pan with mouse reference.
         /// </summary>
-        public static bool Panwithmouse;
+        private bool panwithmouse;
 
         /// <summary>
         /// The mouse position x.
@@ -27,23 +30,16 @@ namespace Assets.Scripts.Controllers
         private float borderoffset;
 
         /// <summary>
-        /// The speed at which the camera moves.
+        /// The rotate speed of the camera reference.
         /// </summary>
-        /// [HideInInspector]
-        public uint MoveSpeed;
-
-        /// <summary>
-        /// The rotate speed of the camera.
-        /// </summary>
-        /// [HideInInspector]
-        public uint RotateSpeed;
+        private uint rotateSpeed;
 
         /// <summary>
         /// The start function.
         /// </summary>
         private void Start()
         {
-            Panwithmouse = false;
+            this.panwithmouse = false;
             this.borderoffset = 20;
         }
 
@@ -55,8 +51,8 @@ namespace Assets.Scripts.Controllers
             this.ZoomCamera();
             this.PanCamera();
 
-            this.MoveSpeed = (uint)Mathf.Clamp(this.MoveSpeed, 3, 5);
-            this.RotateSpeed = (uint)Mathf.Clamp(this.RotateSpeed, 3, 5);
+            MoveSpeed = (uint)Mathf.Clamp(MoveSpeed, 3, 5);
+            this.rotateSpeed = (uint)Mathf.Clamp(this.rotateSpeed, 3, 5);
         }
 
         /// <summary>
@@ -74,57 +70,80 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void PanCamera()
         {
+            // WASD Keys
             if (Input.GetKey(KeyCode.W))
             {
-                this.transform.position += this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                this.transform.position += this.transform.forward * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.S))
             {
-                this.transform.position -= this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                this.transform.position -= this.transform.forward * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.A))
             {
-                this.transform.position -= this.transform.right * this.MoveSpeed * Time.deltaTime;
+                this.transform.position -= this.transform.right * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.D))
             {
-                this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
+                this.transform.position += this.transform.right * MoveSpeed * Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            // Arrow Keys
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                this.transform.position += this.transform.forward * MoveSpeed * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                this.transform.position -= this.transform.forward * MoveSpeed * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                this.transform.position -= this.transform.right * MoveSpeed * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                this.transform.position += this.transform.right * MoveSpeed * Time.deltaTime;
+            }
+
+            // Reset the camera 
+            if (Input.GetKeyDown(KeyCode.T))
             {
                 this.transform.eulerAngles = Vector3.zero;
                 this.transform.position = Vector3.zero;
             }
 
-            if (Panwithmouse)
+            // Toggle on or off panning of camera with mouse
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                this.panwithmouse = !this.panwithmouse;
+            }
+
+            // If can pan with the mouse
+            if (this.panwithmouse)
             {
                 if (Input.mousePosition.x >= Screen.width - this.borderoffset && Input.mousePosition.x < Screen.width)
                 {
-                    this.transform.position += this.transform.right * this.MoveSpeed * Time.deltaTime;
+                    this.transform.position += this.transform.right * MoveSpeed * Time.deltaTime;
                 }
                 if (Input.mousePosition.x <= this.borderoffset && Input.mousePosition.x > 0)
                 {
-                    this.transform.position -= this.transform.right * this.MoveSpeed * Time.deltaTime;
+                    this.transform.position -= this.transform.right * MoveSpeed * Time.deltaTime;
                 }
                 if (Input.mousePosition.y >= Screen.height - this.borderoffset && Input.mousePosition.y < Screen.height)
                 {
-                    this.transform.position += this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                    this.transform.position += this.transform.forward * MoveSpeed * Time.deltaTime;
                 }
                 if (Input.mousePosition.y <= this.borderoffset && Input.mousePosition.y > 0)
                 {
-                    this.transform.position -= this.transform.forward * this.MoveSpeed * Time.deltaTime;
+                    this.transform.position -= this.transform.forward * MoveSpeed * Time.deltaTime;
                 }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                Panwithmouse = !Panwithmouse;
             }
         }
 
         /// <summary>
-        /// The zoom camera.
+        /// The zoom camera function.
+        /// This function changes the orthographic size of the camera to zoom in or out.
         /// </summary>
         private void ZoomCamera()
         {
@@ -141,7 +160,8 @@ namespace Assets.Scripts.Controllers
         }
 
         /// <summary>
-        /// The rotate camera.
+        /// The rotate camera function.
+        /// This function allows camera rotation.
         /// </summary>
         private void RotateCamera()
         {
@@ -149,7 +169,7 @@ namespace Assets.Scripts.Controllers
             {
                 if (Input.mousePosition.x != this.mousePosX)
                 {
-                    float camroty = (Input.mousePosition.x - this.mousePosX) * this.RotateSpeed * Time.deltaTime;
+                    float camroty = (Input.mousePosition.x - this.mousePosX) * this.rotateSpeed * Time.deltaTime;
                     this.transform.Rotate(0.0f, camroty, 0.0f);
                     this.transform.eulerAngles = new Vector3(0, this.ClampAngle(this.transform.eulerAngles.y, -45.0f, 45.0f), 0);
                 }
