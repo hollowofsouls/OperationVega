@@ -89,13 +89,5 @@ namespace Assets.Scripts.Managers
             }
             return false;
         }
-
-        /// <summary>
-        /// The awake function.
-        /// </summary>
-        private void Awake()
-        {
-            DontDestroyOnLoad(this.gameObject);
-        }
     }
 }

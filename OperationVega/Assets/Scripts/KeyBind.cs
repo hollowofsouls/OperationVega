@@ -129,6 +129,16 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The awake function.
+        /// </summary>
+        private void Awake()
+        {
+            // Dont destroy script..incase user changed hot keys in the main
+            // menu. If so, we will need the changes to carry over.
+            DontDestroyOnLoad(this.gameObject);
+        }
+
+        /// <summary>
         /// The start function.
         /// </summary>
         private void Start()
