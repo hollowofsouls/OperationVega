@@ -159,6 +159,8 @@ namespace UI
 
         private Button[] statsbuttons;
 
+        private bool objectiveinview;
+        
         bool revertactionstab;
         bool revertcraftingtab;
         bool revertunittab;
@@ -167,6 +169,8 @@ namespace UI
         bool undo1;
         bool undo2;
         bool undo3;
+        bool selected;
+        private float objectivescale;
         private float Scalefactor;
 
 
@@ -197,6 +201,10 @@ namespace UI
             undo1 = true;
             undo2 = true;
             undo3 = true;
+
+            selected = false;
+
+            m_OptionsUI.GetComponentsInChildren<Slider>()[1].value = CameraController.MoveSpeed;
 
             this.statsbuttons = upgradepanel.GetComponentsInChildren<Button>();
             ScaleFactor();
@@ -249,9 +257,15 @@ namespace UI
             EventManager.Subscribe("Settings", this.OnSettings);
             EventManager.Subscribe("SettingsClose", this.OnSettingsClose);
             EventManager.Subscribe("Customize", this.OnCustomize);
+            EventManager.Subscribe("QuitToMenu", this.OnQuitToMenu);
+            EventManager.Subscribe("VolumeSlider", this.OnVolumeSlider);
+            EventManager.Subscribe("CameraSpeedSlider", this.OnCameraSpeedSlider);
             EventManager.Subscribe("CustomizeClose", this.OnCustomizeClose);
+            EventManager.Subscribe("CustomizeRestore", this.OnCustomRestore);
+            EventManager.Subscribe("ObjectiveClick", this.OnObjective);
             #endregion
 
+            EventManager.Publish("CameraSpeedSlider");
             #region -- Crafting Subscribers --
             EventManager.Subscribe("Minerals", this.OnMinerals);
             EventManager.Subscribe("Food", this.OnFood);
@@ -327,7 +341,10 @@ namespace UI
             EventManager.UnSubscribe("Settings", this.OnSettings);
             EventManager.UnSubscribe("SettingsClose", this.OnSettingsClose);
             EventManager.UnSubscribe("Customize", this.OnCustomize);
+            EventManager.UnSubscribe("QuitToMenu", this.OnQuitToMenu);
             EventManager.UnSubscribe("CustomizeClose", this.OnCustomizeClose);
+            EventManager.UnSubscribe("CustomizeRestore", this.OnCustomRestore);
+            EventManager.UnSubscribe("ObjectiveClick", this.OnObjective);
             #endregion
 
             #region -- Crafting Unsubscribers --
@@ -380,6 +397,17 @@ namespace UI
                 }
             }
 
+            if (this.objectiveinview && this.m_ObjectiveUI.offsetMin.x > 0.1f)
+            {
+                this.m_ObjectiveUI.offsetMin -= new Vector2(1, 0) * 100 * Time.deltaTime;
+                this.m_ObjectiveUI.offsetMax -= new Vector2(1, 0) * 100 * Time.deltaTime;
+            }
+            else if (!this.objectiveinview && this.m_ObjectiveUI.offsetMin.x < this.objectivescale)
+            {
+                this.m_ObjectiveUI.offsetMin += new Vector2(1, 0) * 100 * Time.deltaTime;
+                this.m_ObjectiveUI.offsetMax += new Vector2(1, 0) * 100 * Time.deltaTime;
+            }
+
         }
 
         public void OnChangeKeyClicked(GameObject clicked)
@@ -419,26 +447,32 @@ namespace UI
         void ScaleFactor()
         {
             this.Scalefactor = 0;
+            this.objectivescale = 130;
 
             if (Screen.width == 1280 && Screen.height == 720)
             {
                 Scalefactor = -90;
+                this.objectivescale = 155;
             }
             else if (Screen.width == 1360 && Screen.height == 768)
             {
                 Scalefactor = -95;
+                this.objectivescale = 165;
             }
             else if (Screen.width == 1366 && Screen.height == 768)
             {
                 Scalefactor = -95;
+                this.objectivescale = 165;
             }
             else if (Screen.width == 1600 && Screen.height == 900)
             {
                 Scalefactor = -115;
+                this.objectivescale = 200;
             }
             else if (Screen.width == 1920 && Screen.height == 1080)
             {
                 Scalefactor = -145;
+                this.objectivescale = 240;
             }
             else
             {
@@ -455,6 +489,9 @@ namespace UI
 
                 m_UnitTAB.offsetMax = new Vector2(m_UnitTAB.offsetMax.x, Scalefactor);
                 m_UnitTAB.offsetMin = new Vector2(m_UnitTAB.offsetMin.x, -115);
+
+                m_ObjectiveUI.offsetMin = new Vector2(this.objectivescale, 0);
+                m_ObjectiveUI.offsetMax = new Vector2(this.objectivescale, 0);
 
             }
         }
@@ -558,6 +595,15 @@ namespace UI
 
 
             Debug.Log("Move Crafting Tab down");
+        }
+        public void OnObjectiveClick()
+        {
+            EventManager.Publish("ObjectiveClick");
+
+        }
+        private void OnObjective()
+        {
+            this.objectiveinview = !objectiveinview;
         }
         public void OnUnitClick()
         {
@@ -753,6 +799,36 @@ namespace UI
             m_SettingsUI.gameObject.SetActive(false);
             Debug.Log("Settings Close");
         }
+        public void OnQuitToMenuClick()
+        {
+            EventManager.Publish("QuitToMenu");
+        }
+        private void OnQuitToMenu()
+        {
+            SceneManager.LoadScene(0);
+            Debug.Log("Quit to Menu");
+        }
+        
+        public void OnVolumeSliderClick()
+        {
+            EventManager.Publish("VolumeSlider");
+        }
+        private void OnVolumeSlider()
+        {
+            m_OptionsUI.GetComponentsInChildren<Text>()[2].text = "Audio Volume";
+            Debug.Log("Volume Slider");
+        }
+
+        public void OnCameraSpeedSliderClick()
+        {
+            EventManager.Publish("CameraSpeedSlider");
+        }            
+        private void OnCameraSpeedSlider()
+        {
+            CameraController.MoveSpeed = (uint)m_OptionsUI.GetComponentsInChildren<Slider>()[1].value;
+            m_OptionsUI.GetComponentsInChildren<Text>()[2].text = "Camera Speed: " + CameraController.MoveSpeed;
+            Debug.Log("CameraSpeed Slider");
+        }
         public void OnCustomizeClick()
         {
             EventManager.Publish("Customize");
@@ -767,12 +843,23 @@ namespace UI
             m_CraftingTAB.gameObject.SetActive(false);
             m_Workshop.gameObject.SetActive(false);
             m_ObjectiveUI.gameObject.SetActive(false);
+            
             Debug.Log("Customize Menu");
+        }
+        public void OnCustomRestoreClick()
+        {
+            EventManager.Publish("CustomizeRestore");
+
+        }
+        private void OnCustomRestore()
+        {
+            KeyBind.Self.RestoreToDefault(m_CustomizeUI.GetComponentsInChildren<Button>());
         }
         public void OnCustomizeCloseClick()
         {
             EventManager.Publish("CustomizeClose");
         }
+     
         private void OnCustomizeClose()
         {
             //Used to set all UI to active when the customize menu is open.
@@ -831,6 +918,7 @@ namespace UI
             Debug.Log("User choose No");
             m_AreyousureUI.gameObject.SetActive(false);
         }
+
         public void OnQuitGameClick()
         {
             EventManager.Publish("QuitGame");

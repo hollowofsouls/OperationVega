@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UI;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using Assets.Scripts.Managers;
@@ -14,6 +15,7 @@ namespace Assets.Scripts
     //Currently need to figure out how exactly I want crafting to be set up. 
     public class Craft2 : MonoBehaviour
     {
+        
         #region --Variables--
         public bool HasNeededItems1;
         public bool HasNeededItems2;
@@ -37,6 +39,7 @@ namespace Assets.Scripts
         //Function will be used to create steel
         public void Steel()
         {
+            
             if(HasNeededItems1)
             {
                 User.SteelCount++;
