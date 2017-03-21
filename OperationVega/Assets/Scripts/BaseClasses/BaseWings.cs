@@ -37,6 +37,9 @@ namespace Assets.Scripts.BaseClasses
 		[SerializeField]
 		private uint quality;
 
+		[SerializeField]
+		private string name;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BaseWings"/> class.
 		/// </summary>
@@ -56,11 +59,12 @@ namespace Assets.Scripts.BaseClasses
 		/// <param name="qualities">
 		/// The quality.
 		/// </param>
-		public BaseWings(uint steelcost, uint fuelcost, uint qualities)
+		public BaseWings(uint steelcost, uint fuelcost, uint qualities, string identity)
 		{
 			this.steel = steelcost;
 			this.fuel = fuelcost;
 			this.quality = qualities;
+			this.name = identity;
 		}
 
 		/// <summary>
@@ -108,6 +112,18 @@ namespace Assets.Scripts.BaseClasses
 			set
 			{
 				this.fuel = value;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
 			}
 		}
 	}

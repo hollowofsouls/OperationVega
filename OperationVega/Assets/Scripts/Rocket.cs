@@ -15,50 +15,60 @@ namespace Assets.Scripts
 	public class Rocket : MonoBehaviour
 	{
 		/// <summary>
-		/// The all parts.
+		/// A list of all the parts that have been selected.
+		/// </summary>
+		private List<IRocketParts> allParts;
+
+		/// <summary>
+		/// A list of all the part objects that have been instantiated.
 		/// </summary>
 		[SerializeField]
-		private List<IRocketParts> allParts;
+		private List<GameObject> builtParts = new List<GameObject>();
 
 		/// <summary>
 		/// The total quality.
 		/// </summary>
+		[SerializeField]
 		private uint totalQuality;
 
 		/// <summary>
 		/// Place holding value that represents the current cockpit in the list.
 		/// Used for when the existing cockpit is being replaced and removing it from the list.
 		/// </summary>
+		[SerializeField]
 		private BaseCockpit currentCockpit;
 
 		/// <summary>
 		/// Place holding value that represents the current thrusters in the list.
 		/// Used for when the existing thrusters is being replaced and removing it from the list.
 		/// </summary>
+		[SerializeField]
 		private BaseThrusters currentThrusters;
 
 		/// <summary>
 		/// Place holding value that represents the current wings in the list.
 		/// Used for when the existing wings is being replaced and removing it from the list.
 		/// </summary>
+		[SerializeField]
 		private BaseWings currentWings;
 
 		/// <summary>
 		/// The cockpit 1.
 		/// </summary>
-		private Cockpit Cockpit1;
-
-		private Cockpit Cockpit2;
+		public GameObject cockpitOne;
 
 		/// <summary>
 		/// The cockpit 2.
 		/// </summary>
-		public GameObject testPrefab2;
+		public GameObject cockpitTwo;
 
 		/// <summary>
 		/// The cockpit 3.
 		/// </summary>
-		public Cockpit Cockpit3;
+		public GameObject cockpitThree;
+
+		[SerializeField]
+		private GameObject builtCockpit;
 
 		/// <summary>
 		/// The thrusters 1.
@@ -78,19 +88,20 @@ namespace Assets.Scripts
 		/// <summary>
 		/// The wings 1.
 		/// </summary>
-		public Wings Wings1;
+		public GameObject wingsOne;
 
 		/// <summary>
 		/// The wings 2.
 		/// </summary>
-		public Wings Wings2;
+		public GameObject wingsTwo;
 
 		/// <summary>
 		/// The wings 3.
 		/// </summary>
-		public Wings Wings3;
+		public GameObject wingsThree;
 
-		public GameObject testPrefab;
+		[SerializeField]
+		private GameObject builtWings;
 
 		/// <summary>
 		/// Gets or sets the total quality.
@@ -142,15 +153,18 @@ namespace Assets.Scripts
 		/// The selected part.
 		/// The object that the player is attempting to add to the list that will be checked.
 		/// </param>
-		public void AddPart(IRocketParts selectedPart)
+		public bool AddPart(IRocketParts selectedPart)
 		{
 			var spareList = this.allParts.ToList();
-
 			if (User.SteelCount >= selectedPart.SteelCost && User.FuelCount >= selectedPart.FuelCost)
 			{
 				if (selectedPart is BaseCockpit)
 				{
-					if (!spareList.OfType<BaseCockpit>().Any())
+					if(selectedPart.Name == currentCockpit.Name)
+					{
+						return false;
+					}
+					else if (!spareList.OfType<BaseCockpit>().Any())
 					{
 						this.allParts.Add(selectedPart);
 						this.totalQuality += selectedPart.Quality;
@@ -167,7 +181,11 @@ namespace Assets.Scripts
 				}
 				else if (selectedPart is BaseThrusters)
 				{
-					if (!spareList.OfType<BaseThrusters>().Any())
+					if (selectedPart.Name == currentThrusters.Name)
+					{
+						return false;
+					}
+					else if (!spareList.OfType<BaseThrusters>().Any())
 					{
 						this.allParts.Add(selectedPart);
 						this.totalQuality += selectedPart.Quality;
@@ -184,7 +202,11 @@ namespace Assets.Scripts
 				}
 				else if (selectedPart is BaseWings)
 				{
-					if (!spareList.OfType<BaseWings>().Any())
+					if(selectedPart.Name == currentWings.Name)
+					{
+						return false;
+					}
+					else if (!spareList.OfType<BaseWings>().Any())
 					{
 						this.allParts.Add(selectedPart);
 						this.totalQuality += selectedPart.Quality;
@@ -199,6 +221,11 @@ namespace Assets.Scripts
 						this.AddPart(selectedPart);
 					}
 				}
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -209,15 +236,10 @@ namespace Assets.Scripts
 		{
 			this.allParts = new List<IRocketParts>();
 
-			this.Cockpit3.Accessed = new BaseCockpit(40, 200, 0, 80);
-
 			this.Thrusters1.Accessed = new BaseThrusters(200, 50, 20);
 			this.Thrusters2.Accessed = new BaseThrusters(200, 50, 50);
 			this.Thrusters3.Accessed = new BaseThrusters(200, 50, 80);
 
-			this.Wings1.Accessed = new BaseWings(200, 0, 20);
-			this.Wings2.Accessed = new BaseWings(200, 0, 50);
-			this.Wings3.Accessed = new BaseWings(200, 0, 80);
 		}
 
 		/// <summary>
@@ -227,47 +249,47 @@ namespace Assets.Scripts
 		{
 			if (Input.GetMouseButtonDown(0))
 			{
-				this.Cockpit1 = MakeCockpit(new BaseCockpit(20, 200, 0, 20), testPrefab);
+				this.CreateCockpit1();
 			}
 
 			if (Input.GetMouseButtonDown(1))
 			{
-				this.Cockpit2 = MakeCockpit(new BaseCockpit(30, 200, 0, 50), testPrefab2);
+				this.CreateCockpit2();
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad0))
 			{
-				this.AddPart(this.Cockpit3.Accessed);
+				this.CreateCockpit3();
 			}
 
-			if (Input.GetKeyDown(KeyCode.Keypad1))
-			{
-				this.AddPart(this.Thrusters1.Accessed);
-			}
+			//if (Input.GetKeyDown(KeyCode.Keypad1))
+			//{
+			//	this.AddPart(this.Thrusters1.Accessed);
+			//}
 
-			if (Input.GetKeyDown(KeyCode.Keypad2))
-			{
-				this.AddPart(this.Thrusters2.Accessed);
-			}
+			//if (Input.GetKeyDown(KeyCode.Keypad2))
+			//{
+			//	this.AddPart(this.Thrusters2.Accessed);
+			//}
 
-			if (Input.GetKeyDown(KeyCode.Keypad3))
-			{
-				this.AddPart(this.Thrusters3.Accessed);
-			}
+			//if (Input.GetKeyDown(KeyCode.Keypad3))
+			//{
+			//	this.AddPart(this.Thrusters3.Accessed);
+			//}
 
 			if (Input.GetKeyDown(KeyCode.Keypad4))
 			{
-				this.AddPart(this.Wings1.Accessed);
+				this.CreateWings1();
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad5))
 			{
-				this.AddPart(this.Wings2.Accessed);
+				this.CreateWings2();
 			}
 
 			if (Input.GetKeyDown(KeyCode.Keypad6))
 			{
-				this.AddPart(this.Wings3.Accessed);
+				this.CreateWings3();
 			}
 
 			if (Input.GetKeyDown(KeyCode.V))
@@ -279,41 +301,48 @@ namespace Assets.Scripts
 			{
 				User.FuelCount += 100;
 			}
-
-			Debug.Log(this.allParts.Count);
-			Debug.Log("Total: " + this.totalQuality);
-			Debug.Log(this.ShipBuild());
 		}
-		[SerializeField]
-		private List<GameObject> rocketPart = new List<GameObject>();
-
-		private Cockpit MakeCockpit(BaseCockpit c, GameObject n)
+		
+		private GameObject BuildCockpit(BaseCockpit c, GameObject selectedCockpit, List<GameObject> building)
 		{
-			GameObject g = (GameObject)Instantiate(n) as GameObject;
-			var behaviour = g.AddComponent<Cockpit>();
-			behaviour.Create(c);
-			g.name = "Cockpit";
-			AddPart(c);
-			return behaviour;
+			if (!building.Contains(builtCockpit))
+			{
+				builtCockpit = (GameObject)Instantiate(selectedCockpit) as GameObject;
+				Cockpit behaviour = builtCockpit.AddComponent<Cockpit>();
+				behaviour.Create(c);
+				builtCockpit.name = selectedCockpit.name;
+				building.Add(builtCockpit);
+				return builtCockpit;
+			}
+			else if(building.Contains(builtCockpit) && builtCockpit.name != selectedCockpit.name)
+			{
+				building.Remove(builtCockpit);
+				Destroy(builtCockpit);
+				BuildCockpit(c, selectedCockpit, building);
+			}
+			return null;
+		}
+		private GameObject BuildWings(BaseWings w, GameObject selectedWings, List<GameObject> building)
+		{
+			if (!building.Contains(builtWings))
+			{
+				builtWings = (GameObject)Instantiate(selectedWings) as GameObject;
+				Wings behaviour = builtWings.AddComponent<Wings>();
+				behaviour.Create(w);
+				builtWings.name = selectedWings.name;
+				building.Add(builtWings);
+				return builtWings;
+			}
+			else if (building.Contains(builtWings) && builtWings.name != selectedWings.name)
+			{
+				building.Remove(builtWings);
+				Destroy(builtWings);
+				BuildWings(w, selectedWings, building);
+			}
+			return null;
 		}
 
-		private GameObject MakeWing(BaseWings w, List<GameObject> rocketParts)
-		{
-			GameObject g = new GameObject();
-			var behaviour = g.AddComponent<Wings>();
-			behaviour.Create(w);
-			g.name = "Wing::" + rocketParts.Count.ToString();
-			rocketParts.Add(g);
-			return g;
-		}
-		public void MakeWing(BaseWings w)
-		{
-			AddPart(w);
-			currentWings = w;
-			MakeWing(w, rocketPart);
-		}
-
-		private GameObject MakeThruster(BaseThrusters t, List<GameObject> rocketParts)
+		private GameObject BuildThrusters(BaseThrusters t, List<GameObject> rocketParts)
 		{
 			GameObject g = new GameObject();
 			var behaviour = g.AddComponent<Thrusters>();
@@ -322,11 +351,69 @@ namespace Assets.Scripts
 			rocketParts.Add(g);
 			return g;
 		}
-		public void MakeThruster(BaseThrusters t)
+
+		public void AssembleCockpit(BaseCockpit c, GameObject n)
 		{
+			if (AddPart(c) == true)
+			{
+				AddPart(c);
+				BuildCockpit(c, n, builtParts);
+			}
+		}
+
+		public void AssembleWings(BaseWings w, GameObject go)
+		{
+			if(AddPart(w) == true)
+			{
+				AddPart(w);
+				BuildWings(w, go, builtParts);
+			}
+		}
+
+		public void AssembleThrusters(BaseThrusters t)
+		{
+			if (AddPart(t) == true)
+			{
+				AddPart(t);
+				BuildThrusters(t, builtParts);
+			}
 			AddPart(t);
 			currentThrusters = t;
-			MakeThruster(t, rocketPart);
+			BuildThrusters(t, builtParts);
+		}
+
+		public void CreateCockpit1()
+		{
+			var cp = new BaseCockpit(20, 200, 0, 20, "Cockpit Rust");
+			AssembleCockpit(cp, cockpitOne);
+		}
+		public void CreateCockpit2()
+		{
+			var cp = new BaseCockpit(30, 200, 0, 50, "Cockpit Color");
+			this.AssembleCockpit(cp, cockpitTwo);
+		}
+		public void CreateCockpit3()
+		{
+			var cp = new BaseCockpit(40, 200, 0, 80, "Cockpit Flame");
+			this.AssembleCockpit(cp, cockpitThree);
+		}
+
+		public void CreateWings1()
+		{
+			BaseWings wing = new BaseWings(200, 0, 20, "Wings Rust");
+			this.AssembleWings(wing, wingsOne);
+		}
+
+		public void CreateWings2()
+		{
+			BaseWings wing = new BaseWings(200, 0, 50, "Wings Color");
+			this.AssembleWings(wing, wingsTwo);
+		}
+
+		public void CreateWings3()
+		{
+			BaseWings wing = new BaseWings(200, 0, 80, "Wings Flame");
+			this.AssembleWings(wing, wingsThree);
 		}
 	}
 }
