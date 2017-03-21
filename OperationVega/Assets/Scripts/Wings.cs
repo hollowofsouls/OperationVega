@@ -18,7 +18,7 @@ namespace Assets.Scripts
 		/// The accessed.
 		/// </summary>
 		[SerializeField]
-		public BaseWings Accessed;
+		private BaseWings Accessed;
 		public void Create(BaseWings w)
 		{
 			Accessed = w;

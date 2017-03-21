@@ -18,7 +18,7 @@ namespace Assets.Scripts
 		/// The accessed.
 		/// </summary>
 		[SerializeField]
-		public BaseThrusters Accessed;
+		private BaseThrusters Accessed;
 		public void Create(BaseThrusters t)
 		{
 			Accessed = t;
