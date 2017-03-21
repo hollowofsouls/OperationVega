@@ -91,6 +91,12 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+        public GameObject Harvester;
+
+        public GameObject Miner;
+
+        public GameObject Extractor;
+
         /// <summary>
         /// The invert y function.
         /// Inverts the y so the drag screen will drag accordingly.
@@ -277,6 +283,17 @@ namespace Assets.Scripts.Controllers
                     }
                 }
               }
+        }
+
+        /// <summary>
+        /// The spawn unit function.
+        /// <para></para>
+        /// <remarks><paramref name="theunit"></paramref> -The object to spawn.</remarks>
+        /// </summary>
+        public void SpawnUnit(GameObject theunit)
+        {
+            Vector3 spawnposition = this.theBarracks.transform.FindChild("Door").position;
+            Instantiate(theunit, spawnposition, Quaternion.identity);
         }
 
         /// <summary>

@@ -20,6 +20,13 @@ namespace Assets.Scripts
         private readonly FiniteStateMachine<string> theMinerFsm = new FiniteStateMachine<string>();
 
         /// <summary>
+        /// The orb reference.
+        /// The orb color will represent the units health.
+        /// </summary>
+        [SerializeField]
+        private GameObject orb;
+
+        /// <summary>
         /// Reference to the clean mineral prefab.
         /// </summary>
         [SerializeField]
@@ -543,6 +550,7 @@ namespace Assets.Scripts
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.speed = this.mystats.Speed;
+            this.orb.GetComponent<SkinnedMeshRenderer>().material.color = Color.green;
             Debug.Log("Miner Initialized");
         }
 
