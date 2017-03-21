@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: db5ced5658e86f9448f3cc8e8ce635c6
-timeCreated: 1490115494
+guid: b2dba7742c9111841a3d9eae0bc03839
+timeCreated: 1490125553
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: pickaxe_outroadkill:RoadKillOut
+    100000: Cherrypick
     100002: Unit_base_head__TopSHJnt
     100004: Unit_base_l_arm_ClavicleSHJnt
     100006: Unit_base_l_arm_ElbowSHJnt
@@ -49,7 +49,7 @@ ModelImporter:
     100082: Unit_orb
     100084: Unit_pack
     100086: //RootNode
-    400000: pickaxe_outroadkill:RoadKillOut
+    400000: Cherrypick
     400002: Unit_base_head__TopSHJnt
     400004: Unit_base_l_arm_ClavicleSHJnt
     400006: Unit_base_l_arm_ElbowSHJnt
@@ -93,14 +93,14 @@ ModelImporter:
     400082: Unit_orb
     400084: Unit_pack
     400086: //RootNode
-    4300000: pickaxe_outroadkill:RoadKillOut
+    4300000: Cherrypick
     4300002: Unit_body
     4300004: Unit_head
     4300006: Unit_pack
     4300008: Unit_orb
     7400000: Walk
     9500000: //RootNode
-    13700000: pickaxe_outroadkill:RoadKillOut
+    13700000: Cherrypick
     13700002: Unit_body
     13700004: Unit_head
     13700006: Unit_orb
@@ -153,7 +153,7 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
-      - path: pickaxe_outroadkill:RoadKillOut
+      - path: Cherrypick
         weight: 1
       - path: Unit_base_ROOTSHJnt
         weight: 1
