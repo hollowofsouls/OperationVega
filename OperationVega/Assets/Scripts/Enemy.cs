@@ -168,7 +168,8 @@ namespace Assets.Scripts
             this.mystats.Defense = 2;
             this.mystats.Speed = 2;
             this.mystats.Attackspeed = 2;
-            this.mystats.Skillcooldown = 20;
+            this.mystats.MaxSkillCooldown = 20;
+            this.mystats.CurrentSkillCooldown = this.mystats.MaxSkillCooldown;
             this.mystats.Attackrange = 2.0f;
 
             this.timetotaint = 0;
@@ -203,6 +204,7 @@ namespace Assets.Scripts
                     this.Currenttarget = null;
                     this.target = null;
                     this.ChangeStates("Idle");
+                    this.GetComponent<EnemyAI>().taunted = false;
                 }
             }
         }

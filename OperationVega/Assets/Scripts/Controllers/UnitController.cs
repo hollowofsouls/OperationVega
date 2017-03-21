@@ -3,13 +3,9 @@ namespace Assets.Scripts.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;
-
-    using Managers;
-
     using Interfaces;
-
+    using Managers;
     using UI;
-
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
@@ -20,6 +16,7 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
+
         /// <summary>
         /// The instance of the class.
         /// </summary>
@@ -33,7 +30,6 @@ namespace Assets.Scripts.Controllers
         /// <summary>
         /// The list of units selected by the drag screen.
         /// </summary>
-        [HideInInspector]
         private readonly List<GameObject> units = new List<GameObject>();
 
         /// <summary>
@@ -131,6 +127,8 @@ namespace Assets.Scripts.Controllers
                     selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                     selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
                     this.units.Add(theunit);
+                    UIManager.Self.currentcooldown = theunit.GetComponent<Stats>().CurrentSkillCooldown;
+                    UIManager.Self.abilityunit = theunit;
                     UIManager.Self.CreateUnitButton(theunit);
                 }
 
@@ -198,7 +196,7 @@ namespace Assets.Scripts.Controllers
         public void SelectAllUnits()
         {
             this.ClearSelectedUnits();
-            List<GameObject> units = GameObject.FindGameObjectsWithTag("Targetable").ToList();
+            List<GameObject> units = GameObject.FindGameObjectsWithTag("Player").ToList();
 
             foreach (GameObject go in units)
             {
@@ -315,6 +313,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void SelectUnits()
         {
+            // If the left mouse button is pressed and its not clicking on a UI element
             if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 this.ClearSelectedUnits();
@@ -332,6 +331,8 @@ namespace Assets.Scripts.Controllers
                         GameObject selectionsquare = this.theselectedobject.transform.FindChild("SelectionHighlight").gameObject;
                         selectionsquare.GetComponent<MeshRenderer>().enabled = true;
                         selectionsquare.GetComponent<MeshRenderer>().material.color = Color.black;
+                        UIManager.Self.currentcooldown = this.theselectedobject.GetComponent<Stats>().CurrentSkillCooldown;
+                        UIManager.Self.abilityunit = this.theselectedobject;
                         UIManager.Self.CreateUnitButton(this.theselectedobject);
                     }
                 }
@@ -344,7 +345,8 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void ActivateDragScreen()
         {
-            if (Input.GetMouseButtonDown(0))
+            // If the left mouse button is held down and its not on a UI element
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 this.startclick = Input.mousePosition;
             }
@@ -410,6 +412,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void CommandUnits()
         {
+            // If the right mouse button is pressed and its not on a UI element
             if (Input.GetKeyDown(KeyCode.Mouse1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -562,7 +565,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to pick up function.
-        /// This function sends unit(s) to the pickup item.
+        /// This function sends unit to the pickup item.
         /// <para></para>
         /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
@@ -608,7 +611,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The command to decontaminate function.
-        /// Send unit(s) to decontaminate.
+        /// Send unit(s) to decontaminate a tainted resource.
         /// <para></para>
         /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
@@ -652,13 +655,13 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The heal unit function.
-        /// Heals the unit with food.
+        /// Heals the clicked unit with food.
         /// <para></para>
         /// <remarks><paramref name="hit"></paramref> -The object that was hit by the ray cast.</remarks>
         /// </summary>
         private void HealUnit(RaycastHit hit)
         {
-            // The object hit is a unit and we have an instance of the cooked food to use
+            // If the object hit is a unit and we have an instance of the cooked food to use
             if (hit.transform.gameObject.GetComponent(typeof(IUnit)) && UIManager.Self.foodinstance != null)
             {
                 Stats stats = hit.transform.gameObject.GetComponent<Stats>();
@@ -677,7 +680,7 @@ namespace Assets.Scripts.Controllers
 
         /// <summary>
         /// The Activate Ability function.
-        /// Activates the ability of the selected unit.
+        /// Activates the ability of the selected unit(s).
         /// </summary>
         private void ActivateAbility()
         {
@@ -685,11 +688,20 @@ namespace Assets.Scripts.Controllers
             {
                 this.theUnit.SpecialAbility();
             }
+            else if (this.units.Count > 0)
+            {
+                foreach (GameObject go in this.units)
+                {
+                    IUnit unit = (IUnit)go.GetComponent(typeof(IUnit));
+                    unit.SpecialAbility();
+                }
+            }
         }
 
         /// <summary>
         /// The On GUI function.
         /// This draws the drag screen to the screen.
+        /// Also, uses the KeyBind class to change hot keys.
         /// </summary>
         private void OnGUI()
         {
@@ -698,6 +710,8 @@ namespace Assets.Scripts.Controllers
                 GUI.color = new Color(1, 1, 1, 0.5f);
                 GUI.DrawTexture(dragscreen, this.selectionHighlight);
             }
+
+            KeyBind.Self.HotkeyChange();
         }
     }
 }

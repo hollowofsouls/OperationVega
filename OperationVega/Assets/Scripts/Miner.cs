@@ -3,6 +3,7 @@ namespace Assets.Scripts
 {
     using Controllers;
     using Interfaces;
+    using UI;
     using UnityEngine;
     using UnityEngine.AI;
 
@@ -198,7 +199,30 @@ namespace Assets.Scripts
         /// </summary>
         public void SpecialAbility()
         {
-            Debug.Log("Miner Special Ability Activated");
+            // If able to use ability
+            if (this.mystats.CurrentSkillCooldown >= this.mystats.MaxSkillCooldown)
+            {
+                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 5);
+
+                // If nothing hit by cast then return
+                if (validtargets.Length < 1) return;
+
+                foreach (Collider c in validtargets)
+                {
+                    // If its an enemy - Make them head towards the miner
+                    if (c.gameObject.GetComponent<Enemy>())
+                    {
+                        c.gameObject.GetComponent<Enemy>().Currenttarget = this.gameObject;
+                        c.gameObject.GetComponent<EnemyAI>().taunted = true;
+                        c.gameObject.GetComponent<Enemy>().ChangeStates("Battle");
+                        c.gameObject.GetComponent<NavMeshAgent>().SetDestination(this.transform.position);
+                    }
+                }
+
+                UIManager.Self.currentcooldown = 0;
+                this.mystats.CurrentSkillCooldown = 0;
+                Debug.Log("Miner Special Ability Activated");
+            }
         }
 
         /// <summary>
@@ -462,6 +486,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateUnit()
         {
+            this.mystats.CurrentSkillCooldown += 1.0f * Time.deltaTime;
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
             this.decontime += 1 * Time.deltaTime;
@@ -506,7 +531,8 @@ namespace Assets.Scripts
             this.mystats.Defense = 4;
             this.mystats.Speed = 3;
             this.mystats.Attackspeed = 3;
-            this.mystats.Skillcooldown = 15;
+            this.mystats.MaxSkillCooldown = 15;
+            this.mystats.CurrentSkillCooldown = this.mystats.MaxSkillCooldown;
             this.mystats.Attackrange = 3.0f;
             this.mystats.Resourcecount = 0;
 

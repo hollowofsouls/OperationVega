@@ -12,6 +12,7 @@ namespace Assets.Scripts.BaseClasses
 	/// <summary>
 	/// The base thrusters.
 	/// </summary>
+	[System.Serializable]
 	public class BaseThrusters : IRocketParts
 	{
 		/// <summary>
@@ -19,6 +20,7 @@ namespace Assets.Scripts.BaseClasses
 		/// The amount of steel required to build the part.
 		/// Accessible through the SteelCost property.
 		/// </summary>
+		[SerializeField]
 		private uint steel;
 
 		/// <summary>
@@ -26,11 +28,13 @@ namespace Assets.Scripts.BaseClasses
 		/// The amount of Fuel required to build the part.
 		/// Accessible through the FuelCost property.
 		/// </summary>
+		[SerializeField]
 		private uint fuel;
 
 		/// <summary>
 		/// The quality.
 		/// </summary>
+		[SerializeField]
 		private uint quality;
 
 		/// <summary>

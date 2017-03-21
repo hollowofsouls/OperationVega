@@ -46,10 +46,16 @@ namespace Assets.Scripts
         public int Attackspeed;
 
         /// <summary>
-        /// The skill cool down of the unit.
+        /// The current skill cool down of the unit.
         /// </summary>
         [HideInInspector]
-        public int Skillcooldown;
+        public float CurrentSkillCooldown;
+
+        /// <summary>
+        /// The max skill cool down of the unit.
+        /// </summary>
+        [HideInInspector]
+        public float MaxSkillCooldown;
 
         /// <summary>
         /// The attack range of the unit.

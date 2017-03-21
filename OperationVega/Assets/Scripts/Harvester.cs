@@ -1,12 +1,11 @@
 ﻿
 namespace Assets.Scripts
 {
+    using System.Collections;
     using Controllers;
-
     using Interfaces;
-
     using Managers;
-
+    using UI;
     using UnityEngine;
     using UnityEngine.AI;
 
@@ -237,7 +236,45 @@ namespace Assets.Scripts
         /// </summary>
         public void SpecialAbility()
         {
-            Debug.Log("Harvester Special Ability Activated");
+            // If able to use ability
+            if (this.mystats.CurrentSkillCooldown >= this.mystats.MaxSkillCooldown)
+            {
+                Collider[] validtargets = Physics.OverlapSphere(this.transform.position, 5);
+
+                // If nothing hit by cast then return
+                if (validtargets.Length < 1) return;
+
+                foreach (Collider c in validtargets)
+                {
+                    // If its an enemy - Stop them
+                    if (c.gameObject.GetComponent<Enemy>())
+                    {
+                        Debug.Log("Found An enemy");
+                        NavMeshAgent navagent = c.gameObject.GetComponent<NavMeshAgent>();
+                        EnemyAI enemy = c.gameObject.GetComponent<EnemyAI>();
+
+                        this.StartCoroutine(this.EnemyStopTimer(navagent, enemy));
+
+                    } // If its a unit - Try and heal them
+                    else if (c.gameObject.GetComponent(typeof(IUnit)))
+                    {
+                        Stats unitstats = c.gameObject.GetComponent<Stats>();
+
+                        // Only heal them if health is less than max health
+                        if (unitstats.Health < unitstats.Maxhealth)
+                        {
+                            unitstats.Health += 20;
+
+                            // If health is greater than max health..set health to max health, else just set it to the current health value.
+                            unitstats.Health = unitstats.Health > unitstats.Maxhealth ? unitstats.Maxhealth : unitstats.Health;
+                        }
+                    }
+                }
+
+                UIManager.Self.currentcooldown = 0;
+                this.mystats.CurrentSkillCooldown = 0;
+                Debug.Log("Harvester Special Ability Activated");
+            }
         }
 
         /// <summary>
@@ -443,6 +480,7 @@ namespace Assets.Scripts
         /// </summary>
         private void UpdateUnit()
         {
+            this.mystats.CurrentSkillCooldown += 1.0f * Time.deltaTime;
             this.timebetweenattacks += 1 * Time.deltaTime;
             this.harvesttime += 1 * Time.deltaTime;
             this.decontime += 1 * Time.deltaTime;
@@ -487,7 +525,8 @@ namespace Assets.Scripts
             this.mystats.Defense = 5;
             this.mystats.Speed = 3;
             this.mystats.Attackspeed = 3;
-            this.mystats.Skillcooldown = 15;
+            this.mystats.MaxSkillCooldown = 15;
+            this.mystats.CurrentSkillCooldown = this.mystats.MaxSkillCooldown;
             this.mystats.Attackrange = 5.0f;
             this.mystats.Resourcecount = 0;
 
@@ -734,6 +773,28 @@ namespace Assets.Scripts
                     this.Decontaminate();
                 }
             }
+        }
+
+        /// <summary>
+        /// The enemy stop timer function.
+        /// The enemy takes the stun effect .
+        /// <para></para>
+        /// <remarks><paramref name="nav"></paramref> -The nav agent to stop and resume.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="enemy"></paramref> -The enemy ai to set its stunned value.</remarks>
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IEnumerator"/>.
+        /// </returns>
+        private IEnumerator EnemyStopTimer(NavMeshAgent nav, EnemyAI enemy)
+        {
+            enemy.stunned = true;
+            nav.Stop();
+            Debug.Log("Starting to wait");
+            yield return new WaitForSeconds(3);
+            enemy.stunned = false;
+            nav.Resume();
+            Debug.Log("Done waiting.");
         }
 
         /// <summary>

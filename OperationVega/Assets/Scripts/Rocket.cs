@@ -3,7 +3,6 @@ namespace Assets.Scripts
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 	using Assets.Scripts.BaseClasses;
 	using Assets.Scripts.Interfaces;
@@ -18,6 +17,7 @@ namespace Assets.Scripts
 		/// <summary>
 		/// The all parts.
 		/// </summary>
+		[SerializeField]
 		private List<IRocketParts> allParts;
 
 		/// <summary>
@@ -43,66 +43,54 @@ namespace Assets.Scripts
 		/// </summary>
 		private BaseWings currentWings;
 
-		///// <summary>
-		///// The cockpit 1.
-		///// </summary>
-		// public Cockpit Cockpit1;
+		/// <summary>
+		/// The cockpit 1.
+		/// </summary>
+		private Cockpit Cockpit1;
 
-		///// <summary>
-		///// The cockpit 2.
-		///// </summary>
-		// public Cockpit Cockpit2;
-
-		///// <summary>
-		///// The cockpit 3.
-		///// </summary>
-		// public Cockpit Cockpit3;
-
-		///// <summary>
-		///// The thrusters 1.
-		///// </summary>
-		// public Thrusters Thrusters1;
-
-		///// <summary>
-		///// The thrusters 2.
-		///// </summary>
-		// public Thrusters Thrusters2;
-
-		///// <summary>
-		///// The thrusters 3.
-		///// </summary>
-		// public Thrusters Thrusters3;
-
-		///// <summary>
-		///// The wings 1.
-		///// </summary>
-		// public Wings Wings1;
-
-		///// <summary>
-		///// The wings 2.
-		///// </summary>
-		// public Wings Wings2;
-
-		///// <summary>
-		///// The wings 3.
-		///// </summary>
-		// public Wings Wings3;
+		private Cockpit Cockpit2;
 
 		/// <summary>
-		/// Gets or sets the part list.
+		/// The cockpit 2.
 		/// </summary>
-		public List<IRocketParts> PartList
-		{
-			get
-			{
-				return this.allParts;
-			}
+		public GameObject testPrefab2;
 
-			set
-			{
-				this.allParts = value;
-			}
-		}
+		/// <summary>
+		/// The cockpit 3.
+		/// </summary>
+		public Cockpit Cockpit3;
+
+		/// <summary>
+		/// The thrusters 1.
+		/// </summary>
+		public Thrusters Thrusters1;
+
+		/// <summary>
+		/// The thrusters 2.
+		/// </summary>
+		public Thrusters Thrusters2;
+
+		/// <summary>
+		/// The thrusters 3.
+		/// </summary>
+		public Thrusters Thrusters3;
+
+		/// <summary>
+		/// The wings 1.
+		/// </summary>
+		public Wings Wings1;
+
+		/// <summary>
+		/// The wings 2.
+		/// </summary>
+		public Wings Wings2;
+
+		/// <summary>
+		/// The wings 3.
+		/// </summary>
+		public Wings Wings3;
+
+		public GameObject testPrefab;
 
 		/// <summary>
 		/// Gets or sets the total quality.
@@ -129,7 +117,6 @@ namespace Assets.Scripts
 		public bool ShipBuild()
 		{
 			return this.allParts.OfType<BaseCockpit>().Any() &&
-			       // this.allParts.OfType<BaseChassis>().Any() &&
 			       this.allParts.OfType<BaseThrusters>().Any() &&
 			       this.allParts.OfType<BaseWings>().Any();
 		}
@@ -144,11 +131,12 @@ namespace Assets.Scripts
 		/// Increments the Rocket class's integer value total quality based on the object's integer value quality
 		/// Decrements the values of the player's steel and fuel based on the object's steel and fuel cost values
 		/// Sets an object to be equal to the selected object as current
+		/// Exits the function
 		/// Step 3-2) Else if Step 3-1 returns false, then check if an object of the same type exists in the list at any index and if the list doesn't contain the selected object
 		/// Step 5) If Step 3-2 returns true:
 		/// Decrement the Rocket's total quality based on the quality value the current object in the list,
 		/// Remove the current object from the list,
-		/// See details of Step 4
+		/// And repeat from the start until it meets a condition to exit the function
 		/// </summary>
 		/// <param name="selectedPart">
 		/// The selected part.
@@ -174,12 +162,7 @@ namespace Assets.Scripts
 					{
 						this.totalQuality -= this.currentCockpit.Quality;
 						this.allParts.Remove(this.currentCockpit);
-						
-						this.allParts.Add(selectedPart);
-						this.totalQuality += selectedPart.Quality;
-						User.SteelCount -= selectedPart.SteelCost;
-						User.FuelCount -= selectedPart.FuelCost;
-						this.currentCockpit = selectedPart as BaseCockpit;
+						this.AddPart(selectedPart);
 					}
 				}
 				else if (selectedPart is BaseThrusters)
@@ -196,12 +179,7 @@ namespace Assets.Scripts
 					{
 						this.totalQuality -= this.currentThrusters.Quality;
 						this.allParts.Remove(this.currentThrusters);
-
-						this.allParts.Add(selectedPart);
-						this.totalQuality += selectedPart.Quality;
-						User.SteelCount -= selectedPart.SteelCost;
-						User.FuelCount -= selectedPart.FuelCost;
-						this.currentThrusters = selectedPart as BaseThrusters;
+						this.AddPart(selectedPart);
 					}
 				}
 				else if (selectedPart is BaseWings)
@@ -218,12 +196,7 @@ namespace Assets.Scripts
 					{
 						this.totalQuality -= this.currentWings.Quality;
 						this.allParts.Remove(this.currentWings);
-
-						this.allParts.Add(selectedPart);
-						this.totalQuality += selectedPart.Quality;
-						User.SteelCount -= selectedPart.SteelCost;
-						User.FuelCount -= selectedPart.FuelCost;
-						this.currentWings = selectedPart as BaseWings;
+						this.AddPart(selectedPart);
 					}
 				}
 			}
@@ -236,17 +209,15 @@ namespace Assets.Scripts
 		{
 			this.allParts = new List<IRocketParts>();
 
-			// this.Cockpit1.Accessed = new BaseCockpit(20, 200, 0, 20);
-			// this.Cockpit2.Accessed = new BaseCockpit(30, 200, 0, 50);
-			// this.Cockpit3.Accessed = new BaseCockpit(40, 200, 0, 80);
+			this.Cockpit3.Accessed = new BaseCockpit(40, 200, 0, 80);
 
-			// this.Thrusters1.Accessed = new BaseThrusters(200, 50, 20);
-			// this.Thrusters2.Accessed = new BaseThrusters(200, 50, 50);
-			// this.Thrusters3.Accessed = new BaseThrusters(200, 50, 80);
+			this.Thrusters1.Accessed = new BaseThrusters(200, 50, 20);
+			this.Thrusters2.Accessed = new BaseThrusters(200, 50, 50);
+			this.Thrusters3.Accessed = new BaseThrusters(200, 50, 80);
 
-			// this.Wings1.Accessed = new BaseWings(200, 0, 20);
-			// this.Wings2.Accessed = new BaseWings(200, 0, 50);
-			// this.Wings3.Accessed = new BaseWings(200, 0, 80);
+			this.Wings1.Accessed = new BaseWings(200, 0, 20);
+			this.Wings2.Accessed = new BaseWings(200, 0, 50);
+			this.Wings3.Accessed = new BaseWings(200, 0, 80);
 		}
 
 		/// <summary>
@@ -254,59 +225,57 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Update()
 		{
-			// var spareList = this.allParts.ToList();
+			if (Input.GetMouseButtonDown(0))
+			{
+				this.Cockpit1 = MakeCockpit(new BaseCockpit(20, 200, 0, 20), testPrefab);
+			}
 
-			//if (Input.GetMouseButtonDown(0))
-			//{
-			//	this.AddPart(this.Cockpit1.Accessed);
-			//}
+			if (Input.GetMouseButtonDown(1))
+			{
+				this.Cockpit2 = MakeCockpit(new BaseCockpit(30, 200, 0, 50), testPrefab2);
+			}
 
-			//if (Input.GetMouseButtonDown(1))
-			//{
-			//	this.AddPart(this.Cockpit2.Accessed);
-			//}
+			if (Input.GetKeyDown(KeyCode.Keypad0))
+			{
+				this.AddPart(this.Cockpit3.Accessed);
+			}
 
-			//if (Input.GetKeyDown(KeyCode.Keypad0))
-			//{
-			//	this.AddPart(this.Cockpit3.Accessed);
-			//}
+			if (Input.GetKeyDown(KeyCode.Keypad1))
+			{
+				this.AddPart(this.Thrusters1.Accessed);
+			}
 
-			// if (Input.GetKeyDown(KeyCode.Keypad1))
-			// {
-			//	this.AddPart(this.Thrusters1.Accessed);
-			// }
+			if (Input.GetKeyDown(KeyCode.Keypad2))
+			{
+				this.AddPart(this.Thrusters2.Accessed);
+			}
 
-			// if (Input.GetKeyDown(KeyCode.Keypad2))
-			// {
-			//	this.AddPart(this.Thrusters2.Accessed);
-			// }
+			if (Input.GetKeyDown(KeyCode.Keypad3))
+			{
+				this.AddPart(this.Thrusters3.Accessed);
+			}
 
-			// if (Input.GetKeyDown(KeyCode.Keypad3))
-			// {
-			//	this.AddPart(this.Thrusters3.Accessed);
-			// }
+			if (Input.GetKeyDown(KeyCode.Keypad4))
+			{
+				this.AddPart(this.Wings1.Accessed);
+			}
 
-			//if (Input.GetKeyDown(KeyCode.Keypad4))
-			//{
-			//	this.AddPart(this.Wings1.Accessed);
-			//}
+			if (Input.GetKeyDown(KeyCode.Keypad5))
+			{
+				this.AddPart(this.Wings2.Accessed);
+			}
 
-			//if (Input.GetKeyDown(KeyCode.Keypad5))
-			//{
-			//	this.AddPart(this.Wings2.Accessed);
-			//}
+			if (Input.GetKeyDown(KeyCode.Keypad6))
+			{
+				this.AddPart(this.Wings3.Accessed);
+			}
 
-			//if (Input.GetKeyDown(KeyCode.Keypad6))
-			//{
-			//	this.AddPart(this.Wings3.Accessed);
-			//}
-
-			if (Input.GetKeyDown(KeyCode.A))
+			if (Input.GetKeyDown(KeyCode.V))
 			{
 				User.SteelCount += 100;
 			}
 
-			if (Input.GetKeyDown(KeyCode.S))
+			if (Input.GetKeyDown(KeyCode.B))
 			{
 				User.FuelCount += 100;
 			}
@@ -314,6 +283,50 @@ namespace Assets.Scripts
 			Debug.Log(this.allParts.Count);
 			Debug.Log("Total: " + this.totalQuality);
 			Debug.Log(this.ShipBuild());
+		}
+		[SerializeField]
+		private List<GameObject> rocketPart = new List<GameObject>();
+
+		private Cockpit MakeCockpit(BaseCockpit c, GameObject n)
+		{
+			GameObject g = (GameObject)Instantiate(n) as GameObject;
+			var behaviour = g.AddComponent<Cockpit>();
+			behaviour.Create(c);
+			g.name = "Cockpit";
+			AddPart(c);
+			return behaviour;
+		}
+
+		private GameObject MakeWing(BaseWings w, List<GameObject> rocketParts)
+		{
+			GameObject g = new GameObject();
+			var behaviour = g.AddComponent<Wings>();
+			behaviour.Create(w);
+			g.name = "Wing::" + rocketParts.Count.ToString();
+			rocketParts.Add(g);
+			return g;
+		}
+		public void MakeWing(BaseWings w)
+		{
+			AddPart(w);
+			currentWings = w;
+			MakeWing(w, rocketPart);
+		}
+
+		private GameObject MakeThruster(BaseThrusters t, List<GameObject> rocketParts)
+		{
+			GameObject g = new GameObject();
+			var behaviour = g.AddComponent<Thrusters>();
+			behaviour.Create(t);
+			g.name = "Thruster::" + rocketParts.Count.ToString();
+			rocketParts.Add(g);
+			return g;
+		}
+		public void MakeThruster(BaseThrusters t)
+		{
+			AddPart(t);
+			currentThrusters = t;
+			MakeThruster(t, rocketPart);
 		}
 	}
 }

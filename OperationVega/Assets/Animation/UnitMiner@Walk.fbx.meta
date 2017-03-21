@@ -1,0 +1,620 @@
+fileFormatVersion: 2
+guid: d3bd3d67d4475cb47b4cc5687154a9c0
+timeCreated: 1489520126
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Unit_base_head__TopSHJnt
+    100002: Unit_base_l_arm_ClavicleSHJnt
+    100004: Unit_base_l_arm_ElbowSHJnt
+    100006: Unit_base_l_arm_ShoulderSHJnt
+    100008: Unit_base_l_arm_WristSHJnt
+    100010: Unit_base_l_hand_01_01SHJnt
+    100012: Unit_base_l_hand_01_02SHJnt
+    100014: Unit_base_l_hand_02_01SHJnt
+    100016: Unit_base_l_hand_02_02SHJnt
+    100018: Unit_base_l_leg_AnkleSHJnt
+    100020: Unit_base_l_leg_BallSHJnt
+    100022: Unit_base_l_leg_HipSHJnt
+    100024: Unit_base_l_leg_KneeSHJnt
+    100026: Unit_base_l_leg_ToeSHJnt
+    100028: Unit_base_neck_01SHJnt
+    100030: Unit_base_neck_TopSHJnt
+    100032: Unit_base_pack_01_01SHJnt
+    100034: Unit_base_pack_01_02SHJnt
+    100036: Unit_base_pack_01_03SHJnt
+    100038: Unit_base_pack_01_04SHJnt
+    100040: Unit_base_pack_01_05SHJnt
+    100042: Unit_base_pack_01_06SHJnt
+    100044: Unit_base_r_arm_ClavicleSHJnt
+    100046: Unit_base_r_arm_ElbowSHJnt
+    100048: Unit_base_r_arm_ShoulderSHJnt
+    100050: Unit_base_r_arm_WristSHJnt
+    100052: Unit_base_r_hand_01_01SHJnt
+    100054: Unit_base_r_hand_01_02SHJnt
+    100056: Unit_base_r_hand_02_01SHJnt
+    100058: Unit_base_r_hand_02_02SHJnt
+    100060: Unit_base_r_leg_AnkleSHJnt
+    100062: Unit_base_r_leg_BallSHJnt
+    100064: Unit_base_r_leg_HipSHJnt
+    100066: Unit_base_r_leg_KneeSHJnt
+    100068: Unit_base_r_leg_ToeSHJnt
+    100070: Unit_base_ROOTSHJnt
+    100072: Unit_base_spine_01SHJnt
+    100074: Unit_base_spine_TopSHJnt
+    100076: //RootNode
+    100078: Unit_base_SHJntGrp
+    400000: Unit_base_head__TopSHJnt
+    400002: Unit_base_l_arm_ClavicleSHJnt
+    400004: Unit_base_l_arm_ElbowSHJnt
+    400006: Unit_base_l_arm_ShoulderSHJnt
+    400008: Unit_base_l_arm_WristSHJnt
+    400010: Unit_base_l_hand_01_01SHJnt
+    400012: Unit_base_l_hand_01_02SHJnt
+    400014: Unit_base_l_hand_02_01SHJnt
+    400016: Unit_base_l_hand_02_02SHJnt
+    400018: Unit_base_l_leg_AnkleSHJnt
+    400020: Unit_base_l_leg_BallSHJnt
+    400022: Unit_base_l_leg_HipSHJnt
+    400024: Unit_base_l_leg_KneeSHJnt
+    400026: Unit_base_l_leg_ToeSHJnt
+    400028: Unit_base_neck_01SHJnt
+    400030: Unit_base_neck_TopSHJnt
+    400032: Unit_base_pack_01_01SHJnt
+    400034: Unit_base_pack_01_02SHJnt
+    400036: Unit_base_pack_01_03SHJnt
+    400038: Unit_base_pack_01_04SHJnt
+    400040: Unit_base_pack_01_05SHJnt
+    400042: Unit_base_pack_01_06SHJnt
+    400044: Unit_base_r_arm_ClavicleSHJnt
+    400046: Unit_base_r_arm_ElbowSHJnt
+    400048: Unit_base_r_arm_ShoulderSHJnt
+    400050: Unit_base_r_arm_WristSHJnt
+    400052: Unit_base_r_hand_01_01SHJnt
+    400054: Unit_base_r_hand_01_02SHJnt
+    400056: Unit_base_r_hand_02_01SHJnt
+    400058: Unit_base_r_hand_02_02SHJnt
+    400060: Unit_base_r_leg_AnkleSHJnt
+    400062: Unit_base_r_leg_BallSHJnt
+    400064: Unit_base_r_leg_HipSHJnt
+    400066: Unit_base_r_leg_KneeSHJnt
+    400068: Unit_base_r_leg_ToeSHJnt
+    400070: Unit_base_ROOTSHJnt
+    400072: Unit_base_spine_01SHJnt
+    400074: Unit_base_spine_TopSHJnt
+    400076: //RootNode
+    400078: Unit_base_SHJntGrp
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: "Copied Avatar Rig Configuration mis-match. Transform hierarchy
+      does not match:\n\tParent for 'Unit_base_SHJntGrp' differs from one found in
+      HumanDescription. 'UnitMiner@Walk' was found instead of 'Unit_base'.\n"
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    serializedVersion: 2
+    human:
+    - boneName: Unit_base_ROOTSHJnt
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_leg_HipSHJnt
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_leg_HipSHJnt
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_leg_KneeSHJnt
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_leg_KneeSHJnt
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_leg_AnkleSHJnt
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_leg_AnkleSHJnt
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_spine_01SHJnt
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_spine_TopSHJnt
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_pack_01_03SHJnt
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_pack_01_04SHJnt
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_arm_ClavicleSHJnt
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_arm_ClavicleSHJnt
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_arm_ShoulderSHJnt
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_arm_ShoulderSHJnt
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_arm_ElbowSHJnt
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_arm_ElbowSHJnt
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_arm_WristSHJnt
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_arm_WristSHJnt
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_leg_BallSHJnt
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_leg_BallSHJnt
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_pack_01_05SHJnt
+      humanName: RightEye
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_hand_01_01SHJnt
+      humanName: Left Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_hand_01_02SHJnt
+      humanName: Left Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_hand_02_01SHJnt
+      humanName: Left Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_l_hand_02_02SHJnt
+      humanName: Left Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_hand_01_01SHJnt
+      humanName: Right Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_hand_01_02SHJnt
+      humanName: Right Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_hand_02_01SHJnt
+      humanName: Right Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Unit_base_r_hand_02_02SHJnt
+      humanName: Right Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: UnitMiner(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pickaxe_outroadkill:RoadKillOut
+      parentName: UnitMiner(Clone)
+      position: {x: -0.38475004, y: 0.44787258, z: -0.38260978}
+      rotation: {x: 0.38757715, y: 0.5460732, z: 0.63076174, w: 0.39208117}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_body
+      parentName: UnitMiner(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_head
+      parentName: Unit_body
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_pack
+      parentName: Unit_body
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_orb
+      parentName: Unit_pack
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_ROOTSHJnt
+      parentName: UnitMiner(Clone)
+      position: {x: 3.1554436e-32, y: 0.34171206, z: -7.888609e-33}
+      rotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_spine_01SHJnt
+      parentName: Unit_base_ROOTSHJnt
+      position: {x: -0.12170816, y: -2.6493233e-17, z: 3.37808e-18}
+      rotation: {x: 1.6653345e-16, y: -5.551115e-17, z: 5.551115e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_spine_TopSHJnt
+      parentName: Unit_base_spine_01SHJnt
+      position: {x: -0.12170816, y: -1.4043727e-17, z: -3.37808e-18}
+      rotation: {x: -1.52324e-16, y: -0.05713409, z: 0.22862133, w: 0.9718375}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_pack_01_01SHJnt
+      parentName: Unit_base_spine_TopSHJnt
+      position: {x: 0.10953598, y: 0.2539667, z: -2.0807566e-16}
+      rotation: {x: 0.7071068, y: -0.7071068, z: 2.0030707e-16, w: -2.0030707e-16}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_pack_01_02SHJnt
+      parentName: Unit_base_pack_01_01SHJnt
+      position: {x: -0.06416833, y: 0.18470573, z: -0.091524124}
+      rotation: {x: 0, y: -0, z: -0.6173717, w: 0.78667164}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_pack_01_03SHJnt
+      parentName: Unit_base_pack_01_02SHJnt
+      position: {x: -0.1996421, y: -0.00066105276, z: 1.2434498e-16}
+      rotation: {x: 0, y: 0, z: 0.008367867, w: 0.999965}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_pack_01_04SHJnt
+      parentName: Unit_base_pack_01_03SHJnt
+      position: {x: -0.21448416, y: 0.0051925913, z: 0}
+      rotation: {x: 0, y: 0, z: 0.07400592, w: 0.9972578}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_pack_01_05SHJnt
+      parentName: Unit_base_pack_01_04SHJnt
+      position: {x: -0.1425016, y: 0.026619265, z: 3.5527136e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_pack_01_06SHJnt
+      parentName: Unit_base_pack_01_05SHJnt
+      position: {x: -0.26465538, y: 0.05873292, z: 0}
+      rotation: {x: 0, y: -0, z: -0.2486992, w: 0.9685808}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_arm_ClavicleSHJnt
+      parentName: Unit_base_spine_TopSHJnt
+      position: {x: 0.043731313, y: 4.594451e-18, z: -0.06202817}
+      rotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_arm_ShoulderSHJnt
+      parentName: Unit_base_l_arm_ClavicleSHJnt
+      position: {x: -0.05866433, y: 0.015678685, z: -1.8211883e-17}
+      rotation: {x: -0.031214938, y: -0.017572701, z: -0.023218364, w: 0.9990885}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_arm_ElbowSHJnt
+      parentName: Unit_base_l_arm_ShoulderSHJnt
+      position: {x: -0.09469779, y: 2.1316282e-16, z: -4.4408918e-17}
+      rotation: {x: -0.0007493288, y: 0.042055182, z: -0.012002975, w: 0.999043}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_arm_WristSHJnt
+      parentName: Unit_base_l_arm_ElbowSHJnt
+      position: {x: -0.10435232, y: -1.4210854e-16, z: 3.9968027e-17}
+      rotation: {x: 0.039144367, y: -0.022722289, z: 0.09012296, w: 0.99490166}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_hand_01_01SHJnt
+      parentName: Unit_base_l_arm_WristSHJnt
+      position: {x: -0.020289464, y: -0.02472056, z: 0.059793904}
+      rotation: {x: 0.44557568, y: -0.01042905, z: -0.13950941, w: 0.88424593}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_hand_01_02SHJnt
+      parentName: Unit_base_l_hand_01_01SHJnt
+      position: {x: -0.06029302, y: -2.1316282e-16, z: -3.5527136e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_hand_02_01SHJnt
+      parentName: Unit_base_l_arm_WristSHJnt
+      position: {x: -0.074166626, y: 0.026313052, z: 0.0037162646}
+      rotation: {x: -0.0074350117, y: 0.019037222, z: -0.28317648, w: 0.9588501}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_hand_02_02SHJnt
+      parentName: Unit_base_l_hand_02_01SHJnt
+      position: {x: -0.1046765, y: -0.040881675, z: -2.7547409e-17}
+      rotation: {x: 0, y: 0, z: 0.13855489, w: 0.9903548}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_arm_ClavicleSHJnt
+      parentName: Unit_base_spine_TopSHJnt
+      position: {x: 0.043731313, y: 3.214049e-17, z: 0.06202817}
+      rotation: {x: 0.5114898, y: -0.48976135, z: 0.48867702, w: 0.50961435}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_arm_ShoulderSHJnt
+      parentName: Unit_base_r_arm_ClavicleSHJnt
+      position: {x: 0.05866433, y: 0.015678685, z: 1.9730453e-17}
+      rotation: {x: -0.037038855, y: 0.00756797, z: -0.06755303, w: 0.9969992}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_arm_ElbowSHJnt
+      parentName: Unit_base_r_arm_ShoulderSHJnt
+      position: {x: 0.09469779, y: 0, z: 1.7763568e-17}
+      rotation: {x: -0.00048047665, y: -0.05199573, z: 0.007697024, w: 0.99861753}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_arm_WristSHJnt
+      parentName: Unit_base_r_arm_ElbowSHJnt
+      position: {x: 0.10435232, y: 0, z: 1.7763568e-17}
+      rotation: {x: 0.039144367, y: 0.022722289, z: -0.09012296, w: 0.99490166}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_hand_01_01SHJnt
+      parentName: Unit_base_r_arm_WristSHJnt
+      position: {x: 0.020289464, y: -0.02472056, z: 0.059793904}
+      rotation: {x: 0.44557565, y: 0.010429169, z: 0.13950962, w: 0.8842458}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_hand_01_02SHJnt
+      parentName: Unit_base_r_hand_01_01SHJnt
+      position: {x: 0.06029302, y: 7.81597e-16, z: -4.6185276e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_hand_02_01SHJnt
+      parentName: Unit_base_r_arm_WristSHJnt
+      position: {x: 0.074166626, y: 0.026313052, z: 0.0037162646}
+      rotation: {x: -0.0074349605, y: -0.019037385, z: 0.2831765, w: 0.95885}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_hand_02_02SHJnt
+      parentName: Unit_base_r_hand_02_01SHJnt
+      position: {x: 0.1046765, y: -0.040881675, z: -1.9290125e-17}
+      rotation: {x: 0, y: -0, z: -0.13855489, w: 0.9903548}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_neck_01SHJnt
+      parentName: Unit_base_spine_TopSHJnt
+      position: {x: -0.020642148, y: 1.14981364e-17, z: -1.1594998e-32}
+      rotation: {x: 1.6653345e-16, y: -5.551115e-17, z: 5.551115e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_neck_TopSHJnt
+      parentName: Unit_base_neck_01SHJnt
+      position: {x: -0.020642148, y: -2.5692947e-18, z: -2.293334e-32}
+      rotation: {x: 1.6653345e-16, y: -5.551115e-17, z: 5.551115e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_head__TopSHJnt
+      parentName: Unit_base_neck_TopSHJnt
+      position: {x: -0.39912048, y: -0.052772474, z: 6.822422e-17}
+      rotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_leg_HipSHJnt
+      parentName: Unit_base_ROOTSHJnt
+      position: {x: 0.10286824, y: -7.459583e-18, z: -0.08386528}
+      rotation: {x: 0.0379897, y: 0.7148783, z: -0.69548094, w: -0.061741713}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_leg_KneeSHJnt
+      parentName: Unit_base_l_leg_HipSHJnt
+      position: {x: -0.09118373, y: -3.5527136e-17, z: 4.3076652e-16}
+      rotation: {x: 0, y: -0.15840396, z: -0, w: 0.9873744}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_leg_AnkleSHJnt
+      parentName: Unit_base_l_leg_KneeSHJnt
+      position: {x: -0.0724621, y: 5.3290704e-17, z: -3.042011e-16}
+      rotation: {x: 0.016203135, y: 0.08833463, z: 0.01441012, w: 0.99585485}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_leg_BallSHJnt
+      parentName: Unit_base_l_leg_AnkleSHJnt
+      position: {x: -0.07036004, y: -5.3290704e-17, z: 0.05770915}
+      rotation: {x: -0.000000035522834, y: 0.70710826, z: 0.00000035958993, w: 0.70710534}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_l_leg_ToeSHJnt
+      parentName: Unit_base_l_leg_BallSHJnt
+      position: {x: -0.11961168, y: 7.105427e-17, z: 8.493206e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_leg_HipSHJnt
+      parentName: Unit_base_ROOTSHJnt
+      position: {x: 0.10286824, y: 4.847249e-17, z: 0.08386528}
+      rotation: {x: 0.059933115, y: 0.7164717, z: -0.6939343, w: -0.039136555}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_leg_KneeSHJnt
+      parentName: Unit_base_r_leg_HipSHJnt
+      position: {x: -0.09118373, y: 0, z: -1.110223e-16}
+      rotation: {x: 0, y: -0.1584048, z: -0, w: 0.9873743}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_leg_AnkleSHJnt
+      parentName: Unit_base_r_leg_KneeSHJnt
+      position: {x: -0.0724621, y: 0, z: -2.375877e-16}
+      rotation: {x: 0.013405833, y: 0.08880262, z: -0.017043948, w: 0.9958132}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_leg_BallSHJnt
+      parentName: Unit_base_r_leg_AnkleSHJnt
+      position: {x: -0.07036004, y: 0, z: 0.05770915}
+      rotation: {x: 0.000000035887908, y: 0.70710826, z: -0.00000036329126, w: 0.70710534}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Unit_base_r_leg_ToeSHJnt
+      parentName: Unit_base_r_leg_BallSHJnt
+      position: {x: -0.11961168, y: 1.7763568e-17, z: 5.745404e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 41656d1f0db1b3344937dcff5398d1f6,
+    type: 3}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

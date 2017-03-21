@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts;
+using Assets.Scripts.Managers;
 using UI;
 
 
 namespace Assets.Scripts
 {
+    [System.Serializable]
     public class Craft : MonoBehaviour
     {
         //Will be used to desribe resources as Items
         string Items;
         //Integer that will hold the amount.
         int Amount;
+
+        public GameObject unit;
 
 
         
@@ -69,6 +72,7 @@ namespace Assets.Scripts
             Ingredients.Add(new Craft("Minerals", 1));
             Ingredients.Add(new Craft("Gas", 1));
             CraftItem = false;
+            //Resources resource = unit.GetComponent<Resources>();
 
             //Will say that Fuel has been created.
             Debug.Log("Fuel Created");
