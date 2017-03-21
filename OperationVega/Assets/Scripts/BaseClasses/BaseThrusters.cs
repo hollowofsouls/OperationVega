@@ -37,6 +37,9 @@ namespace Assets.Scripts.BaseClasses
 		[SerializeField]
 		private uint quality;
 
+		[SerializeField]
+		private string name;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BaseThrusters"/> class.
 		/// </summary>
@@ -108,6 +111,18 @@ namespace Assets.Scripts.BaseClasses
 			set
 			{
 				this.fuel = value;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
 			}
 		}
 	}
