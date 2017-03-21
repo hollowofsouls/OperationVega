@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: db5ced5658e86f9448f3cc8e8ce635c6
-timeCreated: 1490115494
+guid: 7dd6a7e6b6e9fcb4db22444b2e5451d0
+timeCreated: 1490125658
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -98,7 +98,7 @@ ModelImporter:
     4300004: Unit_head
     4300006: Unit_pack
     4300008: Unit_orb
-    7400000: Walk
+    7400000: Walkfix
     9500000: //RootNode
     13700000: pickaxe_outroadkill:RoadKillOut
     13700002: Unit_body
@@ -127,10 +127,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walk
+      name: Walkfix
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 24
+      lastFrame: 25
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
