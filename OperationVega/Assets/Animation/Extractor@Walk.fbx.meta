@@ -1,106 +1,106 @@
 fileFormatVersion: 2
-guid: 9da294875a7ca7441967e573a5e94b71
-timeCreated: 1489522768
+guid: f59759e8d05358f4a8307a9bb6503c77
+timeCreated: 1490197684
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: pickaxe_outroadkill:RoadKillOut
-    100002: Unit_base_head__TopSHJnt
-    100004: Unit_base_l_arm_ClavicleSHJnt
-    100006: Unit_base_l_arm_ElbowSHJnt
-    100008: Unit_base_l_arm_ShoulderSHJnt
-    100010: Unit_base_l_arm_WristSHJnt
-    100012: Unit_base_l_hand_01_01SHJnt
-    100014: Unit_base_l_hand_01_02SHJnt
-    100016: Unit_base_l_hand_02_01SHJnt
-    100018: Unit_base_l_hand_02_02SHJnt
-    100020: Unit_base_l_leg_AnkleSHJnt
-    100022: Unit_base_l_leg_BallSHJnt
-    100024: Unit_base_l_leg_HipSHJnt
-    100026: Unit_base_l_leg_KneeSHJnt
-    100028: Unit_base_l_leg_ToeSHJnt
-    100030: Unit_base_neck_01SHJnt
-    100032: Unit_base_neck_TopSHJnt
-    100034: Unit_base_pack_01_01SHJnt
-    100036: Unit_base_pack_01_02SHJnt
-    100038: Unit_base_pack_01_03SHJnt
-    100040: Unit_base_pack_01_04SHJnt
-    100042: Unit_base_pack_01_05SHJnt
-    100044: Unit_base_pack_01_06SHJnt
-    100046: Unit_base_r_arm_ClavicleSHJnt
-    100048: Unit_base_r_arm_ElbowSHJnt
-    100050: Unit_base_r_arm_ShoulderSHJnt
-    100052: Unit_base_r_arm_WristSHJnt
-    100054: Unit_base_r_hand_01_01SHJnt
-    100056: Unit_base_r_hand_01_02SHJnt
-    100058: Unit_base_r_hand_02_01SHJnt
-    100060: Unit_base_r_hand_02_02SHJnt
-    100062: Unit_base_r_leg_AnkleSHJnt
-    100064: Unit_base_r_leg_BallSHJnt
-    100066: Unit_base_r_leg_HipSHJnt
-    100068: Unit_base_r_leg_KneeSHJnt
-    100070: Unit_base_r_leg_ToeSHJnt
-    100072: Unit_base_ROOTSHJnt
-    100074: Unit_base_spine_01SHJnt
-    100076: Unit_base_spine_TopSHJnt
-    100078: Unit_body
-    100080: Unit_head
-    100082: Unit_orb
-    100084: Unit_pack
-    100086: //RootNode
-    400000: pickaxe_outroadkill:RoadKillOut
-    400002: Unit_base_head__TopSHJnt
-    400004: Unit_base_l_arm_ClavicleSHJnt
-    400006: Unit_base_l_arm_ElbowSHJnt
-    400008: Unit_base_l_arm_ShoulderSHJnt
-    400010: Unit_base_l_arm_WristSHJnt
-    400012: Unit_base_l_hand_01_01SHJnt
-    400014: Unit_base_l_hand_01_02SHJnt
-    400016: Unit_base_l_hand_02_01SHJnt
-    400018: Unit_base_l_hand_02_02SHJnt
-    400020: Unit_base_l_leg_AnkleSHJnt
-    400022: Unit_base_l_leg_BallSHJnt
-    400024: Unit_base_l_leg_HipSHJnt
-    400026: Unit_base_l_leg_KneeSHJnt
-    400028: Unit_base_l_leg_ToeSHJnt
-    400030: Unit_base_neck_01SHJnt
-    400032: Unit_base_neck_TopSHJnt
-    400034: Unit_base_pack_01_01SHJnt
-    400036: Unit_base_pack_01_02SHJnt
-    400038: Unit_base_pack_01_03SHJnt
-    400040: Unit_base_pack_01_04SHJnt
-    400042: Unit_base_pack_01_05SHJnt
-    400044: Unit_base_pack_01_06SHJnt
-    400046: Unit_base_r_arm_ClavicleSHJnt
-    400048: Unit_base_r_arm_ElbowSHJnt
-    400050: Unit_base_r_arm_ShoulderSHJnt
-    400052: Unit_base_r_arm_WristSHJnt
-    400054: Unit_base_r_hand_01_01SHJnt
-    400056: Unit_base_r_hand_01_02SHJnt
-    400058: Unit_base_r_hand_02_01SHJnt
-    400060: Unit_base_r_hand_02_02SHJnt
-    400062: Unit_base_r_leg_AnkleSHJnt
-    400064: Unit_base_r_leg_BallSHJnt
-    400066: Unit_base_r_leg_HipSHJnt
-    400068: Unit_base_r_leg_KneeSHJnt
-    400070: Unit_base_r_leg_ToeSHJnt
-    400072: Unit_base_ROOTSHJnt
-    400074: Unit_base_spine_01SHJnt
-    400076: Unit_base_spine_TopSHJnt
-    400078: Unit_body
-    400080: Unit_head
-    400082: Unit_orb
-    400084: Unit_pack
-    400086: //RootNode
-    4300000: pickaxe_outroadkill:RoadKillOut
-    4300002: Unit_body
-    4300004: Unit_head
-    4300006: Unit_pack
-    4300008: Unit_orb
-    7400000: Walk 1
+    100000: //RootNode
+    100002: Extractortool
+    100004: Unit_base_head__TopSHJnt
+    100006: Unit_base_l_arm_ClavicleSHJnt
+    100008: Unit_base_l_arm_ElbowSHJnt
+    100010: Unit_base_l_arm_ShoulderSHJnt
+    100012: Unit_base_l_arm_WristSHJnt
+    100014: Unit_base_l_hand_01_01SHJnt
+    100016: Unit_base_l_hand_01_02SHJnt
+    100018: Unit_base_l_hand_02_01SHJnt
+    100020: Unit_base_l_hand_02_02SHJnt
+    100022: Unit_base_l_leg_AnkleSHJnt
+    100024: Unit_base_l_leg_BallSHJnt
+    100026: Unit_base_l_leg_HipSHJnt
+    100028: Unit_base_l_leg_KneeSHJnt
+    100030: Unit_base_l_leg_ToeSHJnt
+    100032: Unit_base_neck_01SHJnt
+    100034: Unit_base_neck_TopSHJnt
+    100036: Unit_base_pack_01_01SHJnt
+    100038: Unit_base_pack_01_02SHJnt
+    100040: Unit_base_pack_01_03SHJnt
+    100042: Unit_base_pack_01_04SHJnt
+    100044: Unit_base_pack_01_05SHJnt
+    100046: Unit_base_pack_01_06SHJnt
+    100048: Unit_base_r_arm_ClavicleSHJnt
+    100050: Unit_base_r_arm_ElbowSHJnt
+    100052: Unit_base_r_arm_ShoulderSHJnt
+    100054: Unit_base_r_arm_WristSHJnt
+    100056: Unit_base_r_hand_01_01SHJnt
+    100058: Unit_base_r_hand_01_02SHJnt
+    100060: Unit_base_r_hand_02_01SHJnt
+    100062: Unit_base_r_hand_02_02SHJnt
+    100064: Unit_base_r_leg_AnkleSHJnt
+    100066: Unit_base_r_leg_BallSHJnt
+    100068: Unit_base_r_leg_HipSHJnt
+    100070: Unit_base_r_leg_KneeSHJnt
+    100072: Unit_base_r_leg_ToeSHJnt
+    100074: Unit_base_ROOTSHJnt
+    100076: Unit_base_spine_01SHJnt
+    100078: Unit_base_spine_TopSHJnt
+    100080: Unit_body
+    100082: Unit_head
+    100084: Unit_orb
+    100086: Unit_pack
+    400000: //RootNode
+    400002: Extractortool
+    400004: Unit_base_head__TopSHJnt
+    400006: Unit_base_l_arm_ClavicleSHJnt
+    400008: Unit_base_l_arm_ElbowSHJnt
+    400010: Unit_base_l_arm_ShoulderSHJnt
+    400012: Unit_base_l_arm_WristSHJnt
+    400014: Unit_base_l_hand_01_01SHJnt
+    400016: Unit_base_l_hand_01_02SHJnt
+    400018: Unit_base_l_hand_02_01SHJnt
+    400020: Unit_base_l_hand_02_02SHJnt
+    400022: Unit_base_l_leg_AnkleSHJnt
+    400024: Unit_base_l_leg_BallSHJnt
+    400026: Unit_base_l_leg_HipSHJnt
+    400028: Unit_base_l_leg_KneeSHJnt
+    400030: Unit_base_l_leg_ToeSHJnt
+    400032: Unit_base_neck_01SHJnt
+    400034: Unit_base_neck_TopSHJnt
+    400036: Unit_base_pack_01_01SHJnt
+    400038: Unit_base_pack_01_02SHJnt
+    400040: Unit_base_pack_01_03SHJnt
+    400042: Unit_base_pack_01_04SHJnt
+    400044: Unit_base_pack_01_05SHJnt
+    400046: Unit_base_pack_01_06SHJnt
+    400048: Unit_base_r_arm_ClavicleSHJnt
+    400050: Unit_base_r_arm_ElbowSHJnt
+    400052: Unit_base_r_arm_ShoulderSHJnt
+    400054: Unit_base_r_arm_WristSHJnt
+    400056: Unit_base_r_hand_01_01SHJnt
+    400058: Unit_base_r_hand_01_02SHJnt
+    400060: Unit_base_r_hand_02_01SHJnt
+    400062: Unit_base_r_hand_02_02SHJnt
+    400064: Unit_base_r_leg_AnkleSHJnt
+    400066: Unit_base_r_leg_BallSHJnt
+    400068: Unit_base_r_leg_HipSHJnt
+    400070: Unit_base_r_leg_KneeSHJnt
+    400072: Unit_base_r_leg_ToeSHJnt
+    400074: Unit_base_ROOTSHJnt
+    400076: Unit_base_spine_01SHJnt
+    400078: Unit_base_spine_TopSHJnt
+    400080: Unit_body
+    400082: Unit_head
+    400084: Unit_orb
+    400086: Unit_pack
+    4300000: Unit_body
+    4300002: Unit_head
+    4300004: Unit_pack
+    4300006: Unit_orb
+    4300008: Extractortool
+    7400000: Walk
     9500000: //RootNode
-    13700000: pickaxe_outroadkill:RoadKillOut
+    13700000: Extractortool
     13700002: Unit_body
     13700004: Unit_head
     13700006: Unit_orb
@@ -127,10 +127,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walk 1
+      name: Walk
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 24
+      lastFrame: 25
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -152,8 +152,6 @@ ModelImporter:
       events: []
       transformMask:
       - path: 
-        weight: 1
-      - path: pickaxe_outroadkill:RoadKillOut
         weight: 1
       - path: Unit_base_ROOTSHJnt
         weight: 1
@@ -233,6 +231,8 @@ ModelImporter:
         weight: 1
       - path: Unit_body
         weight: 1
+      - path: Unit_body/Extractortool
+        weight: 1
       - path: Unit_body/Unit_head
         weight: 1
       - path: Unit_body/Unit_pack
@@ -265,7 +265,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
   importAnimation: 1
-  copyAvatar: 0
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human: []
@@ -282,7 +282,8 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 7702eb0450690d74190f9bb4e9a4dc6a,
+    type: 3}
   animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
