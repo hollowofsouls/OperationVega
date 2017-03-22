@@ -676,7 +676,42 @@ namespace UI
         }
         private void OnCraft()
         {
+            if(Input1.sprite == minerals.sprite && Input2.sprite == gas.sprite)
+            {
+                Output.sprite = fuel.sprite;
+                User.FuelCount++;
+            }
+            if(Input2.sprite == minerals.sprite && Input1.sprite == gas.sprite)
+            {
+                Output.sprite = fuel.sprite;
+                User.FuelCount++;
+            }
 
+            if(Input1.sprite == minerals.sprite && Input2.sprite == food.sprite)
+            {
+                Output.sprite = steel.sprite;
+                User.SteelCount++;
+            }
+            if(Input2.sprite == minerals.sprite && Input1.sprite == food.sprite)
+            {
+                Output.sprite = steel.sprite;
+                User.SteelCount++;
+            }
+
+            if(Input1.sprite == food.sprite && Input2.sprite == gas.sprite)
+            {
+                Output.sprite = cookedFood.sprite;
+                User.CookedFoodCount++;
+            }
+
+            if(Input2.sprite == food.sprite && Input1.sprite == gas.sprite)
+            {
+                Output.sprite = cookedFood.sprite;
+                User.CookedFoodCount++;
+            }
+
+            
+            
             Debug.Log("Craft");
         }
         public void OnClearClick()
@@ -878,7 +913,9 @@ namespace UI
         }
         private void OnMChoice()
         {
+            //Spawns Miner Upon clicking Yes/No
             m_AreyousureUI.gameObject.SetActive(true);
+            UnitController.Self.SpawnUnit(UnitController.Self.Miner);
             Debug.Log("Miners Choice");
         }
         public void OnHChoiceClick()
@@ -887,7 +924,9 @@ namespace UI
         }
         private void OnHChoice()
         {
+            //Spawns Harvester Upon clicking Yes/No
             m_AreyousureUI.gameObject.SetActive(true);
+            UnitController.Self.SpawnUnit(UnitController.Self.Harvester);
             Debug.Log("Harvester Choice");
         }
         public void OnEChoiceClick()
@@ -896,8 +935,9 @@ namespace UI
         }
         private void OnEChoice()
         {
-            
+            //Spawns Extracter Upon clicking Yes/No
             m_AreyousureUI.gameObject.SetActive(true);
+            UnitController.Self.SpawnUnit(UnitController.Self.Extractor);
             Debug.Log("Extractor Choice");
         }
         public void OnYesClick()
@@ -952,6 +992,7 @@ namespace UI
 
                 input1b = true;
             }
+            User.MineralsCount--;
             Debug.Log("Minerals");
         }
 
@@ -964,7 +1005,7 @@ namespace UI
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
-            User.FoodCount++;
+            User.FoodCount--;
             Debug.Log("Food");
         }
 
@@ -1010,7 +1051,7 @@ namespace UI
 
                 input2b = false;
             }
-            User.GasCount++;
+            User.GasCount--;
             Debug.Log("Gas");
         }
 
@@ -1036,7 +1077,7 @@ namespace UI
                 input2b = false;
             }
             //Second Slot if first one is selected.
-            User.FuelCount++;
+            User.FuelCount--;
 
             Debug.Log("Fuel");
         }
@@ -1059,6 +1100,7 @@ namespace UI
 
                 input1b = true;
             }
+            User.SteelCount--;
             Debug.Log("Steel");
         }
 
