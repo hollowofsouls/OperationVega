@@ -64,6 +64,7 @@ namespace Assets.Scripts
 
     public class Fuel : CanCraft 
     {
+       
         //Ingridients for Fuel
         public Fuel()
         {
@@ -113,6 +114,7 @@ namespace Assets.Scripts
         }
         
     }
+
 
 
     
