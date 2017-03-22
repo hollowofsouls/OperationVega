@@ -49,7 +49,7 @@ namespace Assets.Scripts
 		/// Place holding value that represents the current wings in the list.
 		/// Used for when the existing wings is being replaced and removing it from the list.
 		/// </summary>
-		[SerializeField]
+		//[SerializeField]
 		private BaseWings currentWings;
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace Assets.Scripts
 		public GameObject thrustersOne;
 		public GameObject thrustersTwo;
 		public GameObject thrustersThree;
-		[SerializeField]
+		//[SerializeField]
 		private GameObject builtThrusters;
 
 		/// <summary>
@@ -91,10 +91,8 @@ namespace Assets.Scripts
 		/// </summary>
 		public GameObject wingsThree;
 
-		[SerializeField]
+		//[SerializeField]
 		private GameObject builtWings;
-
-		public uint cash;
 
 		/// <summary>
 		/// Gets or sets the total quality.
@@ -257,12 +255,12 @@ namespace Assets.Scripts
 
 		//	if (Input.GetKeyDown(KeyCode.Keypad2))
 		//	{
-		//		this.CreateThrusters1();
+		//		this.CreateThrusters2();
 		//	}
 
 		//	if (Input.GetKeyDown(KeyCode.Keypad3))
 		//	{
-		//		this.CreateThrusters1();
+		//		this.CreateThrusters3();
 		//	}
 
 		//	if (Input.GetKeyDown(KeyCode.Keypad4))
@@ -299,6 +297,7 @@ namespace Assets.Scripts
 				{
 					builtCockpit = (GameObject)Instantiate(selectedPart) as GameObject;
 					builtCockpit.transform.parent = transform;
+					builtCockpit.transform.localPosition = new Vector3(-2, 0, 5);
 					Cockpit behaviour = builtCockpit.AddComponent<Cockpit>();
 					behaviour.Create(thePart as BaseCockpit);
 					builtCockpit.name = thePart.Name;
@@ -317,6 +316,7 @@ namespace Assets.Scripts
 				{
 					builtThrusters = (GameObject)Instantiate(selectedPart) as GameObject;
 					builtThrusters.transform.parent = transform;
+					builtThrusters.transform.localPosition = new Vector3(-6, 0, 5);
 					Thrusters behaviour = builtThrusters.AddComponent<Thrusters>();
 					behaviour.Create(thePart as BaseThrusters);
 					builtThrusters.name = thePart.Name;
@@ -335,6 +335,7 @@ namespace Assets.Scripts
 				{
 					builtWings = (GameObject)Instantiate(selectedPart) as GameObject;
 					builtWings.transform.parent = transform;
+					builtWings.transform.localPosition = new Vector3(1, -4, 4);
 					Wings behaviour = builtWings.AddComponent<Wings>();
 					behaviour.Create(thePart as BaseWings);
 					builtWings.name = thePart.Name;
