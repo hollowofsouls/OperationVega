@@ -22,6 +22,17 @@ namespace Assets.Scripts
         private readonly FiniteStateMachine<string> theHarvesterFsm = new FiniteStateMachine<string>();
 
         /// <summary>
+        /// The danger color reference.
+        /// Reference to the color change when health is critically low.
+        /// </summary>
+        private Color dangercolor;
+
+        /// <summary>
+        /// The orb reference.
+        /// </summary>
+        private GameObject theorb;
+
+        /// <summary>
         /// Reference to the clean food prefab.
         /// </summary>
         [SerializeField]
@@ -345,6 +356,8 @@ namespace Assets.Scripts
         {
             this.mystats.Health -= damage;
 
+            this.UpdateOrb();
+
             // Check if unit dies
             if (this.mystats.Health <= 0)
             {
@@ -518,6 +531,9 @@ namespace Assets.Scripts
         /// </summary>
         private void InitUnit()
         {
+            this.theorb = this.transform.GetChild(1).GetChild(2).GetChild(0).gameObject;
+            this.dangercolor = Color.black;
+
             this.mystats = this.GetComponent<Stats>();
             this.mystats.Health = 100;
             this.mystats.Maxhealth = 100;
@@ -534,6 +550,7 @@ namespace Assets.Scripts
             this.harvesttime = 1.0f;
             this.decontime = 1.0f;
 
+            this.theorb.GetComponent<SkinnedMeshRenderer>().material.color = Color.green;
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.speed = this.mystats.Speed;
@@ -776,6 +793,21 @@ namespace Assets.Scripts
         }
 
         /// <summary>
+        /// The update orb function.
+        /// This function updates the color of the orb upon taking damage.
+        /// </summary>
+        private void UpdateOrb()
+        {
+            int halfhealth = this.mystats.Maxhealth / 2;
+            int quarterhealth = this.mystats.Maxhealth / 4;
+
+            if (this.mystats.Health > quarterhealth && this.mystats.Health <= halfhealth)
+            {
+                this.theorb.GetComponent<SkinnedMeshRenderer>().material.color = Color.yellow;
+            }
+        }
+
+        /// <summary>
         /// The enemy stop timer function.
         /// The enemy takes the stun effect .
         /// <para></para>
@@ -867,6 +899,19 @@ namespace Assets.Scripts
         {
             UnitController.Self.CheckIfSelected(this.gameObject);
             this.UpdateUnit();
+
+            if (this.mystats.Health <= this.mystats.Maxhealth / 4)
+            {
+                this.theorb.GetComponent<SkinnedMeshRenderer>().material.color = Color.Lerp(this.theorb.GetComponent<SkinnedMeshRenderer>().material.color, this.dangercolor, Time.deltaTime * 20);
+                if (this.theorb.GetComponent<SkinnedMeshRenderer>().material.color == this.dangercolor && this.dangercolor == Color.black)
+                {
+                    this.dangercolor = Color.red;
+                }
+                else if (this.theorb.GetComponent<SkinnedMeshRenderer>().material.color == this.dangercolor && this.dangercolor == Color.red)
+                {
+                    this.dangercolor = Color.black;
+                }
+            }
         }
 
         /// <summary>

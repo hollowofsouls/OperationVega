@@ -772,15 +772,15 @@ namespace Assets.Scripts
             }
         }
 
+        /// <summary>
+        /// The update orb function.
+        /// This function updates the color of the orb upon taking damage.
+        /// </summary>
         private void UpdateOrb()
         {
             int halfhealth = this.mystats.Maxhealth / 2;
             int quarterhealth = this.mystats.Maxhealth / 4;
 
-            //if (this.mystats.Health <= quarterhealth)
-            //{
-            //    this.theorb.GetComponent<SkinnedMeshRenderer>().material.color = Color.red;
-            //}
             if (this.mystats.Health > quarterhealth && this.mystats.Health <= halfhealth)
             {
                 this.theorb.GetComponent<SkinnedMeshRenderer>().material.color = Color.yellow;
