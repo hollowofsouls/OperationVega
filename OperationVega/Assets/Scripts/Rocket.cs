@@ -49,7 +49,7 @@ namespace Assets.Scripts
 		/// Place holding value that represents the current wings in the list.
 		/// Used for when the existing wings is being replaced and removing it from the list.
 		/// </summary>
-		//[SerializeField]
+		[SerializeField]
 		private BaseWings currentWings;
 
 		/// <summary>
@@ -66,14 +66,13 @@ namespace Assets.Scripts
 		/// The cockpit 3.
 		/// </summary>
 		public GameObject cockpitThree;
-
-		[SerializeField]
-		private GameObject builtCockpit;
 		
+		private GameObject builtCockpit;
+
 		public GameObject thrustersOne;
 		public GameObject thrustersTwo;
 		public GameObject thrustersThree;
-		//[SerializeField]
+
 		private GameObject builtThrusters;
 
 		/// <summary>
@@ -90,8 +89,7 @@ namespace Assets.Scripts
 		/// The wings 3.
 		/// </summary>
 		public GameObject wingsThree;
-
-		//[SerializeField]
+		
 		private GameObject builtWings;
 
 		/// <summary>
@@ -354,7 +352,6 @@ namespace Assets.Scripts
 		{
 			if (AddPart(thePart) == true)
 			{
-				AddPart(thePart);
 				BuildParts(thePart, selectedPart, builtParts);
 			}
 		}
