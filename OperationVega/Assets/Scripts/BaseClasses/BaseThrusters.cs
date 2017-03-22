@@ -59,11 +59,12 @@ namespace Assets.Scripts.BaseClasses
 		/// <param name="qualities">
 		/// The quality.
 		/// </param>
-		public BaseThrusters(uint steelcost, uint fuelcost, uint qualities)
+		public BaseThrusters(uint steelcost, uint fuelcost, uint qualities, string identity)
 		{
 			this.steel = steelcost;
 			this.fuel = fuelcost;
 			this.quality = qualities;
+			this.name = identity;
 		}
 
 		/// <summary>

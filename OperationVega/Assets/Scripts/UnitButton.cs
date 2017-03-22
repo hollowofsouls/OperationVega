@@ -26,8 +26,22 @@ namespace Assets.Scripts
         /// </param>
         public void OnPointerEnter(PointerEventData eventData)
         {
+            Color thecolor = new Color();
+
             GameObject selectionsquare = this.Unit.transform.FindChild("SelectionHighlight").gameObject;
-            selectionsquare.GetComponent<MeshRenderer>().material.color = Color.red;
+            if (this.Unit.GetComponent<Miner>())
+            {
+                thecolor = Color.red;
+            }
+            else if (this.Unit.GetComponent<Harvester>())
+            {
+                thecolor = Color.green;
+            }
+            else if (this.Unit.GetComponent<Extractor>())
+            {
+                thecolor = Color.blue;
+            }
+            selectionsquare.GetComponent<MeshRenderer>().material.color = thecolor;
             UIManager.Self.unit = this.Unit;
             UIManager.Self.UpdateStatsPanel(UIManager.Self.tooltippanel);
             UIManager.Self.tooltippanel.SetActive(true);
