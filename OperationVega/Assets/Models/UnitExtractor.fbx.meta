@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 93116c98a1d8cde48b063c1795300064
-timeCreated: 1490124139
+guid: 7702eb0450690d74190f9bb4e9a4dc6a
+timeCreated: 1490197684
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Cherrypick
+    100000: Extractortool
     100002: Unit_base_head__TopSHJnt
     100004: Unit_base_l_arm_ClavicleSHJnt
     100006: Unit_base_l_arm_ElbowSHJnt
@@ -46,10 +46,10 @@ ModelImporter:
     100076: Unit_base_spine_TopSHJnt
     100078: Unit_body
     100080: Unit_head
-    100082: Unit_pack
-    100084: //RootNode
-    100086: Unit_orb
-    400000: Cherrypick
+    100082: Unit_orb
+    100084: Unit_pack
+    100086: //RootNode
+    400000: Extractortool
     400002: Unit_base_head__TopSHJnt
     400004: Unit_base_l_arm_ClavicleSHJnt
     400006: Unit_base_l_arm_ElbowSHJnt
@@ -90,20 +90,20 @@ ModelImporter:
     400076: Unit_base_spine_TopSHJnt
     400078: Unit_body
     400080: Unit_head
-    400082: Unit_pack
-    400084: //RootNode
-    400086: Unit_orb
-    4300000: Cherrypick
-    4300002: Unit_body
-    4300004: Unit_head
-    4300006: Unit_pack
-    4300008: Unit_orb
+    400082: Unit_orb
+    400084: Unit_pack
+    400086: //RootNode
+    4300000: Unit_body
+    4300002: Unit_head
+    4300004: Unit_pack
+    4300006: Unit_orb
+    4300008: Extractortool
     9500000: //RootNode
-    13700000: Cherrypick
+    13700000: Extractortool
     13700002: Unit_body
     13700004: Unit_head
-    13700006: Unit_pack
-    13700008: Unit_orb
+    13700006: Unit_orb
+    13700008: Unit_pack
   materials:
     importMaterials: 1
     materialName: 0
