@@ -1,6 +1,7 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Interfaces;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.Controllers
     using UnityEngine;
     using UnityEngine.AI;
     using UnityEngine.EventSystems;
+    using UnityEngine.UI;
 
     /// <summary>
     /// The unit controller class.
@@ -16,6 +18,24 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
+
+        /// <summary>
+        /// The Harvester reference.
+        /// Reference to a Harvester prefab.
+        /// </summary>
+        public GameObject Harvester;
+
+        /// <summary>
+        /// The Miner reference.
+        /// Reference to a Miner prefab.
+        /// </summary>
+        public GameObject Miner;
+
+        /// <summary>
+        /// The Extractor reference.
+        /// Reference to a Extractor prefab.
+        /// </summary>
+        public GameObject Extractor;
 
         /// <summary>
         /// The instance of the class.
@@ -90,12 +110,6 @@ namespace Assets.Scripts.Controllers
                 dragscreen = value;
             }
         }
-
-        public GameObject Harvester;
-
-        public GameObject Miner;
-
-        public GameObject Extractor;
 
         /// <summary>
         /// The invert y function.
@@ -293,7 +307,7 @@ namespace Assets.Scripts.Controllers
         public void SpawnUnit(GameObject theunit)
         {
             Vector3 spawnposition = this.theBarracks.transform.FindChild("Door").position;
-            Instantiate(theunit, spawnposition, Quaternion.identity);
+            Instantiate(theunit, spawnposition, Quaternion.AngleAxis(-180, Vector3.up));
         }
 
         /// <summary>
@@ -732,6 +746,85 @@ namespace Assets.Scripts.Controllers
                     IUnit unit = (IUnit)go.GetComponent(typeof(IUnit));
                     unit.SpecialAbility();
                 }
+            }
+        }
+
+        private int numbertobuy;
+
+        public InputField inputtext;
+
+        public Button buybutton;
+
+        private bool purchaseHarvester;
+        private bool purchaseMiner = true;
+        private bool purchaseExtractor;
+
+        public void Clicked(Text thetext)
+        {
+            int.TryParse(thetext.text, out this.numbertobuy);
+            User.FoodCount = 15;
+
+            if (this.numbertobuy > User.FoodCount / 5)
+            {
+                this.buybutton.interactable = false;
+            }
+            else
+            {
+                this.buybutton.interactable = true;
+            }
+        }
+
+        public void Minus()
+        {
+            if (this.numbertobuy <= 1)
+            {
+                this.numbertobuy = User.FoodCount / 5;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+            else
+            {
+                this.numbertobuy--;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+        }
+
+        public void Plus()
+        {
+            if (this.numbertobuy >= User.FoodCount / 5)
+            {
+                this.numbertobuy = 1;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+            else
+            {
+                this.numbertobuy++;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+        }
+
+        public void Buy()
+        {
+            if(this.numbertobuy <= User.FoodCount / 5 && this.numbertobuy > 0)
+            {
+                // Close the panel
+
+                if (this.purchaseExtractor)
+                {
+                    this.SpawnUnit(this.Extractor);
+                    this.purchaseExtractor = false;
+                }
+                else if (this.purchaseHarvester)
+                {
+                    this.SpawnUnit(this.Harvester);
+                    this.purchaseHarvester = false;
+                }
+                else if (this.purchaseMiner)
+                {
+                    this.SpawnUnit(this.Miner);
+                    this.purchaseMiner = false;
+                }
+
+                // Spawn the correct number of units.
             }
         }
 
