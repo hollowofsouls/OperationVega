@@ -218,74 +218,74 @@ namespace Assets.Scripts
 			}
 		}
 
-		/// <summary>
-		/// Use this for initialization
-		/// </summary>
-		private void Start()
-		{
-			this.allParts = new List<IRocketParts>();
-		}
+		///// <summary>
+		///// Use this for initialization
+		///// </summary>
+		//private void Start()
+		//{
+		//	this.allParts = new List<IRocketParts>();
+		//}
 
-		/// <summary>
-		/// Update is called once per frame
-		/// </summary>
-		private void Update()
-		{
-			if (Input.GetMouseButtonDown(0))
-			{
-				this.CreateCockpit1();
-			}
+		///// <summary>
+		///// Update is called once per frame
+		///// </summary>
+		//private void Update()
+		//{
+		//	if (Input.GetMouseButtonDown(0))
+		//	{
+		//		this.CreateCockpit1();
+		//	}
 
-			if (Input.GetMouseButtonDown(1))
-			{
-				this.CreateCockpit2();
-			}
+		//	if (Input.GetMouseButtonDown(1))
+		//	{
+		//		this.CreateCockpit2();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad0))
-			{
-				this.CreateCockpit3();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad0))
+		//	{
+		//		this.CreateCockpit3();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad1))
-			{
-				this.CreateThrusters1();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad1))
+		//	{
+		//		this.CreateThrusters1();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad2))
-			{
-				this.CreateThrusters2();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad2))
+		//	{
+		//		this.CreateThrusters2();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad3))
-			{
-				this.CreateThrusters3();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad3))
+		//	{
+		//		this.CreateThrusters3();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad4))
-			{
-				this.CreateWings1();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad4))
+		//	{
+		//		this.CreateWings1();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad5))
-			{
-				this.CreateWings2();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad5))
+		//	{
+		//		this.CreateWings2();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.Keypad6))
-			{
-				this.CreateWings3();
-			}
+		//	if (Input.GetKeyDown(KeyCode.Keypad6))
+		//	{
+		//		this.CreateWings3();
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.V))
-			{
-				User.SteelCount += 100;
-			}
+		//	if (Input.GetKeyDown(KeyCode.V))
+		//	{
+		//		User.SteelCount += 100;
+		//	}
 
-			if (Input.GetKeyDown(KeyCode.B))
-			{
-				User.FuelCount += 100;
-			}
-		}
+		//	if (Input.GetKeyDown(KeyCode.B))
+		//	{
+		//		User.FuelCount += 100;
+		//	}
+		//}
 
 		private void BuildParts(IRocketParts thePart, GameObject selectedPart, List<GameObject> building)
 		{
