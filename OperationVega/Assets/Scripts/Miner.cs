@@ -4,6 +4,9 @@ namespace Assets.Scripts
     using Controllers;
     using Interfaces;
     using UI;
+
+    using UnityEditor;
+
     using UnityEngine;
     using UnityEngine.AI;
 
@@ -77,6 +80,12 @@ namespace Assets.Scripts
         /// The navigation agent reference.
         /// </summary>
         private NavMeshAgent navagent;
+
+        /// <summary>
+        /// The animator controller reference.
+        /// This will help transition a unit to another state of the machine.
+        /// </summary>
+        private Animator animatorcontroller;
 
         /// <summary>
         /// The object to pickup.
@@ -189,6 +198,7 @@ namespace Assets.Scripts
                     GameObject thesilo = GameObject.Find("Silo");
                     Vector3 destination = new Vector3(thesilo.transform.position.x + (this.transform.forward.x * 2), 0.5f, thesilo.transform.position.z + (this.transform.forward.z * 2));
                     this.navagent.SetDestination(destination);
+                    this.animatorcontroller.SetBool("IsWalking", true);
                 }
                 else if (this.mystats.Resourcecount == 5 && this.targetResource.Taint)
                 {
@@ -201,6 +211,7 @@ namespace Assets.Scripts
                     GameObject thedecontaminationbuilding = GameObject.Find("Decontamination");
                     Transform thedoor = thedecontaminationbuilding.transform.Find("FrontDoor");
                     this.navagent.SetDestination(thedoor.position);
+                    this.animatorcontroller.SetBool("IsWalking", true);
                 }
             }
         }
@@ -283,6 +294,7 @@ namespace Assets.Scripts
                         0.5f,
                         thesilo.transform.position.z + (this.transform.forward.z * 2));
                     this.navagent.SetDestination(destination);
+                    this.animatorcontroller.SetBool("IsWalking", true);
                 }
             }
         }
@@ -351,6 +363,7 @@ namespace Assets.Scripts
         public void SetTheMovePosition(Vector3 targetPos)
         {
             this.navagent.SetDestination(targetPos);
+            this.animatorcontroller.SetBool("IsWalking", true);
         }
 
         /// <summary>
@@ -446,6 +459,7 @@ namespace Assets.Scripts
                 this.theobjecttolookat = theResource;
                 this.targetResource = (IResources)theResource.GetComponent(typeof(IResources));
                 this.navagent.SetDestination(theResource.transform.position);
+                this.animatorcontroller.SetBool("IsWalking", true);
                 this.theRecentMineralDeposit = theResource;
                 this.ChangeStates("Harvest");
             }
@@ -464,6 +478,7 @@ namespace Assets.Scripts
                 this.objecttopickup = thepickup;
                 this.theobjecttolookat = this.objecttopickup;
                 this.navagent.SetDestination(thepickup.transform.position);
+                this.animatorcontroller.SetBool("IsWalking", true);
                 this.ChangeStates("PickUp");
             }
         }
@@ -505,6 +520,13 @@ namespace Assets.Scripts
             this.decontime += 1 * Time.deltaTime;
 
             this.UpdateRotation();
+
+            // If the navagent isnt looking for a current path - this helps prevent any lag when the unit is already stopped then starting to move,
+            // if the navagent is within stopping distance and its currently using the walk animation...
+            if (!this.navagent.pathPending && this.navagent.remainingDistance <= this.navagent.stoppingDistance && this.animatorcontroller.GetBool("IsWalking"))
+            {
+                this.animatorcontroller.SetBool("IsWalking", false);
+            }
 
             switch (this.theMinerFsm.CurrentState.Statename)
             {
@@ -560,6 +582,8 @@ namespace Assets.Scripts
             this.timebetweenattacks = this.mystats.Attackspeed;
             this.navagent = this.GetComponent<NavMeshAgent>();
             this.navagent.speed = this.mystats.Speed;
+            this.animatorcontroller = this.GetComponent<Animator>();
+
             Debug.Log("Miner Initialized");
         }
 
@@ -687,6 +711,7 @@ namespace Assets.Scripts
                     {
                         this.theobjecttolookat = this.theRecentMineralDeposit;
                         this.navagent.SetDestination(this.theRecentMineralDeposit.transform.position);
+                        this.animatorcontroller.SetBool("IsWalking", true);
                         this.ChangeStates("Harvest");
                     }
                     else

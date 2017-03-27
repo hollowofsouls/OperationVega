@@ -233,10 +233,10 @@ namespace Assets.Scripts.Controllers
             {
                 foreach (GameObject go in this.units)
                 {
-                    if (go.GetComponent<NavMeshAgent>())
+                    if (go.GetComponent(typeof(IUnit)))
                     {
-                        go.GetComponent<NavMeshAgent>().SetDestination(go.transform.position);
                         IUnit u = (IUnit)go.GetComponent(typeof(IUnit));
+                        u.SetTheMovePosition(go.transform.position);
                         u.ChangeStates("Idle");
                     }
                 }
