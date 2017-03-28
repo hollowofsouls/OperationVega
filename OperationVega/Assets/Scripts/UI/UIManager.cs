@@ -56,6 +56,10 @@ namespace UI
 
         [SerializeField]
         private RectTransform m_ActionsTAB;
+        public RectTransform ActionsTab
+        {
+            get { return m_ActionsTAB; }
+        }
         [SerializeField]
         private RectTransform m_CraftingTAB;
         [SerializeField]
@@ -175,6 +179,11 @@ namespace UI
         public Button buybutton;
 
         bool revertactionstab;
+        public bool RevertActionsTab
+        {
+            get { return revertactionstab; }
+        }
+
         bool revertcraftingtab;
         bool revertunittab;
         bool input1b;
@@ -185,6 +194,10 @@ namespace UI
         bool selected;
         private float objectivescale;
         private float Scalefactor;
+        public float UIScaleFactor
+        {
+            get { return Scalefactor; }
+        }
 
 
 
@@ -238,7 +251,7 @@ namespace UI
             EventManager.Subscribe("Clear", this.OnClear);
             EventManager.Subscribe("Mine", this.OnMine);
             EventManager.Subscribe("Extract", this.OnExtract);
-            EventManager.Subscribe("Actions", this.OnActions);
+           // EventManager.Subscribe("Actions", this.OnActions);
             EventManager.Subscribe("Crafting", this.OnCrafting);
             EventManager.Subscribe("UnitTab", this.OnUnit);
             EventManager.Subscribe("Build Rocket", this.OnBuild);
@@ -856,19 +869,19 @@ namespace UI
           
             if (Input1.sprite == minerals.sprite|| Input2.sprite == minerals.sprite)
             {               
-                User.MineralsCount++;
+                //User.MineralsCount++;
             }
             if(Input1.sprite == steel.sprite || Input2.sprite == steel.sprite)
             {              
-                User.SteelCount++;
+                //User.SteelCount++;
             }
             if(Input1.sprite == gas.sprite || Input2.sprite == gas.sprite)
             {            
-                User.GasCount++;
+                //User.GasCount++;
             }
             if(Input1.sprite == fuel.sprite || Input2.sprite == fuel.sprite)
             {              
-                User.FuelCount++;
+                //User.FuelCount++;
             }
 
             List<Image> images = new List<Image>() { Input1, Input2, Output };
@@ -1068,7 +1081,7 @@ namespace UI
         {
             //Spawns Miner Upon clicking Yes/No
             m_AreyousureUI.gameObject.SetActive(true);
-            UnitController.Self.SpawnUnit(UnitController.Self.Miner);
+            UnitController.PurchaseMiner = true;
             Debug.Log("Miners Choice");
         }
         public void OnHChoiceClick()
@@ -1079,7 +1092,7 @@ namespace UI
         {
             //Spawns Harvester Upon clicking Yes/No
             m_AreyousureUI.gameObject.SetActive(true);
-            UnitController.Self.SpawnUnit(UnitController.Self.Harvester);
+            UnitController.PurchaseHarvester = true;
             Debug.Log("Harvester Choice");
         }
         public void OnEChoiceClick()
@@ -1090,7 +1103,7 @@ namespace UI
         {
             //Spawns Extracter Upon clicking Yes/No
             m_AreyousureUI.gameObject.SetActive(true);
-            UnitController.Self.SpawnUnit(UnitController.Self.Extractor);
+            UnitController.PurchaseExtractor = true;
             Debug.Log("Extractor Choice");
         }
         public void OnYesClick()
