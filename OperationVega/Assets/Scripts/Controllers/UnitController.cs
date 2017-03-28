@@ -69,6 +69,24 @@ namespace Assets.Scripts.Controllers
         private readonly List<GameObject> units = new List<GameObject>();
 
         /// <summary>
+        /// The trees list.
+        /// Reference to every tree in the scene.
+        /// </summary>
+        private List<GameObject> trees = new List<GameObject>();
+
+        /// <summary>
+        /// The mineral deposits list.
+        /// Reference to every mineral deposit in the scene.
+        /// </summary>
+        private List<GameObject> mineraldeposits = new List<GameObject>();
+
+        /// <summary>
+        /// The geysers list.
+        /// Reference to every geyser in the scene.
+        /// </summary>
+        private List<GameObject> geysers = new List<GameObject>();
+
+        /// <summary>
         /// The click destination of where to send the unit.
         /// </summary>
         private Vector3 clickdestination;
@@ -279,40 +297,128 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public void CallHome()
         {
-            Vector3 doorposition = this.theBarracks.transform.FindChild("Door").position;
-            
             this.SelectAllUnits();
+
+            Vector3 doorposition = this.theBarracks.transform.FindChild("Door").position;
 
             if (this.units.Count > 0)
             {
-                // Make an offset to prevent units from pushing each other back and forth.
+                int counter = -1;
                 int x = -1;
-                int z = 0;
-                float theoffset = Mathf.Sqrt(this.units.Count);
+
+                double sqrt = Math.Sqrt(this.units.Count);
+
+                float startx = doorposition.x;
 
                 for (int i = 0; i < this.units.Count; i++)
                 {
-                    // Increment x
+                    counter++;
                     x++;
-                    // If the x is equal to the offset
-                    if (x == (int)theoffset)
-                    { // Increment z
-                        z += 1;
-                        // Set x back to 0
-                        x = 0;
+
+                    if (x > 1)
+                    {
+                        x = 1;
                     }
 
-                    // Multiply but 1.5f to give an offset from each unit, this prevents jittering.
-                    Vector3 thedestination = new Vector3(doorposition.x - (x * 1.5f), 0.5f, doorposition.z + (z * 1.5f));
+                    doorposition = new Vector3(doorposition.x + (x * 2f), 0.5f, doorposition.z);
 
-                    if (this.units[i].GetComponent(typeof(IUnit)))
+                    if (counter == Math.Floor(sqrt))
                     {
-                        IUnit u = (IUnit)this.units[i].GetComponent(typeof(IUnit));
-                        u.SetTheMovePosition(thedestination);
-                        u.ChangeStates("Idle");
+                        counter = 0;
+                        x = 0;
+                        doorposition.x = startx;
+                        doorposition.z--;
+                    }
+
+                    if (!this.units[i].GetComponent(typeof(IUnit)))
+                    {
+                        Debug.LogWarning(string.Format("hey, no component on {0}", this.units[i].name));
+                    }
+                    else
+                    {
+                        IUnit unit = (IUnit)this.units[i].GetComponent(typeof(IUnit));
+
+                        unit.SetTheMovePosition(doorposition);
+                        unit.ChangeStates("Idle");
                     }
                 }
-              }
+            }
+        }
+
+        /// <summary>
+        /// The harvest function.
+        /// This function will send all units to harvest the closest resource respectively.
+        /// </summary>
+        public void Harvest()
+        {
+            // Find all the resources in the scene
+            List<GameObject> theresources = GameObject.FindGameObjectsWithTag("Resource").ToList();
+            
+            // Find the appropriate types in the resources list
+            this.trees = theresources.FindAll(x => x.GetComponent<Food>());
+            this.mineraldeposits = theresources.FindAll(x => x.GetComponent<Minerals>());
+            this.geysers = theresources.FindAll(x => x.GetComponent<Gas>());
+
+            // Select all the units
+            this.SelectAllUnits();
+
+            foreach (GameObject go in this.units)
+            {
+                IUnit u = (IUnit)go.GetComponent(typeof(IUnit));
+
+                // If its a harvester
+                if (go.GetComponent<Harvester>())
+                {
+                    // Sort the trees list
+                    this.trees.Sort(
+                        delegate (GameObject a, GameObject b)
+                        {
+                            float distanceA = Vector3.Distance(a.transform.position, go.transform.position);
+                            float distanceB = Vector3.Distance(b.transform.position, go.transform.position);
+
+                            if (distanceA > distanceB) return 1;
+                            if (distanceA < distanceB) return -1;
+
+                            return 0;
+                        });
+
+                    // Set the target to the closest tree to the unit
+                    u.SetTargetResource(this.trees[0]);
+                } 
+                // If it's a miner
+                else if (go.GetComponent<Miner>())
+                {
+                    this.mineraldeposits.Sort(
+                        delegate (GameObject a, GameObject b)
+                        {
+                            float distanceA = Vector3.Distance(a.transform.position, go.transform.position);
+                            float distanceB = Vector3.Distance(b.transform.position, go.transform.position);
+
+                            if (distanceA > distanceB) return 1;
+                            if (distanceA < distanceB) return -1;
+
+                            return 0;
+                        });
+
+                    u.SetTargetResource(this.mineraldeposits[0]);
+                }
+                else if (go.GetComponent<Extractor>())
+                {
+                    this.geysers.Sort(
+                        delegate (GameObject a, GameObject b)
+                        {
+                            float distanceA = Vector3.Distance(a.transform.position, go.transform.position);
+                            float distanceB = Vector3.Distance(b.transform.position, go.transform.position);
+
+                            if (distanceA > distanceB) return 1;
+                            if (distanceA < distanceB) return -1;
+
+                            return 0;
+                        });
+
+                    u.SetTargetResource(this.geysers[0]);
+                }
+            }
         }
 
         /// <summary>
@@ -344,6 +450,11 @@ namespace Assets.Scripts.Controllers
             this.ActivateDragScreen();
             this.SelectUnits();
             this.CommandUnits();
+
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                this.Harvest();
+            }
         }
 
         /// <summary>
@@ -783,7 +894,6 @@ namespace Assets.Scripts.Controllers
                     this.clickdestination.z++;
                 }
 
-                Debug.Log(this.clickdestination);
                 if (!this.units[i].GetComponent(typeof(IUnit)))
                 {
                     Debug.LogWarning(string.Format("hey, no component on {0}", this.units[i].name));

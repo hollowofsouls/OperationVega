@@ -204,12 +204,21 @@ MonoBehaviour:
   - {fileID: 21300018, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
   - {fileID: 21300008, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
   - {fileID: 21300022, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
+  hotkeys:
+    Hotkeys: []
+  hotkeysconfig: 
 --- !u!114 &528296174 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114103116634986714, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
     type: 2}
   m_PrefabInternal: {fileID: 1424023810}
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+--- !u!114 &532094216 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114780766421501904, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1424023810}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!114 &548782910 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114526609487402082, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
@@ -249,6 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67518c994ab768d48a46113768dd594e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_defaultCraftSprite: {fileID: 0}
   m_NewGame: {fileID: 556290130}
   m_LoadGame: {fileID: 222600405}
   m_QuitGame: {fileID: 265443341}
@@ -292,7 +302,7 @@ MonoBehaviour:
   tooltippanel: {fileID: 1940432727}
   unitbutton: {fileID: 0}
   abilityunit: {fileID: 0}
-  Input1: {fileID: 0}
+  Input1: {fileID: 532094216}
   Input2: {fileID: 0}
   Output: {fileID: 0}
   minerals: {fileID: 0}
@@ -305,6 +315,8 @@ MonoBehaviour:
   currentcooldown: 0
   contentfield: {fileID: 0}
   unit: {fileID: 0}
+  inputtext: {fileID: 0}
+  buybutton: {fileID: 0}
 --- !u!4 &660983340
 Transform:
   m_ObjectHideFlags: 0
@@ -398,6 +410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bde64b38a5813469311276bfeab967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Harvester: {fileID: 0}
+  Miner: {fileID: 0}
+  Extractor: {fileID: 0}
   selectionHighlight: {fileID: 0}
 --- !u!1 &912139635 stripped
 GameObject:
@@ -1044,6 +1059,16 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnQuitGameClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 114940915861056018, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 660983339}
+    - target: {fileID: 114940915861056018, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnCustomRestoreClick
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb, type: 2}

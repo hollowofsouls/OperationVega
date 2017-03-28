@@ -1,10 +1,13 @@
 ﻿
 namespace Assets.Scripts
 {
+    using System.Collections;
     using System.Collections.Generic;
     using Managers;
     using UnityEngine;
+    using UnityEngine.Events;
     using UnityEngine.UI;
+
 
     /// <summary>
     /// The key bind class.
@@ -80,8 +83,17 @@ namespace Assets.Scripts
                 if (e.isKey && this.possiblekeys.Contains(e.keyCode))
                 {
                     // Map key
-                    this.thekeybinddictionary[this.CurrentKey.GetComponentInChildren<Text>().text] = e.keyCode;
-                   
+                    string kb_key = this.CurrentKey.GetComponentInChildren<Text>().text;
+                    this.thekeybinddictionary[kb_key] = e.keyCode;
+                    hotkeys = new HotKeySerializables();
+                    foreach (var val in thekeybinddictionary)
+                    {
+                        MakeHotKey(val.Key, val.Value.ToString());
+                    }
+
+
+
+
                     // Set sprite here
                     this.CurrentKey.GetComponent<Image>().sprite = this.spritedictionary[e.keyCode];
                     this.CurrentKey = null;
@@ -164,6 +176,8 @@ namespace Assets.Scripts
 
             this.Timer += 1 * Time.deltaTime;
         }
+        
+        public Dictionary<string, UnityAction> keybindmapping = new Dictionary<string, UnityAction>();
 
         /// <summary>
         /// The perform hot key action function.
@@ -171,78 +185,83 @@ namespace Assets.Scripts
         /// </summary>
         private void PerformHotKeyAction()
         {
-            if (Input.GetKeyDown(this.thekeybinddictionary["Settings"]))
+            foreach(var val in keybindmapping)
             {
-                EventManager.Publish("Settings");
+                if(Input.GetKeyDown(this.thekeybinddictionary[val.Key]))
+                    val.Value.Invoke();
             }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Objectives"]))
-            {
+            //if (Input.GetKeyDown(this.thekeybinddictionary["Settings"]))
+            //{
+            //    EventManager.Publish("Settings");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Objectives"]))
+            //{
 
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Crafting"]))
-            {
-                EventManager.Publish("Crafting");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Actions"]))
-            {
-                EventManager.Publish("Actions");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Units"]))
-            {
-                EventManager.Publish("UnitTab");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Workshop"]))
-            {
-                EventManager.Publish("Workshop");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Ability"]))
-            {
-                EventManager.Publish("ActivateAbility");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Home"]))
-            {
-                EventManager.Publish("Recall");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Cancel"]))
-            {
-                EventManager.Publish("CancelAction");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAExtractors"]))
-            {
-                EventManager.Publish("SAExtract");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAMiners"]))
-            {
-                EventManager.Publish("SAMiner");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAHarvesters"]))
-            {
-                EventManager.Publish("SAHarvest");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAUnits"]))
-            {
-                EventManager.Publish("SAUnit");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["BuyExtractor"]))
-            {
-                EventManager.Publish("OnEChoice");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["BuyMiner"]))
-            {
-                EventManager.Publish("OnMChoice");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["BuyHarvester"]))
-            {
-                EventManager.Publish("OnHChoice");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Controls"]))
-            {
-                EventManager.Publish("Customize");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Save"]))
-            {
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Crafting"]))
+            //{
+            //    EventManager.Publish("Crafting");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Actions"]))
+            //{
+            //    EventManager.Publish("Actions");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Units"]))
+            //{
+            //    EventManager.Publish("UnitTab");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Workshop"]))
+            //{
+            //    EventManager.Publish("Workshop");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Ability"]))
+            //{
+            //    EventManager.Publish("ActivateAbility");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Home"]))
+            //{
+            //    EventManager.Publish("Recall");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Cancel"]))
+            //{
+            //    EventManager.Publish("CancelAction");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["SAExtractors"]))
+            //{
+            //    EventManager.Publish("SAExtract");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["SAMiners"]))
+            //{
+            //    EventManager.Publish("SAMiner");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["SAHarvesters"]))
+            //{
+            //    EventManager.Publish("SAHarvest");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["SAUnits"]))
+            //{
+            //    EventManager.Publish("SAUnit");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["BuyExtractor"]))
+            //{
+            //    EventManager.Publish("OnEChoice");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["BuyMiner"]))
+            //{
+            //    EventManager.Publish("OnMChoice");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["BuyHarvester"]))
+            //{
+            //    EventManager.Publish("OnHChoice");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Controls"]))
+            //{
+            //    EventManager.Publish("Customize");
+            //}
+            //else if (Input.GetKeyDown(this.thekeybinddictionary["Save"]))
+            //{
 
-            }
+            //}
         }
 
         /// <summary>
@@ -270,6 +289,17 @@ namespace Assets.Scripts
             this.thekeybinddictionary.Add("BuyHarvester", KeyCode.Alpha3);
             this.thekeybinddictionary.Add("Controls", KeyCode.Slash);
             this.thekeybinddictionary.Add("Save", KeyCode.F5);
+
+            keybindmapping.Add("Settings", delegate { EventManager.Publish("Settings"); });
+            keybindmapping.Add("Crafting", delegate { EventManager.Publish("Crafting"); });
+            keybindmapping.Add("Actions", delegate { EventManager.Publish("Actions"); });
+            keybindmapping.Add("Units", delegate { EventManager.Publish("UnitTab"); });
+            
+            foreach(var val in thekeybinddictionary)
+            {
+                MakeHotKey(val.Key, val.Value.ToString());
+            }
+            
         }
 
         /// <summary>
@@ -366,5 +396,55 @@ namespace Assets.Scripts
             // The slash key sprite is the same for the right keypad slash
             this.spritedictionary.Add(KeyCode.KeypadDivide, this.buttonimages[40]);
         }
+
+        [SerializeField]
+        public HotKeySerializables hotkeys = new HotKeySerializables();
+
+        private void MakeHotKey(string hk, string m)
+        {
+            var hotkey = new HotKeySerializable();
+            hotkey.Hotkey = hk;
+            hotkey.Message = m;
+            if (hotkeys.Hotkeys == null)
+                hotkeys.Hotkeys = new List<HotKeySerializable>();
+            hotkeys.Hotkeys.Add(hotkey);
+            
+        }
+        public string hotkeysconfig;
+        [ContextMenu("save it")]
+        private void SaveHotkeys()
+        {
+           hotkeysconfig = JsonUtility.ToJson(hotkeys, true);
+           System.IO.File.WriteAllText(@"..\JSON\dictionarydata.json", hotkeysconfig);
+
+           
+        }
+
+        [ContextMenu("load it")]
+        private void LoadHotkeys()
+        {               
+            hotkeysconfig = System.IO.File.ReadAllText(@"..\JSON\dictionarydata.json");
+            
+            hotkeys = JsonUtility.FromJson(hotkeysconfig, typeof(HotKeySerializables)) as HotKeySerializables;
+        }
     }
+
+
+    [System.Serializable]
+    public class HotKeySerializables
+    {
+        [SerializeField]
+        public List<HotKeySerializable> Hotkeys;
+    }
+
+    [System.Serializable]
+    public class HotKeySerializable
+    {
+        [SerializeField]
+        public string Hotkey;
+        [SerializeField]
+        public string Message;
+    }
+
 }
+

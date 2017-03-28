@@ -1,0 +1,76 @@
+{
+    "Hotkeys": [
+        {
+            "Hotkey": "Settings",
+            "Message": "Escape"
+        },
+        {
+            "Hotkey": "Objectives",
+            "Message": "O"
+        },
+        {
+            "Hotkey": "Crafting",
+            "Message": "F1"
+        },
+        {
+            "Hotkey": "Actions",
+            "Message": "F2"
+        },
+        {
+            "Hotkey": "Units",
+            "Message": "F3"
+        },
+        {
+            "Hotkey": "Workshop",
+            "Message": "F4"
+        },
+        {
+            "Hotkey": "Ability",
+            "Message": "Space"
+        },
+        {
+            "Hotkey": "Home",
+            "Message": "H"
+        },
+        {
+            "Hotkey": "Cancel",
+            "Message": "X"
+        },
+        {
+            "Hotkey": "SAExtractors",
+            "Message": "F1"
+        },
+        {
+            "Hotkey": "SAMiners",
+            "Message": "F2"
+        },
+        {
+            "Hotkey": "SAHarvesters",
+            "Message": "F3"
+        },
+        {
+            "Hotkey": "SAUnits",
+            "Message": "F4"
+        },
+        {
+            "Hotkey": "BuyExtractor",
+            "Message": "Alpha1"
+        },
+        {
+            "Hotkey": "BuyMiner",
+            "Message": "Alpha2"
+        },
+        {
+            "Hotkey": "BuyHarvester",
+            "Message": "Alpha3"
+        },
+        {
+            "Hotkey": "Controls",
+            "Message": "Slash"
+        },
+        {
+            "Hotkey": "Save",
+            "Message": "F5"
+        }
+    ]
+}
