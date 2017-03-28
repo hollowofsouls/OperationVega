@@ -132,6 +132,11 @@ namespace UI
         [SerializeField]
         private Image skillIcon;
 
+
+        private Image defaultInput1;
+        private Image defaultInput2;
+        private Image defaultOutput;
+
         
 
         [HideInInspector]
@@ -192,6 +197,10 @@ namespace UI
             revertcraftingtab = true;
             //Bool use to manage unit tab
             revertunittab = true;
+
+            defaultInput1 = Input1;
+            defaultInput2 = Input2;
+            defaultOutput = Output;
 
             input1b = true;
             input2b = true;
@@ -542,6 +551,7 @@ namespace UI
         }
 
 
+
         public void OnActionsClick()
         {
             EventManager.Publish("Actions");
@@ -676,37 +686,52 @@ namespace UI
         }
         private void OnCraft()
         {
+            //If Input is minerals and gas, produce fuel.
             if(Input1.sprite == minerals.sprite && Input2.sprite == gas.sprite)
             {
                 Output.sprite = fuel.sprite;
+                User.MineralsCount--;
+                User.GasCount--;
                 User.FuelCount++;
             }
             if(Input2.sprite == minerals.sprite && Input1.sprite == gas.sprite)
             {
                 Output.sprite = fuel.sprite;
+                User.MineralsCount--;
+                User.GasCount--;
                 User.FuelCount++;
             }
 
+            //If Input is minerals and food, produce steel.
             if(Input1.sprite == minerals.sprite && Input2.sprite == food.sprite)
             {
                 Output.sprite = steel.sprite;
+                User.MineralsCount--;
+                User.FoodCount--;
                 User.SteelCount++;
             }
             if(Input2.sprite == minerals.sprite && Input1.sprite == food.sprite)
             {
                 Output.sprite = steel.sprite;
+                User.MineralsCount--;
+                User.FoodCount--;
                 User.SteelCount++;
             }
 
+            //If Input is food and gas, produce Cooked Food.
             if(Input1.sprite == food.sprite && Input2.sprite == gas.sprite)
             {
                 Output.sprite = cookedFood.sprite;
+                User.FoodCount--;
+                User.GasCount--;
                 User.CookedFoodCount++;
             }
 
             if(Input2.sprite == food.sprite && Input1.sprite == gas.sprite)
             {
                 Output.sprite = cookedFood.sprite;
+                User.FoodCount--;
+                User.GasCount--;
                 User.CookedFoodCount++;
             }
 
@@ -720,15 +745,31 @@ namespace UI
         }
         private void OnClear()
         {
+            if(Input1.sprite == minerals.sprite|| Input2.sprite == minerals.sprite)
+            {
+               
+                User.MineralsCount++;
+            }
+            if(Input1.sprite == steel.sprite || Input2.sprite == steel.sprite)
+            {
+              
+                User.SteelCount++;
+            }
+            if(Input1.sprite == gas.sprite || Input2.sprite == gas.sprite)
+            {            
+                User.GasCount++;
+            }
+            if(Input1.sprite == fuel.sprite || Input2.sprite == fuel.sprite)
+            {              
+                User.FuelCount++;
+            }
 
-            //minerals.sprite = Input1.sprite;
-            //minerals.sprite = Input2.sprite;
-            //steel.sprite = Input1.sprite;
-            //steel.sprite = Input2.sprite;
-            //gas.sprite = Input1.sprite;
-            //gas.sprite = Input2.sprite;
-            //fuel.sprite = Input1.sprite;
-            //fuel.sprite = Input2.sprite;
+            Input1 = defaultInput1;
+            Input2 = defaultInput2;
+            Output = defaultOutput;
+           
+
+
 
             //This function will clear items in the craft.
             Debug.Log("Clear");
@@ -992,7 +1033,6 @@ namespace UI
 
                 input1b = true;
             }
-            User.MineralsCount--;
             Debug.Log("Minerals");
         }
 
@@ -1005,7 +1045,18 @@ namespace UI
         {
             //Will Change the source image to the first craft slot
             //Second Slot if first one is selected.
-            User.FoodCount--;
+            if (input1b)
+            {
+                Input1.sprite = food.sprite;
+
+                input1b = false;
+            }
+            else if (!input1b)
+            {
+                Input2.sprite = food.sprite;
+
+                input2b = false;
+            }
             Debug.Log("Food");
         }
 
@@ -1051,7 +1102,6 @@ namespace UI
 
                 input2b = false;
             }
-            User.GasCount--;
             Debug.Log("Gas");
         }
 
@@ -1077,8 +1127,6 @@ namespace UI
                 input2b = false;
             }
             //Second Slot if first one is selected.
-            User.FuelCount--;
-
             Debug.Log("Fuel");
         }
         public void Steel()
@@ -1100,7 +1148,6 @@ namespace UI
 
                 input1b = true;
             }
-            User.SteelCount--;
             Debug.Log("Steel");
         }
 
