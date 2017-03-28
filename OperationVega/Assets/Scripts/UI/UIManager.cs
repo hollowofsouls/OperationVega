@@ -22,6 +22,8 @@ namespace UI
     {
         #region -- VARIABLES --
         [SerializeField]
+        private Sprite m_defaultCraftSprite;
+        [SerializeField]
         private Button m_NewGame;
         [SerializeField]
         private Button m_LoadGame;
@@ -165,7 +167,13 @@ namespace UI
         private Button[] statsbuttons;
 
         private bool objectiveinview;
-        
+
+        private int numbertobuy;
+
+        public InputField inputtext;
+
+        public Button buybutton;
+
         bool revertactionstab;
         bool revertcraftingtab;
         bool revertunittab;
@@ -201,6 +209,7 @@ namespace UI
             defaultInput1 = Input1;
             defaultInput2 = Input2;
             defaultOutput = Output;
+            m_defaultCraftSprite = defaultInput1.sprite;
 
             input1b = true;
             input2b = true;
@@ -243,9 +252,9 @@ namespace UI
             EventManager.Subscribe("Player chose CP2", this.OnCP2);
             EventManager.Subscribe("Player chose CP3", this.OnCP3);
             EventManager.Subscribe("Apply Wings", this.OnWings);
-            EventManager.Subscribe("WingChoice1", this.OnWC1);
-            EventManager.Subscribe("WingChoice2", this.OnWC2);
-            EventManager.Subscribe("WingChoice3", this.OnWC3);
+            EventManager.Subscribe("Player chose WC1", this.OnWC1);
+            EventManager.Subscribe("Player chose WC2", this.OnWC2);
+            EventManager.Subscribe("Player chose WC3", this.OnWC3);
             EventManager.Subscribe("OnMChoice", this.OnMChoice);
             EventManager.Subscribe("OnHChoice", this.OnHChoice);
             EventManager.Subscribe("OnEChoice", this.OnEChoice);
@@ -550,6 +559,105 @@ namespace UI
             this.theUnitButtonsList.Clear();
         }
 
+        public void Clicked(Text thetext)
+        {
+            int.TryParse(thetext.text, out this.numbertobuy);
+
+            if (this.numbertobuy > User.FoodCount / 5 || this.numbertobuy <= 0)
+            {
+                this.buybutton.interactable = false;
+            }
+            else
+            {
+                this.buybutton.interactable = true;
+            }
+        }
+
+        public void Minus()
+        {
+            if (this.numbertobuy <= 1)
+            {
+                this.numbertobuy = User.FoodCount / 5;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+            else
+            {
+                this.numbertobuy--;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+
+            if (this.numbertobuy > User.FoodCount / 5 || this.numbertobuy <= 0)
+            {
+                this.buybutton.interactable = false;
+            }
+            else
+            {
+                this.buybutton.interactable = true;
+            }
+        }
+
+        public void Plus()
+        {
+            if (this.numbertobuy >= User.FoodCount / 5 && this.numbertobuy > 0)
+            {
+                this.numbertobuy = 1;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+            else if (User.FoodCount > 5)
+            {
+                this.numbertobuy++;
+                this.inputtext.text = this.numbertobuy.ToString();
+            }
+
+            if (this.numbertobuy > User.FoodCount / 5 || this.numbertobuy <= 0)
+            {
+                this.buybutton.interactable = false;
+            }
+            else
+            {
+                this.buybutton.interactable = true;
+            }
+        }
+
+        public void Buy()
+        {
+            if (this.numbertobuy <= User.FoodCount / 5 && this.numbertobuy > 0)
+            {
+                if (UnitController.PurchaseHarvester)
+                {
+                    for (int i = 0; i < this.numbertobuy; i++)
+                    {
+                        UnitController.Self.SpawnUnit(UnitController.Self.Harvester);
+                    }
+                    UnitController.PurchaseHarvester = false;
+                }
+                else if (UnitController.PurchaseExtractor)
+                {
+                    for (int i = 0; i < this.numbertobuy; i++)
+                    {
+                        UnitController.Self.SpawnUnit(UnitController.Self.Extractor);
+                    }
+                    UnitController.PurchaseExtractor = false;
+                }
+                else if (UnitController.PurchaseMiner)
+                {
+                    for (int i = 0; i < this.numbertobuy; i++)
+                    {
+                        UnitController.Self.SpawnUnit(UnitController.Self.Miner);
+                    }
+                    UnitController.PurchaseMiner = false;
+                }
+
+                User.FoodCount -= this.numbertobuy * 5;
+                this.inputtext.text = "0";
+                this.numbertobuy = 0;
+
+                // Close the panel
+                EventManager.Publish("Player choose no");
+            }
+        }
+
+
 
 
         public void OnActionsClick()
@@ -745,14 +853,13 @@ namespace UI
         }
         private void OnClear()
         {
-            if(Input1.sprite == minerals.sprite|| Input2.sprite == minerals.sprite)
-            {
-               
+          
+            if (Input1.sprite == minerals.sprite|| Input2.sprite == minerals.sprite)
+            {               
                 User.MineralsCount++;
             }
             if(Input1.sprite == steel.sprite || Input2.sprite == steel.sprite)
-            {
-              
+            {              
                 User.SteelCount++;
             }
             if(Input1.sprite == gas.sprite || Input2.sprite == gas.sprite)
@@ -764,10 +871,15 @@ namespace UI
                 User.FuelCount++;
             }
 
-            Input1 = defaultInput1;
-            Input2 = defaultInput2;
-            Output = defaultOutput;
-           
+            List<Image> images = new List<Image>() { Input1, Input2, Output };
+            foreach (Image image in images)
+                image.sprite = m_defaultCraftSprite;
+
+            input1b = true;
+            input2b = true;
+
+
+
 
 
 
@@ -1241,28 +1353,28 @@ namespace UI
         }
         public void OnWC1Click()
         {
-            EventManager.Publish("WingChoice1");
+            EventManager.Publish("Player chose WC1");
         }
         private void OnWC1()
         {
-            Debug.Log("Player chose WingChoice1");
+            Debug.Log("Player chose WC1");
         }
         public void OnWC2Click()
         {
-            EventManager.Publish("WingChoice2");
+            EventManager.Publish("Player chose WC2");
 
         }
         private void OnWC2()
         {
-            Debug.Log("Player chose WingChoice2");
+            Debug.Log("Player chose WC2");
         }
         public void OnWC3Click()
         {
-            EventManager.Publish("WingChoice3");
+            EventManager.Publish("Player chose WC3");
         }
         private void OnWC3()
         {
-            Debug.Log("Player chose WingChoice3");
+            Debug.Log("Player chose WC3");
         }
         public void OnCP1Click()
         {
