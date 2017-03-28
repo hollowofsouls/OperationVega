@@ -22,6 +22,8 @@ namespace UI
     {
         #region -- VARIABLES --
         [SerializeField]
+        private Sprite m_defaultCraftSprite;
+        [SerializeField]
         private Button m_NewGame;
         [SerializeField]
         private Button m_LoadGame;
@@ -201,6 +203,7 @@ namespace UI
             defaultInput1 = Input1;
             defaultInput2 = Input2;
             defaultOutput = Output;
+            m_defaultCraftSprite = defaultInput1.sprite;
 
             input1b = true;
             input2b = true;
@@ -745,14 +748,13 @@ namespace UI
         }
         private void OnClear()
         {
-            if(Input1.sprite == minerals.sprite|| Input2.sprite == minerals.sprite)
-            {
-               
+          
+            if (Input1.sprite == minerals.sprite|| Input2.sprite == minerals.sprite)
+            {               
                 User.MineralsCount++;
             }
             if(Input1.sprite == steel.sprite || Input2.sprite == steel.sprite)
-            {
-              
+            {              
                 User.SteelCount++;
             }
             if(Input1.sprite == gas.sprite || Input2.sprite == gas.sprite)
@@ -764,10 +766,15 @@ namespace UI
                 User.FuelCount++;
             }
 
-            Input1 = defaultInput1;
-            Input2 = defaultInput2;
-            Output = defaultOutput;
-           
+            List<Image> images = new List<Image>() { Input1, Input2, Output };
+            foreach (Image image in images)
+                image.sprite = m_defaultCraftSprite;
+
+            input1b = true;
+            input2b = true;
+
+
+
 
 
 
