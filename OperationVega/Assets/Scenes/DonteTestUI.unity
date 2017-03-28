@@ -306,6 +306,8 @@ MonoBehaviour:
   currentcooldown: 0
   contentfield: {fileID: 0}
   unit: {fileID: 0}
+  inputtext: {fileID: 0}
+  buybutton: {fileID: 0}
 --- !u!4 &381470711
 Transform:
   m_ObjectHideFlags: 0
