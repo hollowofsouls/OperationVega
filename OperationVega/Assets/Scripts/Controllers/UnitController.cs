@@ -1,16 +1,15 @@
 ﻿
 namespace Assets.Scripts.Controllers
 {
-    using System.Collections;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Interfaces;
     using Managers;
     using UI;
     using UnityEngine;
-    using UnityEngine.AI;
     using UnityEngine.EventSystems;
-    using UnityEngine.UI;
 
     /// <summary>
     /// The unit controller class.
@@ -18,6 +17,23 @@ namespace Assets.Scripts.Controllers
     /// </summary>
     public class UnitController : MonoBehaviour
     {
+        /// <summary>
+        /// The purchase harvester reference.
+        /// Determines if the purchase harvester button was clicked.
+        /// </summary>
+        public static bool PurchaseHarvester;
+
+        /// <summary>
+        /// The purchase miner reference.
+        /// Determines if the purchase miner button was clicked.
+        /// </summary>
+        public static bool PurchaseMiner;
+
+        /// <summary>
+        /// The purchase extractor reference.
+        /// Determines if the purchase extractor button was clicked.
+        /// </summary>
+        public static bool PurchaseExtractor;
 
         /// <summary>
         /// The Harvester reference.
@@ -569,28 +585,13 @@ namespace Assets.Scripts.Controllers
                 this.theUnit.SetTheMovePosition(this.clickdestination);
                 this.theUnit.ChangeStates("Idle");
             }
-            else if (this.units.Count > 0)
+            else if (this.units.Count > 0 && this.units.Count <= 20)
             {
-                for (int i = 0; i < this.units.Count; i++)
-                {
-                    float angle = i * (2 * 3.14159f / this.units.Count);
-                    float x = Mathf.Cos(angle) * 1.5f;
-                    float z = Mathf.Sin(angle) * 1.5f;
-
-                    this.clickdestination = new Vector3(this.clickdestination.x + x, 0.5f, this.clickdestination.z + z);
-
-                    if (!this.units[i].GetComponent(typeof(IUnit)))
-                    {
-                        Debug.LogWarning(string.Format("hey, no component on {0}", this.units[i].name));
-                    }
-                    else
-                    {
-                        IUnit unit = (IUnit)this.units[i].GetComponent(typeof(IUnit));
-
-                        unit.SetTheMovePosition(this.clickdestination);
-                        unit.ChangeStates("Idle");
-                    }
-                }
+                this.CircleFormation();
+            }
+            else if (this.units.Count > 20)
+            {
+                this.SquareFormation();
             }
         }
 
@@ -749,82 +750,79 @@ namespace Assets.Scripts.Controllers
             }
         }
 
-        private int numbertobuy;
-
-        public InputField inputtext;
-
-        public Button buybutton;
-
-        private bool purchaseHarvester;
-        private bool purchaseMiner = true;
-        private bool purchaseExtractor;
-
-        public void Clicked(Text thetext)
+        /// <summary>
+        /// The Square Formation function.
+        /// Puts units in the Square Formation.
+        /// </summary>
+        private void SquareFormation()
         {
-            int.TryParse(thetext.text, out this.numbertobuy);
-            User.FoodCount = 15;
+            int counter = -1;
+            int x = -1;
 
-            if (this.numbertobuy > User.FoodCount / 5)
+            double sqrt = Math.Sqrt(this.units.Count);
+
+            float startx = this.clickdestination.x;
+
+            for (int i = 0; i < this.units.Count; i++)
             {
-                this.buybutton.interactable = false;
-            }
-            else
-            {
-                this.buybutton.interactable = true;
+                counter++;
+                x++;
+
+                if (x > 1)
+                {
+                    x = 1;
+                }
+
+                this.clickdestination = new Vector3(this.clickdestination.x + (x * 2f), 0.5f, this.clickdestination.z);
+
+                if (counter == Math.Floor(sqrt))
+                {
+                    counter = 0;
+                    x = 0;
+                    this.clickdestination.x = startx;
+                    this.clickdestination.z++;
+                }
+
+                Debug.Log(this.clickdestination);
+                if (!this.units[i].GetComponent(typeof(IUnit)))
+                {
+                    Debug.LogWarning(string.Format("hey, no component on {0}", this.units[i].name));
+                }
+                else
+                {
+                    IUnit unit = (IUnit)this.units[i].GetComponent(typeof(IUnit));
+
+                    unit.SetTheMovePosition(this.clickdestination);
+                    unit.ChangeStates("Idle");
+                }
             }
         }
 
-        public void Minus()
+        /// <summary>
+        /// The Circle Formation function.
+        /// Puts units in the Circle Formation.
+        /// </summary>
+        private void CircleFormation()
         {
-            if (this.numbertobuy <= 1)
+            for (int i = 0; i < this.units.Count; i++)
             {
-                this.numbertobuy = User.FoodCount / 5;
-                this.inputtext.text = this.numbertobuy.ToString();
-            }
-            else
-            {
-                this.numbertobuy--;
-                this.inputtext.text = this.numbertobuy.ToString();
-            }
-        }
+                float angle = i * (2 * 3.14159f / this.units.Count);
+                float x = Mathf.Cos(angle) * 1.5f;
+                float z = Mathf.Sin(angle) * 1.5f;
 
-        public void Plus()
-        {
-            if (this.numbertobuy >= User.FoodCount / 5)
-            {
-                this.numbertobuy = 1;
-                this.inputtext.text = this.numbertobuy.ToString();
-            }
-            else
-            {
-                this.numbertobuy++;
-                this.inputtext.text = this.numbertobuy.ToString();
-            }
-        }
+                this.clickdestination = new Vector3(this.clickdestination.x + x, 0.5f, this.clickdestination.z + z);
 
-        public void Buy()
-        {
-            if(this.numbertobuy <= User.FoodCount / 5 && this.numbertobuy > 0)
-            {
-                // Close the panel
-
-                if (this.purchaseExtractor)
+                if (!this.units[i].GetComponent(typeof(IUnit)))
                 {
-                    this.SpawnUnit(this.Extractor);
-                    this.purchaseExtractor = false;
+                    Debug.LogWarning(string.Format("hey, no component on {0}", this.units[i].name));
                 }
-                else if (this.purchaseHarvester)
+                else
                 {
-                    this.SpawnUnit(this.Harvester);
-                    this.purchaseHarvester = false;
-                }
-                else if (this.purchaseMiner)
-                {
-                    this.SpawnUnit(this.Miner);
-                    this.purchaseMiner = false;
-                }
+                    IUnit unit = (IUnit)this.units[i].GetComponent(typeof(IUnit));
 
-                // Spawn the correct number of units.
+                    unit.SetTheMovePosition(this.clickdestination);
+                    unit.ChangeStates("Idle");
+                }
             }
         }
 
