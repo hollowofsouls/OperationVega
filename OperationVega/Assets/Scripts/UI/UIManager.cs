@@ -182,6 +182,7 @@ namespace UI
         public bool RevertActionsTab
         {
             get { return revertactionstab; }
+            set { revertactionstab = value; }
         }
 
         bool revertcraftingtab;
@@ -197,6 +198,7 @@ namespace UI
         public float UIScaleFactor
         {
             get { return Scalefactor; }
+            set { UIScaleFactor = Scalefactor; }
         }
 
 
@@ -251,7 +253,7 @@ namespace UI
             EventManager.Subscribe("Clear", this.OnClear);
             EventManager.Subscribe("Mine", this.OnMine);
             EventManager.Subscribe("Extract", this.OnExtract);
-           // EventManager.Subscribe("Actions", this.OnActions);
+            EventManager.Subscribe("Actions", this.OnActions);
             EventManager.Subscribe("Crafting", this.OnCrafting);
             EventManager.Subscribe("UnitTab", this.OnUnit);
             EventManager.Subscribe("Build Rocket", this.OnBuild);

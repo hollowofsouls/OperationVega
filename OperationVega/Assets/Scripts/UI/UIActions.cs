@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class UIActions : MonoBehaviour {
     UI.UIManager uiManager;
+    bool revertactionstab;
+    RectTransform m_ActionsTAB;
+    float Scalefactor;
+
     void Awake()
     {
-         uiManager= FindObjectOfType<UI.UIManager>();
+        revertactionstab = true;
+        uiManager= FindObjectOfType<UI.UIManager>();
+        Assets.Scripts.Managers.EventManager.Subscribe("Actions", OnActions);
     }
 	// Use this for initialization
 	void Start ()
@@ -16,13 +22,11 @@ public class UIActions : MonoBehaviour {
         Scalefactor = uiManager.UIScaleFactor;
         revertactionstab = uiManager.RevertActionsTab;
 
-        Assets.Scripts.Managers.EventManager.Subscribe("Actions", OnActions);	
-	}
+       
+       
+    }
 
-    bool revertactionstab;
-    RectTransform m_ActionsTAB;
-    float Scalefactor;
-
+  
     private void OnActions()
     {
         m_ActionsTAB = uiManager.ActionsTab;
@@ -48,6 +52,6 @@ public class UIActions : MonoBehaviour {
         Debug.Log("Move Actions Tab down");
     }
 
-    // Update is called once per frame
+    
 
 }
