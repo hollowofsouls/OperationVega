@@ -144,7 +144,7 @@ namespace Assets.Scripts
 		/// </param>
 		public bool AddPart(IRocketParts selectedPart)
 		{
-			var spareList = this.allParts.ToList();
+			var spareList = this.allParts;
 			if (User.SteelCount >= selectedPart.SteelCost && User.FuelCount >= selectedPart.FuelCost)
 			{
 				if (selectedPart is BaseCockpit)
@@ -218,75 +218,86 @@ namespace Assets.Scripts
 			}
 		}
 
-		///// <summary>
-		///// Use this for initialization
-		///// </summary>
-		//private void Start()
-		//{
-		//	this.allParts = new List<IRocketParts>();
-		//}
+		/// <summary>
+		/// Use this for initialization
+		/// </summary>
+		private void Start()
+		{
+			this.allParts = new List<IRocketParts>();
+		}
 
-		///// <summary>
-		///// Update is called once per frame
-		///// </summary>
-		//private void Update()
-		//{
-		//	if (Input.GetMouseButtonDown(0))
-		//	{
-		//		this.CreateCockpit1();
-		//	}
+		/// <summary>
+		/// Update is called once per frame
+		/// </summary>
+		private void TestInput()
+		{
+			if (Input.GetMouseButtonDown(0))
+			{
+				this.CreateCockpit1();
+			}
 
-		//	if (Input.GetMouseButtonDown(1))
-		//	{
-		//		this.CreateCockpit2();
-		//	}
+			if (Input.GetMouseButtonDown(1))
+			{
+				this.CreateCockpit2();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad0))
-		//	{
-		//		this.CreateCockpit3();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad0))
+			{
+				this.CreateCockpit3();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad1))
-		//	{
-		//		this.CreateThrusters1();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad1))
+			{
+				this.CreateThrusters1();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad2))
-		//	{
-		//		this.CreateThrusters2();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad2))
+			{
+				this.CreateThrusters2();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad3))
-		//	{
-		//		this.CreateThrusters3();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad3))
+			{
+				this.CreateThrusters3();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad4))
-		//	{
-		//		this.CreateWings1();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad4))
+			{
+				this.CreateWings1();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad5))
-		//	{
-		//		this.CreateWings2();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad5))
+			{
+				this.CreateWings2();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.Keypad6))
-		//	{
-		//		this.CreateWings3();
-		//	}
+			if (Input.GetKeyDown(KeyCode.Keypad6))
+			{
+				this.CreateWings3();
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.V))
-		//	{
-		//		User.SteelCount += 100;
-		//	}
+			if (Input.GetKeyDown(KeyCode.V))
+			{
+				User.SteelCount += 100;
+			}
 
-		//	if (Input.GetKeyDown(KeyCode.B))
-		//	{
-		//		User.FuelCount += 100;
-		//	}
-		//}
+			if (Input.GetKeyDown(KeyCode.B))
+			{
+				User.FuelCount += 100;
+			}
+		}
 
+		public void BuildRocket()
+		{
+			if (ShipBuild())
+			{
+				Assets.Scripts.Managers.GameManager.Instance.HasBuiltShip = true;
+				Assets.Scripts.Managers.GameManager.Instance.CheckForWin();
+				Debug.Log("you win");
+			}
+			else
+				Debug.Log("nope");
+		}
 		private void BuildParts(IRocketParts thePart, GameObject selectedPart, List<GameObject> building)
 		{
 			if (thePart is BaseCockpit)
@@ -371,6 +382,7 @@ namespace Assets.Scripts
 			var cp = new BaseCockpit(40, 200, 0, 80, "Cockpit Flame");
 			AssembleParts(cp, cockpitThree);
 		}
+ 
 
 		public void CreateThrusters1()
 		{
