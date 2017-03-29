@@ -26,7 +26,7 @@ class TestRocketUI : MonoBehaviour
 	{
 		UnityAction ua = delegate { Debug.Log("do it"); };
 		cockpitClickEvents = new List<string>() { "Player chose CP1", "Player chose CP2", "Player chose CP3" };
-		wingsClickEvents = new List<string>() { "WingChoice1", "WingChoice2", "WingChoice3" };
+		wingsClickEvents = new List<string>() { "Player chose WC1", "Player chose WC2", "Player chose WC3" };
 		thrusterClickEvents = new List<string>() { "Player chose TC1", "Player chose TC2", "Player chose TC3" };
 
 		

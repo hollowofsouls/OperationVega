@@ -160,6 +160,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Timer: 0
   CurrentKey: {fileID: 0}
+  customizeUi: {fileID: 353977531}
+  hotkeys:
+    Hotkeys: []
   buttonimages:
   - {fileID: 21300054, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
   - {fileID: 21300016, guid: 535a464d6fdbb9747a48037f123142ae, type: 3}
@@ -204,9 +207,6 @@ MonoBehaviour:
   - {fileID: 21300018, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
   - {fileID: 21300008, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
   - {fileID: 21300022, guid: 3dafbff404235d94da41fd52b17a0a03, type: 3}
-  hotkeys:
-    Hotkeys: []
-  hotkeysconfig: 
 --- !u!114 &528296174 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114103116634986714, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
@@ -808,7 +808,7 @@ Prefab:
     - target: {fileID: 224157088012627228, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 224551879009007710, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
@@ -838,7 +838,7 @@ Prefab:
     - target: {fileID: 224874589520420008, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 114997306384218996, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
         type: 2}
