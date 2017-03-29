@@ -1,12 +1,8 @@
 ﻿
 namespace Assets.Scripts
 {
-    using System.Collections;
     using System.Collections.Generic;
     using Managers;
-
-    using UI;
-
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.UI;
@@ -173,25 +169,20 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The awake function.
-        /// </summary>
-        private void Awake()
-        {
-            // Dont destroy script..incase user changed hot keys in the main
-            // menu. If so, we will need the changes to carry over.
-            DontDestroyOnLoad(this.gameObject);
-        }
-
-        /// <summary>
         /// The start function.
         /// </summary>
         private void Start()
         {
             instance = this;
 
-            this.SetUpDefaultKeys();
+            if (!System.IO.Directory.Exists(@"..\KeyBindings"))
+            {
+                System.IO.Directory.CreateDirectory(@"..\KeyBindings");
+            }
+
             this.SetUpPossibleKeys();
             this.SetUpSprites();
+            this.SetUpDefaultKeys();
 
             this.Timer = 1.0f;
         }
@@ -269,9 +260,13 @@ namespace Assets.Scripts
             this.keybindmapping.Add("Controls", delegate { EventManager.Publish("Customize"); });
             this.keybindmapping.Add("Save", delegate { EventManager.Publish("Empty"); });
 
-            foreach (var val in this.thekeybinddictionary)
+            // Load the hotkeys - If they can't be loaded then make the keys
+            if (!this.LoadHotkeys())
             {
-                this.MakeHotKey(val.Key, val.Value.ToString());
+                foreach (var val in this.thekeybinddictionary)
+                {
+                    this.MakeHotKey(val.Key, val.Value.ToString());
+                }
             }
         }
 
@@ -380,15 +375,15 @@ namespace Assets.Scripts
         /// </summary>
         private void MakeHotKey(string hk, string m)
         {
-            var hotkey = new HotKeySerializable();
-            hotkey.Hotkey = hk;
-            hotkey.Message = m;
-
             if (this.hotkeys.Hotkeys == null)
             {
                 this.hotkeys.Hotkeys = new List<HotKeySerializable>();
             }
-                
+
+            var hotkey = new HotKeySerializable();
+            hotkey.Hotkey = hk;
+            hotkey.Message = m;
+
             this.hotkeys.Hotkeys.Add(hotkey);
         }
 
@@ -398,34 +393,46 @@ namespace Assets.Scripts
         /// </summary>
         private void SaveHotkeys()
         {
-           this.hotkeysconfig = JsonUtility.ToJson(this.hotkeys, true);
-           System.IO.File.WriteAllText(@"..\JSON\KeyBindings.json", this.hotkeysconfig);
+            if (this.hotkeys != null)
+            {
+                this.hotkeysconfig = JsonUtility.ToJson(this.hotkeys, true);
+                System.IO.File.WriteAllText(@"..\KeyBindings\HotKeys.json", this.hotkeysconfig);
+            }
         }
 
         /// <summary>
         /// The load hotkeys function.
-        /// Lods hotkeys from the saved json file.
+        /// Loads hot keys from the saved file.
         /// </summary>
-        [ContextMenu("load it")]
-        private void LoadHotkeys()
-        {               
-            this.hotkeysconfig = System.IO.File.ReadAllText(@"..\JSON\KeyBindings.json");
-
-            this.hotkeys = JsonUtility.FromJson(this.hotkeysconfig, typeof(HotKeySerializables)) as HotKeySerializables;
-
-            if (this.hotkeys != null)
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        private bool LoadHotkeys()
+        {
+            // The folder exists and the file exists then load the keys
+            if (System.IO.Directory.Exists(@"..\KeyBindings") && System.IO.File.Exists(@"..\KeyBindings\HotKeys.json"))
             {
-                Button[] keybuttons = this.customizeUi.GetComponentsInChildren<Button>();
+                this.hotkeysconfig = System.IO.File.ReadAllText(@"..\KeyBindings\HotKeys.json");
 
-                for (int i = 0; i < this.hotkeys.Hotkeys.Count; i++)
+                this.hotkeys = JsonUtility.FromJson(this.hotkeysconfig, typeof(HotKeySerializables)) as HotKeySerializables;
+
+                if (this.hotkeys != null)
                 {
-                    // Convert the message string into its keycode form.
-                    KeyCode keycode = (KeyCode)System.Enum.Parse(typeof(KeyCode), this.hotkeys.Hotkeys[i].Message);
+                    Button[] keybuttons = this.customizeUi.GetComponentsInChildren<Button>();
 
-                    this.thekeybinddictionary[this.hotkeys.Hotkeys[i].Hotkey] = keycode;
-                    keybuttons[i].GetComponent<Image>().sprite = this.spritedictionary[keycode];
+                    for (int i = 0; i < this.hotkeys.Hotkeys.Count; i++)
+                    {
+                        // Convert the message string into its keycode form.
+                        KeyCode keycode = (KeyCode)System.Enum.Parse(typeof(KeyCode), this.hotkeys.Hotkeys[i].Message);
+
+                        this.thekeybinddictionary[this.hotkeys.Hotkeys[i].Hotkey] = keycode;
+                        keybuttons[i].GetComponent<Image>().sprite = this.spritedictionary[keycode];
+                    }
+
+                    return true;
                 }
             }
+            return false;
         }
     }
 
