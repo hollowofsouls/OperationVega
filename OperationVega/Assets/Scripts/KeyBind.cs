@@ -1,10 +1,16 @@
 ﻿
 namespace Assets.Scripts
 {
+    using System.Collections;
     using System.Collections.Generic;
     using Managers;
+
+    using UI;
+
     using UnityEngine;
+    using UnityEngine.Events;
     using UnityEngine.UI;
+
 
     /// <summary>
     /// The key bind class.
@@ -24,6 +30,13 @@ namespace Assets.Scripts
         /// </summary>
         [HideInInspector]
         public GameObject CurrentKey;
+
+        /// <summary>
+        /// The customize ui.
+        /// Reference to the customize ui to have access to the buttons.
+        /// </summary>
+        [SerializeField]
+        private RectTransform customizeUi;
 
         /// <summary>
         /// The instance reference.
@@ -49,11 +62,30 @@ namespace Assets.Scripts
         private readonly List<KeyCode> possiblekeys = new List<KeyCode>();
 
         /// <summary>
+        /// The key bind mapping reference.
+        /// Reference to the events that are used with a specific key.
+        /// </summary>
+        private readonly Dictionary<string, UnityAction> keybindmapping = new Dictionary<string, UnityAction>();
+
+        /// <summary>
+        /// The hot keys reference.
+        /// The Serialized hot keys.
+        /// </summary>
+        [SerializeField]
+        private HotKeySerializables hotkeys = new HotKeySerializables();
+
+        /// <summary>
         /// The button images reference.
         /// Holds reference in the hierarchy for all sprites.
         /// </summary>
         [SerializeField]
         private List<Sprite> buttonimages = new List<Sprite>();
+
+        /// <summary>
+        /// The hot keys config reference.
+        /// Reference to the representation of the serialized keys as a string.
+        /// </summary>
+        private string hotkeysconfig;
 
         /// <summary>
         /// Gets the instance of the KeyBind object.
@@ -79,9 +111,21 @@ namespace Assets.Scripts
                 // Check if its a key and if its a mappable key
                 if (e.isKey && this.possiblekeys.Contains(e.keyCode))
                 {
-                    // Map key
-                    this.thekeybinddictionary[this.CurrentKey.GetComponentInChildren<Text>().text] = e.keyCode;
-                   
+                    // Get the key
+                    string kb_key = this.CurrentKey.GetComponentInChildren<Text>().text;
+
+                    // Map key code to the key
+                    this.thekeybinddictionary[kb_key] = e.keyCode;
+
+                    this.hotkeys = new HotKeySerializables();
+
+                    foreach (var val in this.thekeybinddictionary)
+                    {
+                        this.MakeHotKey(val.Key, val.Value.ToString());
+                    }
+
+                    this.SaveHotkeys();
+
                     // Set sprite here
                     this.CurrentKey.GetComponent<Image>().sprite = this.spritedictionary[e.keyCode];
                     this.CurrentKey = null;
@@ -164,84 +208,19 @@ namespace Assets.Scripts
 
             this.Timer += 1 * Time.deltaTime;
         }
-
+        
         /// <summary>
         /// The perform hot key action function.
         /// Performs the appropriate action for the key pressed.
         /// </summary>
         private void PerformHotKeyAction()
         {
-            if (Input.GetKeyDown(this.thekeybinddictionary["Settings"]))
+            foreach (var val in this.keybindmapping)
             {
-                EventManager.Publish("Settings");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Objectives"]))
-            {
-
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Crafting"]))
-            {
-                EventManager.Publish("Crafting");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Actions"]))
-            {
-                EventManager.Publish("Actions");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Units"]))
-            {
-                EventManager.Publish("UnitTab");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Workshop"]))
-            {
-                EventManager.Publish("Workshop");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Ability"]))
-            {
-                EventManager.Publish("ActivateAbility");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Home"]))
-            {
-                EventManager.Publish("Recall");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Cancel"]))
-            {
-                EventManager.Publish("CancelAction");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAExtractors"]))
-            {
-                EventManager.Publish("SAExtract");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAMiners"]))
-            {
-                EventManager.Publish("SAMiner");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAHarvesters"]))
-            {
-                EventManager.Publish("SAHarvest");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["SAUnits"]))
-            {
-                EventManager.Publish("SAUnit");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["BuyExtractor"]))
-            {
-                EventManager.Publish("OnEChoice");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["BuyMiner"]))
-            {
-                EventManager.Publish("OnMChoice");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["BuyHarvester"]))
-            {
-                EventManager.Publish("OnHChoice");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Controls"]))
-            {
-                EventManager.Publish("Customize");
-            }
-            else if (Input.GetKeyDown(this.thekeybinddictionary["Save"]))
-            {
-
+                if (Input.GetKeyDown(this.thekeybinddictionary[val.Key]))
+                {
+                    val.Value.Invoke();
+                }
             }
         }
 
@@ -270,6 +249,30 @@ namespace Assets.Scripts
             this.thekeybinddictionary.Add("BuyHarvester", KeyCode.Alpha3);
             this.thekeybinddictionary.Add("Controls", KeyCode.Slash);
             this.thekeybinddictionary.Add("Save", KeyCode.F5);
+
+            this.keybindmapping.Add("Settings", delegate { EventManager.Publish("Settings"); });
+            this.keybindmapping.Add("Objectives", delegate { EventManager.Publish("ObjectiveClick"); });
+            this.keybindmapping.Add("Crafting", delegate { EventManager.Publish("Crafting"); });
+            this.keybindmapping.Add("Actions", delegate { EventManager.Publish("Actions"); });
+            this.keybindmapping.Add("Units", delegate { EventManager.Publish("UnitTab"); });
+            this.keybindmapping.Add("Workshop", delegate { EventManager.Publish("Workshop"); });
+            this.keybindmapping.Add("Ability", delegate { EventManager.Publish("ActivateAbility"); });
+            this.keybindmapping.Add("Home", delegate { EventManager.Publish("Recall"); });
+            this.keybindmapping.Add("Cancel", delegate { EventManager.Publish("CancelAction"); });
+            this.keybindmapping.Add("SAExtractors", delegate { EventManager.Publish("SAExtract"); });
+            this.keybindmapping.Add("SAMiners", delegate { EventManager.Publish("SAMiner"); });
+            this.keybindmapping.Add("SAHarvesters", delegate { EventManager.Publish("SAHarvest"); });
+            this.keybindmapping.Add("SAUnits", delegate { EventManager.Publish("SAUnit"); });
+            this.keybindmapping.Add("BuyExtractor", delegate { EventManager.Publish("OnEChoice"); });
+            this.keybindmapping.Add("BuyMiner", delegate { EventManager.Publish("OnMChoice"); });
+            this.keybindmapping.Add("BuyHarvester", delegate { EventManager.Publish("OnHChoice"); });
+            this.keybindmapping.Add("Controls", delegate { EventManager.Publish("Customize"); });
+            this.keybindmapping.Add("Save", delegate { EventManager.Publish("Empty"); });
+
+            foreach (var val in this.thekeybinddictionary)
+            {
+                this.MakeHotKey(val.Key, val.Value.ToString());
+            }
         }
 
         /// <summary>
@@ -366,5 +369,101 @@ namespace Assets.Scripts
             // The slash key sprite is the same for the right keypad slash
             this.spritedictionary.Add(KeyCode.KeypadDivide, this.buttonimages[40]);
         }
+
+        /// <summary>
+        /// The make hot key function.
+        /// Makes a hot key to be serialized.
+        /// <para></para>
+        /// <remarks><paramref name="hk"></paramref> -The name of the key to serialize.</remarks>
+        /// <para></para>
+        /// <remarks><paramref name="m"></paramref> -The message to serialize.</remarks>
+        /// </summary>
+        private void MakeHotKey(string hk, string m)
+        {
+            var hotkey = new HotKeySerializable();
+            hotkey.Hotkey = hk;
+            hotkey.Message = m;
+
+            if (this.hotkeys.Hotkeys == null)
+            {
+                this.hotkeys.Hotkeys = new List<HotKeySerializable>();
+            }
+                
+            this.hotkeys.Hotkeys.Add(hotkey);
+        }
+
+        /// <summary>
+        /// The save hotkeys function.
+        /// Saves hotkeys to json file.
+        /// </summary>
+        private void SaveHotkeys()
+        {
+           this.hotkeysconfig = JsonUtility.ToJson(this.hotkeys, true);
+           System.IO.File.WriteAllText(@"..\JSON\KeyBindings.json", this.hotkeysconfig);
+        }
+
+        /// <summary>
+        /// The load hotkeys function.
+        /// Lods hotkeys from the saved json file.
+        /// </summary>
+        [ContextMenu("load it")]
+        private void LoadHotkeys()
+        {               
+            this.hotkeysconfig = System.IO.File.ReadAllText(@"..\JSON\KeyBindings.json");
+
+            this.hotkeys = JsonUtility.FromJson(this.hotkeysconfig, typeof(HotKeySerializables)) as HotKeySerializables;
+
+            if (this.hotkeys != null)
+            {
+                Button[] keybuttons = this.customizeUi.GetComponentsInChildren<Button>();
+
+                for (int i = 0; i < this.hotkeys.Hotkeys.Count; i++)
+                {
+                    // Convert the message string into its keycode form.
+                    KeyCode keycode = (KeyCode)System.Enum.Parse(typeof(KeyCode), this.hotkeys.Hotkeys[i].Message);
+
+                    this.thekeybinddictionary[this.hotkeys.Hotkeys[i].Hotkey] = keycode;
+                    keybuttons[i].GetComponent<Image>().sprite = this.spritedictionary[keycode];
+                }
+            }
+        }
     }
+
+    /// <summary>
+    /// The hot key serializable class.
+    /// Reference to seralize hotkeys.
+    /// </summary>
+    [System.Serializable]
+    public class HotKeySerializables
+    {
+        /// <summary>
+        /// The hotkeys reference.
+        /// </summary>
+        [SerializeField]
+        public List<HotKeySerializable> Hotkeys;
+    }
+
+    /// <summary>
+    /// The hot key serializable class.
+    /// Reference to a serlizable class for serilaizing hot keys.
+    /// </summary>
+    [System.Serializable]
+    public class HotKeySerializable
+    {
+        /// <summary>
+        /// The hot key reference.
+        /// Name of the hot key.
+        /// </summary>
+        [SerializeField]
+        public string Hotkey;
+
+        /// <summary>
+        /// The message reference.
+        /// Message to broadcast for event to be fired.
+        /// </summary>
+        [SerializeField]
+        public string Message;
+    }
+
 }
+
