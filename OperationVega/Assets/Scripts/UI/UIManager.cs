@@ -62,6 +62,10 @@ namespace UI
         }
         [SerializeField]
         private RectTransform m_CraftingTAB;
+        public RectTransform CraftingTab
+        {
+            get { return m_CraftingTAB; }
+        }
         [SerializeField]
         private RectTransform m_UnitTAB;
         [SerializeField]
@@ -77,7 +81,7 @@ namespace UI
         [SerializeField]
         private RectTransform m_SettingsUI;
         [SerializeField]
-        private RectTransform m_CustomizeUI;
+        public RectTransform m_CustomizeUI;
         [SerializeField]
         private RectTransform m_ObjectiveUI;
         [SerializeField]
@@ -186,6 +190,11 @@ namespace UI
         }
 
         bool revertcraftingtab;
+        public bool RevertCraftingTab
+        {
+            get { return revertcraftingtab; }
+            set { revertcraftingtab = value; }
+        }
         bool revertunittab;
         bool input1b;
         bool input2b;
