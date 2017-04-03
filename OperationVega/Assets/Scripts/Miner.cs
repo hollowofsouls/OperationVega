@@ -5,8 +5,6 @@ namespace Assets.Scripts
     using Interfaces;
     using UI;
 
-    using UnityEditor;
-
     using UnityEngine;
     using UnityEngine.AI;
 
