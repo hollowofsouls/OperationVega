@@ -73,15 +73,15 @@ namespace Assets.Scripts.Controllers
             // WASD Keys
             if (Input.GetKey(KeyCode.W))
             {
-                this.transform.position += this.transform.forward * MoveSpeed * Time.deltaTime;
+                this.transform.position += Vector3.up * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.S))
             {
-                this.transform.position -= this.transform.forward * MoveSpeed * Time.deltaTime;
+                this.transform.position += Vector3.down * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.A))
             {
-                this.transform.position -= this.transform.right * MoveSpeed * Time.deltaTime;
+                this.transform.position += -this.transform.right * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.D))
             {
@@ -91,15 +91,15 @@ namespace Assets.Scripts.Controllers
             // Arrow Keys
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                this.transform.position += this.transform.forward * MoveSpeed * Time.deltaTime;
+               this.transform.position += Vector3.up * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                this.transform.position -= this.transform.forward * MoveSpeed * Time.deltaTime;
+                this.transform.position += Vector3.down * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                this.transform.position -= this.transform.right * MoveSpeed * Time.deltaTime;
+                this.transform.position += -this.transform.right * MoveSpeed * Time.deltaTime;
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -128,15 +128,15 @@ namespace Assets.Scripts.Controllers
                 }
                 if (Input.mousePosition.x <= this.borderoffset && Input.mousePosition.x > 0)
                 {
-                    this.transform.position -= this.transform.right * MoveSpeed * Time.deltaTime;
+                    this.transform.position += -this.transform.right * MoveSpeed * Time.deltaTime;
                 }
                 if (Input.mousePosition.y >= Screen.height - this.borderoffset && Input.mousePosition.y < Screen.height)
                 {
-                    this.transform.position += this.transform.forward * MoveSpeed * Time.deltaTime;
+                    this.transform.position += Vector3.up * MoveSpeed * Time.deltaTime;
                 }
                 if (Input.mousePosition.y <= this.borderoffset && Input.mousePosition.y > 0)
                 {
-                    this.transform.position -= this.transform.forward * MoveSpeed * Time.deltaTime;
+                    this.transform.position += Vector3.down * MoveSpeed * Time.deltaTime;
                 }
             }
         }
@@ -171,7 +171,7 @@ namespace Assets.Scripts.Controllers
                 {
                     float camroty = (Input.mousePosition.x - this.mousePosX) * this.rotateSpeed * Time.deltaTime;
                     this.transform.Rotate(0.0f, camroty, 0.0f);
-                    this.transform.eulerAngles = new Vector3(0, this.ClampAngle(this.transform.eulerAngles.y, -45.0f, 45.0f), 0);
+                    this.transform.eulerAngles = new Vector3(0, this.ClampAngle(this.transform.eulerAngles.y, -85.0f, 90.0f), 0);
                 }
             }
         }

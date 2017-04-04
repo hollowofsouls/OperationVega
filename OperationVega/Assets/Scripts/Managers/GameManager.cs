@@ -4,6 +4,7 @@ namespace Assets.Scripts.Managers
     using System.Collections.Generic;
 
     using UnityEngine;
+    using UnityEngine.SceneManagement;
 
     /// <summary>
     /// The game manager class. This class is responsible for 
@@ -66,7 +67,8 @@ namespace Assets.Scripts.Managers
             if (this.HasBuiltShip)
             {
                 ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].Currentvalue++;
-                Debug.Log("Ship has been built now press launch to end the game");
+
+                SceneManager.LoadScene(0);
                 return true;
             }
             return false;
