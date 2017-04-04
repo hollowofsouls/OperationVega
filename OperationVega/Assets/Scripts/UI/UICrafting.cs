@@ -31,7 +31,7 @@ public class UICrafting : MonoBehaviour
 
     private void OnCrafting()
     {
-
+        //Moves the crafting tab up
         if (revertcraftingtab)
         {
             m_CraftingTAB.offsetMax = new Vector2(m_CraftingTAB.offsetMax.x, 0);
@@ -40,6 +40,8 @@ public class UICrafting : MonoBehaviour
             revertcraftingtab = false;
 
         }
+
+        //Sets the crafting tab to its original state
         else if (!revertcraftingtab)
         {
             revertcraftingtab = true;
@@ -49,7 +51,7 @@ public class UICrafting : MonoBehaviour
         }
 
 
-        Debug.Log("Move Crafting Tab down");
+        Debug.Log("Changes Position of the Crafting Tab.");
     }
 
 }
