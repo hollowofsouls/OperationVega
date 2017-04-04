@@ -288,6 +288,7 @@ MonoBehaviour:
   m_ObjectiveUI: {fileID: 207971333}
   m_MainUI: {fileID: 402031977}
   m_AreyousureUI: {fileID: 462314361}
+  Tooltipobjectpanel: {fileID: 0}
   m_MineralsT: {fileID: 1224539076}
   m_FoodT: {fileID: 1836072376}
   m_CookedFoodT: {fileID: 787679932}
@@ -297,6 +298,9 @@ MonoBehaviour:
   m_KillT: {fileID: 345743285}
   m_CraftT: {fileID: 482590102}
   m_MainT: {fileID: 1114899991}
+  m_minertext: {fileID: 0}
+  m_extractortext: {fileID: 0}
+  m_harvestertext: {fileID: 0}
   foodinstance: {fileID: 100000, guid: d91dd13a1323f9d49b25c69d0465d9be, type: 3}
   cookedfoodPrefab: {fileID: 1131821788970860, guid: 90373d2eb11a33443a6ea48eece04ea6,
     type: 2}
