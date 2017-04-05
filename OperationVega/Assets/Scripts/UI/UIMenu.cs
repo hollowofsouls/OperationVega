@@ -94,12 +94,14 @@ public class UIMenu : MonoBehaviour {
 
     private void OnVolumeSlider()
     {
+        //Changes the volume number text on the slider
         m_OptionsUI.GetComponentsInChildren<Text>()[2].text = "Audio Volume";
         Debug.Log("Volume Slider");
     }
 
     private void OnCameraSpeedSlider()
     {
+        //Changes the camera speed text on the slider
         Assets.Scripts.Controllers.CameraController.MoveSpeed = (uint)m_OptionsUI.GetComponentsInChildren<Slider>()[1].value;
         m_OptionsUI.GetComponentsInChildren<Text>()[2].text = "Camera Speed: " + Assets.Scripts.Controllers.CameraController.MoveSpeed;
         Debug.Log("CameraSpeed Slider");
@@ -107,6 +109,7 @@ public class UIMenu : MonoBehaviour {
 
     private void OnSettings()
     {
+        //Enables the settings panel to pop up when button is clicked.
         m_SettingsUI.gameObject.SetActive(true);
         Debug.Log("Settings Menu");
     }

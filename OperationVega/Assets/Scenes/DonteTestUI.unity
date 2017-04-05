@@ -259,7 +259,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67518c994ab768d48a46113768dd594e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_defaultCraftSprite: {fileID: 0}
   m_NewGame: {fileID: 0}
   m_LoadGame: {fileID: 0}
   m_QuitGame: {fileID: 0}
