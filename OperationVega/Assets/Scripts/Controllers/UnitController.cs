@@ -807,7 +807,7 @@ namespace Assets.Scripts.Controllers
             // If the object hit is a unit and we have an instance of the cooked food to use
             if (hit.transform.gameObject.GetComponent(typeof(IUnit)) && UIManager.Self.foodinstance != null)
             {
-                GameObject theorb = hit.transform.GetChild(3).GetChild(1).GetChild(0).gameObject;
+                GameObject theorb = hit.transform.GetChild(2).GetChild(2).GetChild(0).gameObject;
                 Stats stats = hit.transform.gameObject.GetComponent<Stats>();
 
                 // If the unit can be healed
@@ -834,9 +834,12 @@ namespace Assets.Scripts.Controllers
                             theorb.GetComponent<SkinnedMeshRenderer>().material.color = Color.green;
                         }
                     }
-
-                    // Destroy the food
+                } // If the current clicked units health is equal to or greater than its max health..
+                else if (stats.Health >= stats.Maxhealth)
+                {
+                    // Destroy the cooked food object and refund the cooked food point.
                     Destroy(UIManager.Self.foodinstance);
+                    User.CookedFoodCount++;
                 }
             }
         }

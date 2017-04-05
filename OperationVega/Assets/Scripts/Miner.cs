@@ -557,7 +557,7 @@ namespace Assets.Scripts
         /// </summary>
         private void InitUnit()
         {
-            this.theorb = this.transform.GetChild(3).GetChild(1).GetChild(0).gameObject;
+            this.theorb = this.transform.GetChild(2).GetChild(2).GetChild(0).gameObject;
             this.dangercolor = Color.black;
 
             this.mystats = this.GetComponent<Stats>();

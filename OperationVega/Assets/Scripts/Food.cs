@@ -157,5 +157,27 @@ namespace Assets.Scripts
 			this.Refresh();
 			this.Reset();
 		}
-	}
+
+        /// <summary>
+		/// On Mouse Enter function.
+		/// Handles when the mouse just started hovering over an object.
+		/// </summary>
+	    public void OnMouseEnter()
+        {
+            if (ToolTip.Istooltipactive)
+            {
+                ToolTip.Self.Objectdescription = "Tree.\n This resource provides " +
+                " food when harvested. Food is used in crafting and purchasing units.";
+            }
+        }
+
+        /// <summary>
+		/// On Mouse Exit function.
+		/// Handles when the mouse stops being over an object.
+		/// </summary>
+	    public void OnMouseExit()
+        {
+            ToolTip.Self.Objectdescription = " ";
+        }
+    }
 }

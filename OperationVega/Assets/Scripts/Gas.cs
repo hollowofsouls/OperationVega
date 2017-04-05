@@ -159,5 +159,27 @@ namespace Assets.Scripts
 			this.Reset();
 
 		}
-	}
+
+        /// <summary>
+        /// On Mouse Enter function.
+        /// Handles when the mouse just started hovering over an object.
+        /// </summary>
+        public void OnMouseEnter()
+        {
+            if (ToolTip.Istooltipactive)
+            {
+                ToolTip.Self.Objectdescription = "Geyser.\n This resource provides " +
+                " gas when harvested. Gas is used in crafting.";
+            }
+        }
+
+        /// <summary>
+		/// On Mouse Exit function.
+		/// Handles when the mouse stops being over an object.
+		/// </summary>
+	    public void OnMouseExit()
+        {
+            ToolTip.Self.Objectdescription = " ";
+        }
+    }
 }

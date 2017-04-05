@@ -88,6 +88,8 @@ namespace UI
         private RectTransform m_MainUI;
         [SerializeField]
         private RectTransform m_AreyousureUI;
+  
+        public RectTransform Tooltipobjectpanel;
 
         [SerializeField]
         private Text m_MineralsT;
@@ -107,7 +109,12 @@ namespace UI
         private Text m_CraftT;
         [SerializeField]
         private Text m_MainT;
-
+        [SerializeField]
+        private Text m_minertext;
+        [SerializeField]
+        private Text m_extractortext;
+        [SerializeField]
+        private Text m_harvestertext;
         [HideInInspector]
         public GameObject foodinstance;
         [SerializeField]
@@ -147,7 +154,7 @@ namespace UI
         private Image defaultInput2;
         private Image defaultOutput;
 
-        
+        private Toggle tooltiptoggle;
 
         [HideInInspector]
         public float currentcooldown;
@@ -417,6 +424,10 @@ namespace UI
             m_CraftT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Craft].GetObjectiveInfo();
             m_MainT.text = ObjectiveManager.Instance.TheObjectives[ObjectiveType.Main].GetObjectiveInfo();
 
+            m_minertext.text = User.MinerCount + " / " + User.MaxCountOfUnits;
+            m_extractortext.text = User.ExtractorCount + " / " + User.MaxCountOfUnits;
+            m_harvestertext.text = User.HarvesterCount + " / " + User.MaxCountOfUnits;
+
             //Updates the amount of resources the player has.
             m_MineralsT.text = " " + User.MineralsCount;
             m_FoodT.text = " " + User.FoodCount;
@@ -450,6 +461,11 @@ namespace UI
                 this.m_ObjectiveUI.offsetMax += new Vector2(1, 0) * 100 * Time.deltaTime;
             }
 
+        }
+
+        public void SetToolTip()
+        {
+            ToolTip.Istooltipactive = this.tooltiptoggle.isOn;
         }
 
         public void OnChangeKeyClicked(GameObject clicked)
@@ -786,6 +802,7 @@ namespace UI
         private void OnHarvest()
         {
             //Function will be use to harvest upon click.
+            UnitController.Self.Harvest();
             Debug.Log("Begin Harvesting");
         }
         public void OnRecallClick()
