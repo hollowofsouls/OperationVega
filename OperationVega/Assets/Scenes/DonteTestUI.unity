@@ -318,6 +318,7 @@ MonoBehaviour:
   fuel: {fileID: 1533376372}
   gas: {fileID: 1915688372}
   skillIcon: {fileID: 0}
+  tooltiptoggle: {fileID: 0}
   currentcooldown: 0
   contentfield: {fileID: 0}
   unit: {fileID: 0}
