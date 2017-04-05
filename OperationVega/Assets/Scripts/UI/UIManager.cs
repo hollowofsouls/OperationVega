@@ -154,6 +154,7 @@ namespace UI
         private Image defaultInput2;
         private Image defaultOutput;
 
+        [SerializeField]
         private Toggle tooltiptoggle;
 
         [HideInInspector]

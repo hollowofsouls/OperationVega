@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 using Text = UnityEngine.UI.Text;
 using Assets.Scripts.Managers;
 using Assets.Scripts;
@@ -19,7 +20,9 @@ public class UIMenu : MonoBehaviour {
     private RectTransform m_ObjectiveUI;
     private RectTransform m_MainUI;
 
-	void Awake()
+    private bool objectiveinview;
+
+    void Awake()
     {
         Assets.Scripts.Managers.EventManager.Subscribe("NewGame", this.NewGame);
         Assets.Scripts.Managers.EventManager.Subscribe("Options Menu", this.OnOptions);
