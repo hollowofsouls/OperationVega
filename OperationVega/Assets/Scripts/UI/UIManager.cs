@@ -21,7 +21,7 @@ namespace UI
     public class UIManager : MonoBehaviour
     {
         #region -- VARIABLES --
-        [SerializeField]
+       
         private Sprite m_defaultCraftSprite;
         [SerializeField]
         private Button m_NewGame;
