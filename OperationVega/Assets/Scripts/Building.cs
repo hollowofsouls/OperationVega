@@ -1,6 +1,8 @@
 ﻿
 namespace Assets.Scripts
 {
+    using UI;
+
     using UnityEngine;
 
     /// <summary>
@@ -18,6 +20,7 @@ namespace Assets.Scripts
         {
             if (ToolTip.Istooltipactive)
             {
+                UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(true);
                 switch (this.gameObject.name)
                 {
                     case "Silo":
@@ -45,6 +48,7 @@ namespace Assets.Scripts
         public void OnMouseExit()
         {
             ToolTip.Self.Objectdescription = " ";
+            UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(false);
         }
     }
 }

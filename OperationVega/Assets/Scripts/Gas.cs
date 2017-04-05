@@ -3,6 +3,8 @@ namespace Assets.Scripts
 {
 	using Assets.Scripts.Interfaces;
 
+	using UI;
+
 	using UnityEngine;
 
 	/// <summary>
@@ -168,6 +170,7 @@ namespace Assets.Scripts
         {
             if (ToolTip.Istooltipactive)
             {
+                UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(true);
                 ToolTip.Self.Objectdescription = "Geyser.\n This resource provides " +
                 " gas when harvested. Gas is used in crafting.";
             }
@@ -180,6 +183,7 @@ namespace Assets.Scripts
 	    public void OnMouseExit()
         {
             ToolTip.Self.Objectdescription = " ";
+            UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(false);
         }
     }
 }

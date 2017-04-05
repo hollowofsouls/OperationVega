@@ -4,6 +4,8 @@ namespace Assets.Scripts
 {
 	using Assets.Scripts.Interfaces;
 
+	using UI;
+
 	using UnityEngine;
 
 	/// <summary>
@@ -166,6 +168,7 @@ namespace Assets.Scripts
         {
             if (ToolTip.Istooltipactive)
             {
+                UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(true);
                 ToolTip.Self.Objectdescription = "Tree.\n This resource provides " +
                 " food when harvested. Food is used in crafting and purchasing units.";
             }
@@ -178,6 +181,7 @@ namespace Assets.Scripts
 	    public void OnMouseExit()
         {
             ToolTip.Self.Objectdescription = " ";
+            UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(false);
         }
     }
 }
