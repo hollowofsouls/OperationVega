@@ -223,15 +223,15 @@ namespace Assets.Scripts
 		/// </summary>
 		private void Start()
 		{
-			User.SteelCount = 9000;
-			User.FuelCount = 9000;
+			//User.SteelCount = 9000;
+			//User.FuelCount = 9000;
 			this.allParts = new List<IRocketParts>();
 		}
 
 		/// <summary>
 		/// Update is called once per frame
 		/// </summary>
-		private void Update()
+		private void TestRocket()
 		{
 			if (Input.GetMouseButtonDown(0))
 			{
@@ -331,8 +331,8 @@ namespace Assets.Scripts
 				if (!building.Contains(builtThrusters))
 				{
 					builtThrusters = (GameObject)Instantiate(selectedPart) as GameObject;
-					builtThrusters.transform.parent = builtCockpit.transform;
-					builtThrusters.transform.localPosition = new Vector3(-6, 0, 5);
+					builtThrusters.transform.parent = transform;
+					builtThrusters.transform.localPosition = new Vector3(-8, 0, 5);
 					Thrusters behaviour = builtThrusters.AddComponent<Thrusters>();
 					behaviour.Create(thePart as BaseThrusters);
 					builtThrusters.name = thePart.Name;
@@ -350,8 +350,8 @@ namespace Assets.Scripts
 				if (!building.Contains(builtWings))
 				{
 					builtWings = (GameObject)Instantiate(selectedPart) as GameObject;
-					builtWings.transform.parent = builtCockpit.transform;
-					builtWings.transform.localPosition = new Vector3(1, -4, 4);
+					builtWings.transform.parent = transform;
+					builtWings.transform.localPosition = new Vector3(5, -4, 4);
 					Wings behaviour = builtWings.AddComponent<Wings>();
 					behaviour.Create(thePart as BaseWings);
 					builtWings.name = thePart.Name;
@@ -428,11 +428,10 @@ namespace Assets.Scripts
 			if(this.ShipBuild() == true)
 			{
 				builtWings.transform.parent = builtCockpit.transform;
+				builtWings.transform.localPosition = new Vector3(0, 0, 0);
 				builtThrusters.transform.parent = builtCockpit.transform;
 				if(builtCockpit.name == "Cockpit Rust")
 				{
-					builtWings.transform.localPosition = new Vector3(0, 0, 0);
-
 					builtWings.transform.GetChild(0).transform.localPosition = new Vector3(1.6f, -0.15f, 1.9f);
 					builtWings.transform.GetChild(0).transform.eulerAngles = new Vector3(0, -45, 0);
 
@@ -463,13 +462,15 @@ namespace Assets.Scripts
 				}
 				else if(builtCockpit.name == "Cockpit Color")
 				{
-					builtWings.transform.localPosition = new Vector3(0, 0, 0);
 					builtWings.transform.GetChild(0).transform.localPosition = new Vector3(2.07f, -1.8f, 1);
 					builtWings.transform.GetChild(0).transform.eulerAngles = new Vector3(0, -25.4f, -9.42f);
+
 					builtWings.transform.GetChild(1).transform.localPosition = new Vector3(-2.07f, -1.8f, -1);
 					builtWings.transform.GetChild(1).transform.eulerAngles = new Vector3(0, -199, -9.42f);
+
 					builtWings.transform.GetChild(2).transform.localPosition = new Vector3(-2.07f, -1.8f, 1);
 					builtWings.transform.GetChild(2).transform.eulerAngles = new Vector3(0, 199, -9.42f);
+
 					builtWings.transform.GetChild(3).transform.localPosition = new Vector3(2.07f, -1.8f, -1);	
 					builtWings.transform.GetChild(3).transform.eulerAngles = new Vector3(0, 25.4f, -9.42f);
 
@@ -491,33 +492,31 @@ namespace Assets.Scripts
 				}
 				else if(builtCockpit.name == "Cockpit Flame")
 				{
-					builtWings.transform.localPosition = new Vector3(0, 4, 0);
+					builtWings.transform.GetChild(0).transform.localPosition = new Vector3(2.5f, -1.7f, 0);
+					builtWings.transform.GetChild(0).transform.eulerAngles = new Vector3(0, 0, -14);
 
-					builtWings.transform.GetChild(0).transform.localPosition = new Vector3(1.6f, -0.15f, 1.8f);
-					builtWings.transform.GetChild(0).transform.eulerAngles = new Vector3(0, -45, -17.3f);
+					builtWings.transform.GetChild(1).transform.localPosition = new Vector3(-2.5f, -1.7f, 0);
+					builtWings.transform.GetChild(1).transform.eulerAngles = new Vector3(0, 180, -14);
 
-					builtWings.transform.GetChild(1).transform.localPosition = new Vector3(-1.6f, -0.15f, -1.8f);
-					builtWings.transform.GetChild(1).transform.eulerAngles = new Vector3(0, 135, -17.3f);
+					builtWings.transform.GetChild(2).transform.localPosition = new Vector3(0, -1.7f, 2.5f);
+					builtWings.transform.GetChild(2).transform.eulerAngles = new Vector3(0, -90, -14);
 
-					builtWings.transform.GetChild(2).transform.localPosition = new Vector3(-1.6f, -0.15f, 1.8f);
-					builtWings.transform.GetChild(2).transform.eulerAngles = new Vector3(0, -135, -17.3f);
-
-					builtWings.transform.GetChild(3).transform.localPosition = new Vector3(1.6f, -0.15f, -1.8f);
-					builtWings.transform.GetChild(3).transform.eulerAngles = new Vector3(0, 45, -17.3f);
+					builtWings.transform.GetChild(3).transform.localPosition = new Vector3(0, -1.7f, -2.5f);
+					builtWings.transform.GetChild(3).transform.eulerAngles = new Vector3(0, 90, -14f);
 
 					if (builtThrusters.name == "Thrusters Rust")
 					{
-						builtThrusters.transform.localPosition = new Vector3(0, 0.41f, 0);
+						builtThrusters.transform.localPosition = new Vector3(0, -5.1f, 0);
 						builtThrusters.transform.localScale = new Vector3(1.26f, 1, 1.27f);
 					}
 					else if (builtThrusters.name == "Thrusters Color")
 					{
-						builtThrusters.transform.localPosition = new Vector3(0, 0.39f, 0);
+						builtThrusters.transform.localPosition = new Vector3(0, -5.15f, 0);
 						builtThrusters.transform.localScale = new Vector3(1, 0.58f, 1);
 					}
 					else if (builtThrusters.name == "Thrusters Flame")
 					{
-						builtThrusters.transform.localPosition = new Vector3(0, 0.27f, 0);
+						builtThrusters.transform.localPosition = new Vector3(0, -5.3f, 0);
 						builtThrusters.transform.localScale = new Vector3(1, 1, 1);
 					}
 				}
