@@ -92,6 +92,23 @@ NavMeshSettings:
     cellSize: 0.16666667
     accuratePlacement: 0
   m_NavMeshData: {fileID: 23800000, guid: 909960c6ac329464689ccc47046c9112, type: 2}
+--- !u!1 &8259583 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17,
+    type: 2}
+  m_PrefabInternal: {fileID: 343545735}
+--- !u!114 &8259589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 8259583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57e1b012cb6261b46a9ba80862462751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
 --- !u!224 &21860276 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224386228563859506, guid: 924c3e0e679a0a04d9ff0f2f7d8572eb,
@@ -584,26 +601,41 @@ Prefab:
       propertyPath: m_Name
       value: MineralOreVeinNode (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 255
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 230
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_TagString
+      value: Resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_Name
+      value: MineralOreVeinNode (1)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &343545736 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1753390111381368, guid: bf177d0681e31d44ca3b79134a01da17,
-    type: 2}
-  m_PrefabInternal: {fileID: 343545735}
---- !u!114 &343545737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 343545736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57e1b012cb6261b46a9ba80862462751, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 1
 --- !u!1001 &346970214
 Prefab:
   m_ObjectHideFlags: 0
@@ -1432,6 +1464,34 @@ Prefab:
     - target: {fileID: 1753390111381368, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 360.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224556039336540, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 213.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_TagString
+      value: Resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf177d0681e31d44ca3b79134a01da17, type: 2}
@@ -2495,23 +2555,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 634305326}
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
---- !u!1 &978070323 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1753390111381368, guid: bf177d0681e31d44ca3b79134a01da17,
-    type: 2}
-  m_PrefabInternal: {fileID: 629564974}
---- !u!114 &978070324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 978070323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57e1b012cb6261b46a9ba80862462751, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 1
 --- !u!1 &983778919
 GameObject:
   m_ObjectHideFlags: 0
@@ -4868,6 +4911,23 @@ Transform:
   m_Father: {fileID: 1530533209}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2029117891 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1205876600776164, guid: bf177d0681e31d44ca3b79134a01da17,
+    type: 2}
+  m_PrefabInternal: {fileID: 629564974}
+--- !u!114 &2029117897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2029117891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57e1b012cb6261b46a9ba80862462751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
 --- !u!1 &2068105196
 GameObject:
   m_ObjectHideFlags: 0
