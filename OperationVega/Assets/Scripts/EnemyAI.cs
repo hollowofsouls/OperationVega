@@ -67,6 +67,12 @@ namespace Assets.Scripts
         private NavMeshAgent mynavagent;
 
         /// <summary>
+        /// The enemy controller reference.\
+        /// Reference to Animator Controller.
+        /// </summary>
+        private Animator enemycontroller;
+
+        /// <summary>
         /// The check rate reference.
         /// Reference to how long between casting the overlap sphere.
         /// </summary>
@@ -86,6 +92,7 @@ namespace Assets.Scripts
             this.enemyreference = this.GetComponent<Enemy>();
             this.mynavagent = this.GetComponent<NavMeshAgent>();
             this.mynavagent.stoppingDistance = 1.2f;
+            this.enemycontroller = this.GetComponent<Animator>();
             this.checkrate = Random.Range(0.5f, 1.0f);
             this.stunned = false;
             this.taunted = false;
@@ -105,6 +112,11 @@ namespace Assets.Scripts
             else if (this.taunted && this.enemyreference.Currenttarget != null)
             {
                 this.mynavagent.SetDestination(this.enemyreference.Currenttarget.transform.position);
+
+                if (!this.enemycontroller.GetBool("Walk"))
+                {
+                    this.enemycontroller.SetBool("Walk", true);
+                }
             }
             else if (this.scared && !this.stunned)
             {
@@ -112,14 +124,39 @@ namespace Assets.Scripts
 
                 this.mynavagent.SetDestination(this.transform.position * this.runtimer);
 
+                if (!this.enemycontroller.GetBool("Walk"))
+                {
+                    this.enemycontroller.SetBool("Walk", true);
+                }
+
                 // If the enemy has been scared for 5 seconds then the effect wore off
                 if (this.runtimer >= 5.0f)
                 {
                     this.scared = false;
                     this.runtimer = 1;
                     this.mynavagent.SetDestination(this.transform.position);
+
+                    if (!this.enemycontroller.GetBool("Walk"))
+                    {
+                        this.enemycontroller.SetBool("Walk", true);
+                    }
                 }
             }
+            else if (this.stunned)
+            {
+                if (this.enemycontroller.GetBool("Walk"))
+                {
+                    this.enemycontroller.SetBool("Walk", false);
+                }
+            }
+
+            // If the navagent isnt looking for a current path - this helps prevent any lag when the enemy is already stopped then starting to move,
+            // if the navagent is within stopping distance and its currently using the walk animation...
+            if (!this.mynavagent.pathPending && this.mynavagent.remainingDistance <= this.mynavagent.stoppingDistance && this.enemycontroller.GetBool("Walk"))
+            {
+                this.enemycontroller.SetBool("Walk", false);
+            }
+
         }
 
         /// <summary>
@@ -163,6 +200,12 @@ namespace Assets.Scripts
                 }
 
                 this.mynavagent.SetDestination(this.enemyreference.Currenttarget.transform.position);
+
+                // Only Set the animator to walk if its not walking
+                if (!this.enemycontroller.GetBool("Walk"))
+                {
+                    this.enemycontroller.SetBool("Walk", true);
+                }
             }
         }
 
