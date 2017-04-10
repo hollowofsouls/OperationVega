@@ -429,6 +429,7 @@ namespace Assets.Scripts.Controllers
         public void SpawnUnit(GameObject theunit)
         {
             Vector3 spawnposition = this.theBarracks.transform.FindChild("Door").position;
+            theunit.transform.FindChild("SelectionHighlight").gameObject.GetComponent<MeshRenderer>().enabled = false;
             Instantiate(theunit, spawnposition, Quaternion.AngleAxis(-180, Vector3.up));
         }
 
@@ -437,6 +438,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         private void Start()
         {
+            User.FoodCount += 12;
             instance = this;
             this.theBarracks = GameObject.Find("Barracks");
             EventManager.Subscribe("ActivateAbility", this.ActivateAbility);

@@ -73,8 +73,11 @@ namespace Assets.Scripts
             instance = this;
             Istooltipactive = true;
             this.textdisplay = this.GetComponentInChildren<Text>();
-            this.xoffset = this.transform.GetComponent<RectTransform>().sizeDelta.x / 2;
+            
+            // Give x more offset than y so the panel isnt preventing the mouse from ray casting
+            this.xoffset = this.transform.GetComponent<RectTransform>().sizeDelta.x / 2 + 25;
             this.yoffset = this.transform.GetComponent<RectTransform>().sizeDelta.y / 2;
+            this.gameObject.SetActive(false);
         }
 
         /// <summary>

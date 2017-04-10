@@ -3,6 +3,8 @@ namespace Assets.Scripts
 {
 	using Assets.Scripts.Interfaces;
 
+	using UI;
+
 	using UnityEngine;
 
 	/// <summary>
@@ -164,6 +166,7 @@ namespace Assets.Scripts
         {
             if (ToolTip.Istooltipactive)
             {
+                UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(true);
                 ToolTip.Self.Objectdescription = "Mineral Deposit.\n This resource provides " +
                 " minerals when harvested. Minerals are used in crafting.";
             }
@@ -176,6 +179,7 @@ namespace Assets.Scripts
 	    public void OnMouseExit()
         {
             ToolTip.Self.Objectdescription = " ";
+            UIManager.Self.Tooltipobjectpanel.gameObject.SetActive(false);
         }
     }
 }
