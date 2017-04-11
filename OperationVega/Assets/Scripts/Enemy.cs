@@ -99,6 +99,7 @@ namespace Assets.Scripts
             // Check if unit dies
             if (this.mystats.Health <= 0)
             {
+                // Switch to death animation
                 this.enemycontroller.SetBool("Death", true);
             }
         }
@@ -219,10 +220,15 @@ namespace Assets.Scripts
                 // If unit is alive but out of range
                 else if (Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) > this.GetComponent<EnemyAI>().Radius)
                 {
+                    this.enemycontroller.SetBool("Attack", false);
                     this.Currenttarget = null;
                     this.target = null;
                     this.ChangeStates("Idle");
                     this.GetComponent<EnemyAI>().taunted = false;
+                }
+                else if (Vector3.Distance(this.Currenttarget.transform.position, this.transform.position) > this.mystats.Attackrange && this.enemycontroller.GetBool("Attack"))
+                {
+                    this.enemycontroller.SetBool("Attack", false);
                 }
             }
         }

@@ -337,9 +337,7 @@ namespace Assets.Scripts
         {
             this.mystats.Health -= damage;
 
-            UnitController.Self.textobjs.Enqueue(UnitController.Self.combattext);
-            this.StartCoroutine(UnitController.Self.CombatText(this.gameObject));
-
+            UnitController.Self.unithit = this.gameObject;
             this.UpdateOrb();
            
             // Check if unit dies

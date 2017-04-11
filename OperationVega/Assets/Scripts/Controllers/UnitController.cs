@@ -65,6 +65,9 @@ namespace Assets.Scripts.Controllers
         [SerializeField]
         public GameObject combattext;
 
+        [HideInInspector]
+        public GameObject unithit;
+
         /// <summary>
         /// The instance of the class.
         /// </summary>
@@ -445,7 +448,6 @@ namespace Assets.Scripts.Controllers
             Instantiate(theunit, spawnposition, Quaternion.AngleAxis(-180, Vector3.up));
         }
 
-
         public Queue<GameObject> textobjs = new Queue<GameObject>();
 
         /// <summary>
@@ -455,7 +457,7 @@ namespace Assets.Scripts.Controllers
         /// </summary>
         public IEnumerator CombatText(GameObject unit)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             Stats thestats = unit.GetComponent<Stats>();
             Vector3 spawnposition = unit.transform.position;
             spawnposition.y += 0.5f;

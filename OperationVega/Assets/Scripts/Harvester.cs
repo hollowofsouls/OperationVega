@@ -366,6 +366,7 @@ namespace Assets.Scripts
         {
             this.mystats.Health -= damage;
 
+            UnitController.Self.unithit = this.gameObject;
             this.UpdateOrb();
 
             // Check if unit dies

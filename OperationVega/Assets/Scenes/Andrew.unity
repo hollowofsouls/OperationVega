@@ -1033,6 +1033,7 @@ MonoBehaviour:
   Miner: {fileID: 1265296820}
   Extractor: {fileID: 570408277}
   combattext: {fileID: 1891770639032376, guid: 717c436b89b9ce94c9864c1437d86922, type: 2}
+  unithit: {fileID: 0}
   selectionHighlight: {fileID: 2800000, guid: ddcfce0b72b55e845b2c7a5baa66bc79, type: 3}
 --- !u!114 &526479882
 MonoBehaviour:
